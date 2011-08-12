@@ -25,7 +25,7 @@ public final class MyScreen extends MainScreen
     public MyScreen()
     {        
         // Set the displayed title of the screen       
-        setTitle("MyTitle");
+        setTitle("MyTitle"); 
         
         GzVerticalFieldManager manager = new GzVerticalFieldManager();
         GzTextField labelField = new GzTextField(Field.USE_ALL_WIDTH);
