@@ -2,7 +2,7 @@ package de.enough.glaze.style.parser.utils;
 
 import java.util.Vector;
 
-import de.enough.glaze.style.parser.exception.CssSyntaxException;
+import de.enough.glaze.style.parser.exception.CssSyntaxError;
 
 public class ParserUtils {
 
@@ -229,7 +229,7 @@ public class ParserUtils {
 	 *            the id
 	 * @return true if the given id is valid otherwise false
 	 */
-	public static void validate(String id) throws CssSyntaxException {
+	public static void validate(String id) throws CssSyntaxError {
 		for (int index = 0; index < id.length(); index++) {
 			char character = id.charAt(index);
 			boolean valid = (character >= 'a' && character <= 'z')
@@ -237,7 +237,7 @@ public class ParserUtils {
 					|| (character >= '0' && character <= '9')
 					|| character == '-' || character == '_';
 			if (!valid) {
-				throw new CssSyntaxException(id,
+				throw new CssSyntaxError(id,
 						"an id must only contain the following characters : a-z A-Z 0-9 _ -");
 			}
 		}

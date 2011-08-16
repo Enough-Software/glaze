@@ -6,7 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import net.rim.device.api.ui.UiApplication;
-import de.enough.glaze.style.parser.CssContentHandler;
+import de.enough.glaze.style.StyleSheet;
+import de.enough.glaze.style.parser.CssContentHandlerImpl;
 import de.enough.glaze.style.parser.CssParser;
 
 /**
@@ -21,24 +22,15 @@ public class MyApp extends UiApplication
      */ 
     public static void main(String[] args)
     {
-    	String css = "colors { red: #ff0000" +
-    			"}" +
-    			"block:focus {\n " +
-    			"firstkey: firstvalue;\n " +
-    			"secondkey: secondstyle;\n " +
+    	String css = "block:focus{\n " +
     			"innerblock {\n " +
     			"innerfirstkey: innerfirstvalue; \n" +
-    			"innersecondkey: test\n" +
-    			"} \n" +
-    			"/*comment*/\n" +
-    			"thirdkey: thirdstyle;\n " +
-    			"fourthkey: fourthstyle\n " +
-    			"}\n";
+    			"}}} \n";
     	
     	InputStream stream = new ByteArrayInputStream(css.getBytes());
     	InputStreamReader reader = new InputStreamReader(stream);
     	CssParser cssParser = new CssParser(reader);
-    	CssContentHandler cssContentHandler = new CssContentHandler();
+    	CssContentHandlerImpl cssContentHandler = new CssContentHandlerImpl(StyleSheet.getInstance());
     	cssParser.setContentHandler(cssContentHandler);
     	try {
 			cssParser.parse();

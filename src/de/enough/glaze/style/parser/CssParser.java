@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import de.enough.glaze.style.parser.exception.CssSyntaxException;
+import de.enough.glaze.log.Log;
+import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.style.parser.utils.ParserUtils;
 
 /**
@@ -41,11 +42,13 @@ public class CssParser {
 
 	private boolean isInComment;
 
-	private boolean isInInvalidBlock;
-
 	private boolean hasNextToken;
 
-	private ContentHandler handler;
+	private CssContentHandler handler;
+
+	private int blockDepth;
+
+	private int invalidBlockDepth;
 
 	private int lineNumber;
 
@@ -61,13 +64,14 @@ public class CssParser {
 		this.bufferStartIndex = BUFFER_SIZE;
 		this.hasNextToken = true;
 		this.lineNumber = 1;
+		this.invalidBlockDepth = Integer.MIN_VALUE;
 	}
 
-	public void setContentHandler(ContentHandler handler) {
+	public void setContentHandler(CssContentHandler handler) {
 		this.handler = handler;
 	}
 
-	public ContentHandler getContentHandler() {
+	public CssContentHandler getContentHandler() {
 		return this.handler;
 	}
 
@@ -87,6 +91,34 @@ public class CssParser {
 		return this.hasNextToken || this.bufferStartIndex < this.bufferEndIndex;
 	}
 
+	private boolean isInInvalidBlock() {
+		return this.invalidBlockDepth != Integer.MIN_VALUE;
+	}
+
+	private void setInvalidBlock(boolean invalid) {
+		if (invalid) {
+			this.invalidBlockDepth = this.blockDepth;
+		} else {
+			this.invalidBlockDepth = Integer.MIN_VALUE;
+		}
+	}
+
+	private void enterBlock() {
+		this.blockDepth++;
+	}
+
+	private void leaveBlock() {
+		this.blockDepth--;
+	}
+
+	private int getBlockDepth() {
+		return this.blockDepth;
+	}
+
+	private int getInvalidBlockDepth() {
+		return this.invalidBlockDepth;
+	}
+
 	/**
 	 * Retrieves the next token
 	 * 
@@ -100,6 +132,9 @@ public class CssParser {
 		if (this.bufferStartIndex >= this.bufferEndIndex) {
 			int read = this.reader.read(this.readBuffer);
 			if (read == -1) {
+				if(getBlockDepth() > 0) {
+					Log.s(new CssSyntaxError(this.lineNumber, "block not closed"));
+				}
 				return;
 			}
 			this.bufferStartIndex = 0;
@@ -130,43 +165,48 @@ public class CssParser {
 			} else {
 				checkNextCharForStartComment = false;
 				if (c == ATTRIBUTE_END || c == BLOCK_START || c == BLOCK_END) {
-					if (!this.isInInvalidBlock) {
+					if (c == BLOCK_START) {
+						enterBlock();
+					}
+
+					if (!isInInvalidBlock()) {
 						String value = buffer.toString().trim();
 						if (c == ATTRIBUTE_END) {
 							try {
-								parseAttribute(value);
-							} catch (CssSyntaxException e) {
-								System.out.println(new CssSyntaxException(
-										this.lineNumber, e).getMessage());
+								handleAttribute(value);
+							} catch (CssSyntaxError e) {
+								Log.s(new CssSyntaxError(this.lineNumber, e));
 							}
 						} else if (c == BLOCK_START) {
 							try {
-								parseBlockStart(value);
-							} catch (CssSyntaxException e) {
-								System.out.println(new CssSyntaxException(
-										this.lineNumber, e).getMessage());
-								this.isInInvalidBlock = true;
+								handleBlockStart(value);
+							} catch (CssSyntaxError e) {
+								Log.s(new CssSyntaxError(this.lineNumber, e));
+								setInvalidBlock(true);
 							}
 						} else if (c == BLOCK_END) {
 							if (value.length() > 0) {
 								try {
-									parseAttribute(value);
-								} catch (CssSyntaxException e) {
-									System.out.println(new CssSyntaxException(
-											this.lineNumber, e).getMessage());
+									handleAttribute(value);
+								} catch (CssSyntaxError e) {
+									Log.s(new CssSyntaxError(this.lineNumber, e));
 								}
 							}
 							try {
-								parseBlockEnd();
-							} catch (CssSyntaxException e) {
-								System.out.println(new CssSyntaxException(
-										this.lineNumber, e).getMessage());
+								handleBlockEnd();
+							} catch (CssSyntaxError e) {
+								Log.s(new CssSyntaxError(this.lineNumber, e));
 							}
+						}
+					} else {
+						if (c == BLOCK_END
+								&& getBlockDepth() == getInvalidBlockDepth()) {
+							setInvalidBlock(false);
 						}
 					}
 
-					if (c == BLOCK_END && this.isInInvalidBlock) {
-						this.isInInvalidBlock = false;
+					if (c == BLOCK_END) {
+						leaveBlock();
 					}
 
 					this.bufferStartIndex = index + 1;
@@ -184,7 +224,7 @@ public class CssParser {
 		return;
 	}
 
-	public void parseAttribute(String value) throws CssSyntaxException {
+	public void handleAttribute(String value) throws CssSyntaxError {
 		value = ParserUtils.normalize(value);
 		if (value.length() > 0) {
 			if (ParserUtils.hasDelimiter(value, ATTRIBUTE_DELIMITER)) {
@@ -203,11 +243,11 @@ public class CssParser {
 				}
 			}
 
-			throw new CssSyntaxException(value, "invalid attribute declaration");
+			throw new CssSyntaxError(value, "invalid attribute declaration");
 		}
 	}
 
-	public void parseBlockStart(String value) throws CssSyntaxException {
+	public void handleBlockStart(String value) throws CssSyntaxError {
 		if (ParserUtils.hasDelimiter(value, BLOCK_EXTENDS_DELIMITER)) {
 			String[] attributeArray = ParserUtils.toArray(value,
 					BLOCK_EXTENDS_DELIMITER);
@@ -216,19 +256,19 @@ public class CssParser {
 				String blockId = ParserUtils.normalize(attributeArray[0]);
 				ParserUtils.validate(blockId);
 				String blockExtends = ParserUtils.normalize(attributeArray[1]);
-				parseBlockStart(value, blockId, blockExtends);
+				handleBlockStart(value, blockId, blockExtends);
 				return;
 			}
 		} else {
-			parseBlockStart(value, value, null);
+			handleBlockStart(value, value, null);
 			return;
 		}
 
-		throw new CssSyntaxException(value, "invalid block declaration");
+		throw new CssSyntaxError(value, "invalid block declaration");
 	}
 
-	public void parseBlockStart(String value, String blockIdValue,
-			String blockExtends) throws CssSyntaxException {
+	public void handleBlockStart(String value, String blockIdValue,
+			String blockExtends) throws CssSyntaxError {
 		if (ParserUtils.hasDelimiter(blockIdValue, BLOCK_CLASS_DELIMITER)) {
 			String[] attributeArray = ParserUtils.toArray(blockIdValue,
 					BLOCK_CLASS_DELIMITER);
@@ -237,9 +277,10 @@ public class CssParser {
 				String blockId = ParserUtils.normalize(attributeArray[0]);
 				ParserUtils.validate(blockId);
 				String blockClass = ParserUtils.normalize(attributeArray[1]);
+				ParserUtils.validate(blockClass);
 
 				if (blockExtends != null) {
-					throw new CssSyntaxException(value,
+					throw new CssSyntaxError(value,
 							"pseudoclasses are not allowed to be extended");
 				}
 
@@ -258,10 +299,10 @@ public class CssParser {
 			return;
 		}
 
-		throw new CssSyntaxException(value, "invalid block declaration");
+		throw new CssSyntaxError(value, "invalid block declaration");
 	}
 
-	public void parseBlockEnd() throws CssSyntaxException {
+	public void handleBlockEnd() throws CssSyntaxError {
 		if (this.handler != null) {
 			this.handler.onBlockEnd();
 		}
