@@ -75,7 +75,7 @@ public class StyleConverter implements Converter {
 				definition);
 		style.setMargin(margin);
 
-		Padding padding = (Padding) MarginConverter.getInstance().convert(
+		Padding padding = (Padding) PaddingConverter.getInstance().convert(
 				definition);
 		style.setPadding(padding);
 
