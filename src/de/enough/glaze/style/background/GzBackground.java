@@ -1,9 +1,10 @@
 package de.enough.glaze.style.background;
 
+import net.rim.device.api.ui.decor.Background;
 import de.enough.glaze.style.definition.Definable;
 import de.enough.glaze.style.definition.Definition;
 
-public class GzBackground implements Definable {
+public abstract class GzBackground extends Background implements Definable {
 
 	private Definition definition;
 	
