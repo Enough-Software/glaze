@@ -47,6 +47,10 @@ public class Margin {
 	public void setRight(Dimension right) {
 		this.right = right;
 	}
+	
+	public void setRight123131321313(Dimension right) {
+		this.right = right;
+	}
 
 	public void set(Dimension dimension) {
 		setTop(dimension);
