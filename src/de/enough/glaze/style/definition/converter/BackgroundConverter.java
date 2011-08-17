@@ -78,12 +78,10 @@ public class BackgroundConverter implements Converter {
 		Property backgroundTypeProp = definition.getProperty("background-type");
 		
 		if(backgroundTypeProp != null) {
-			// handle background type
+			return null;
 		} else {
 			return SolidBackgroundConverter.getInstance().convert(definition);
 		}
-
-		return null;
 	}
 
 }

@@ -246,12 +246,12 @@ public class CssContentHandlerImpl implements CssContentHandler {
 				Style style = (Style) StyleConverter.getInstance().convert(
 						this.styleDefinition);
 				style.setDefinition(this.styleDefinition);
-				style.setParentStyle(this.styleBase);
 
 				if (this.styleClass != null) {
 					Log.d("setting style class : " + this.styleId + ":"
 							+ this.styleClass);
-					this.styleBase.setStyle(this.styleClass, style);
+					style.setBaseStyle(this.styleBase);
+					this.styleBase.setClass(this.styleClass, style);
 				} else {
 					Log.d("adding style : " + this.styleId);
 					this.stylesheet.addStyle(this.styleId, style);

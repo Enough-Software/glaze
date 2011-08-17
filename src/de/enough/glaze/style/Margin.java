@@ -3,6 +3,8 @@ package de.enough.glaze.style;
 import net.rim.device.api.ui.XYEdges;
 
 public class Margin {
+	
+	public static final Margin ZERO = new Margin();
 
 	private Dimension top;
 

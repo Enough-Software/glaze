@@ -42,7 +42,7 @@ public class FieldStyleHandlerList {
 	public void delete(Field field) {
 		for (int index = 0; index < this.list.size(); index++) {
 			FieldStyleHandler fieldStyleHandler = (FieldStyleHandler) this.list.elementAt(index);
-			if (fieldStyleHandler.getField().equals(fieldStyleHandler)) {
+			if (fieldStyleHandler.getField().equals(field)) {
 				delete(index);
 			}
 		}
@@ -68,5 +68,16 @@ public class FieldStyleHandlerList {
 	
 	public FieldStyleHandler get(int index) {
 		return (FieldStyleHandler)this.list.elementAt(index);
+	}
+	
+	public FieldStyleHandler get(Field field) {
+		for (int index = 0; index < this.list.size(); index++) {
+			FieldStyleHandler fieldStyleHandler = (FieldStyleHandler) this.list.elementAt(index);
+			if (fieldStyleHandler.getField().equals(field)) {
+				return fieldStyleHandler;
+			}
+		}
+		
+		return null;
 	}
 }

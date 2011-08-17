@@ -69,6 +69,23 @@ public class Log {
 	}
 
 	/**
+	 * Prints a debug message with the given message and object. Use this method
+	 * to avoid intensive toString() operations if the given log level is not
+	 * allowed.
+	 * 
+	 * @param message
+	 *            the message
+	 * @param object
+	 *            the object
+	 */
+	public static void d(String message, Object object) {
+		if (isLevelAllowed(DEBUG)) {
+			message = toLog(message + " : " + object.toString());
+			System.out.println(message);
+		}
+	}
+
+	/**
 	 * Prints an info with the given message
 	 * 
 	 * @param message
@@ -77,6 +94,23 @@ public class Log {
 	public static void i(String message) {
 		if (isLevelAllowed(INFO)) {
 			message = toLog(message);
+			System.out.println(message);
+		}
+	}
+	
+	/**
+	 * Prints an info message with the given message and object. Use this method
+	 * to avoid intensive toString() operations if the given log level is not
+	 * allowed.
+	 * 
+	 * @param message
+	 *            the message
+	 * @param object
+	 *            the object
+	 */
+	public static void i(String message, Object object) {
+		if (isLevelAllowed(INFO)) {
+			message = toLog(message + " : " + object.toString());
 			System.out.println(message);
 		}
 	}
@@ -93,6 +127,23 @@ public class Log {
 			System.err.println(message);
 		}
 	}
+	
+	/**
+	 * Prints an info message with the given message and object. Use this method
+	 * to avoid intensive toString() operations if the given log level is not
+	 * allowed.
+	 * 
+	 * @param message
+	 *            the message
+	 * @param object
+	 *            the object
+	 */
+	public static void w(String message, Object object) {
+		if (isLevelAllowed(WARN)) {
+			message = toLog(message + " : " + object.toString());
+			System.out.println(message);
+		}
+	}
 
 	/**
 	 * Prints an error with the given message
@@ -101,10 +152,22 @@ public class Log {
 	 *            the message
 	 */
 	public static void e(String message) {
-		if (isLevelAllowed(ERROR)) {
-			message = toLog(message);
-			System.err.println(message);
-		}
+		message = toLog(message);
+		System.err.println(message);
+	}
+	
+	/**
+	 * Prints an info message with the given message and object. Use this method
+	 * to avoid intensive toString() operations if the given log level is not
+	 * allowed.
+	 * 
+	 * @param message
+	 *            the message
+	 * @param object
+	 *            the object
+	 */
+	public static void e(String message, Object object) {
+		e(message + " : " + object.toString());
 	}
 
 	/**
@@ -116,11 +179,9 @@ public class Log {
 	 *            the {@link Throwable}
 	 */
 	public static void e(String message, Throwable t) {
-		if (isLevelAllowed(ERROR)) {
-			message = toLog(t.getMessage());
-			System.err.println(message);
-			t.printStackTrace();
-		}
+		message = toLog(t.getMessage());
+		System.err.println(message);
+		t.printStackTrace();
 	}
 
 	/**
@@ -166,7 +227,7 @@ public class Log {
 
 		messageBuffer.append(" : ");
 		messageBuffer.append(error);
-		if(value != null) {
+		if (value != null) {
 			messageBuffer.append(" : ");
 			messageBuffer.append("'" + value + "'");
 		}

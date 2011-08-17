@@ -1,15 +1,13 @@
 package mypackage;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
+import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.UiApplication;
+import de.enough.glaze.content.ContentException;
 import de.enough.glaze.log.Log;
+import de.enough.glaze.style.StyleResources;
 import de.enough.glaze.style.StyleSheet;
-import de.enough.glaze.style.parser.CssContentHandlerImpl;
-import de.enough.glaze.style.parser.CssParser;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 
 /**
@@ -44,5 +42,20 @@ public class MyApp extends UiApplication
 		}
 		
         pushScreen(new MyScreen());
+        
+        new Thread() {
+        	public void run() {
+        		try {
+					Bitmap iconBitmap = StyleResources.getInstance().loadBitmap("/img/icon.png");
+					System.out.println(iconBitmap.getWidth() + "x" + iconBitmap.getHeight());
+					
+					Bitmap logoBitmap = StyleResources.getInstance().loadBitmap("http://www.spiegel.de/static/sys/v9/spiegelonline_logo.png;deviceside=true");
+					System.out.println(logoBitmap.getWidth() + "x" + logoBitmap.getHeight());
+				} catch (ContentException e) {
+					System.out.println(e);
+					e.printStackTrace();
+				}
+        	}
+        }.start();
     }    
 }

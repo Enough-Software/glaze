@@ -16,7 +16,7 @@ public class Style implements Definable {
 	private static final String DISABLED = "disabled";
 
 	private static final String DISABLED_FOCUSED = "disabled_focused";
-
+	
 	private Margin margin;
 
 	private Padding padding;
@@ -27,7 +27,7 @@ public class Style implements Definable {
 
 	private GzBorder border;
 
-	private Style parentStyle;
+	private Style baseStyle;
 
 	private Definition definition;
 
@@ -39,25 +39,25 @@ public class Style implements Definable {
 
 	private Style disabledFocusedStyle;
 
-	public void setParentStyle(Style parentStyle) {
-		this.parentStyle = parentStyle;
+	public void setBaseStyle(Style parentStyle) {
+		this.baseStyle = parentStyle;
 	}
 
-	public Style getParentStyle() {
-		return this.parentStyle;
+	public Style getBaseStyle() {
+		return this.baseStyle;
 	}
 
-	public void setStyle(String styleClass, Style style) {
-		if (FOCUSED.equals(styleClass)) {
+	public void setClass(String id, Style style) {
+		if (FOCUSED.equals(id)) {
 			this.focusedStyle = style;
-		} else if (ACTIVE.equals(styleClass)) {
+		} else if (ACTIVE.equals(id)) {
 			this.activeStyle = style;
-		} else if (DISABLED.equals(styleClass)) {
+		} else if (DISABLED.equals(id)) {
 			this.disabledStyle = style;
-		} else if (DISABLED_FOCUSED.equals(styleClass)) {
+		} else if (DISABLED_FOCUSED.equals(id)) {
 			this.activeStyle = style;
 		} else {
-			throw new IllegalArgumentException(styleClass
+			throw new IllegalArgumentException(id
 					+ " is not a valid style class");
 		}
 	}
@@ -69,14 +69,44 @@ public class Style implements Definable {
 	}
 
 	public Style getStyle(int visualState) {
-		if (visualState == Field.VISUAL_STATE_FOCUS) {
-			return this.focusedStyle;
+		if(this.baseStyle != null) {
+			return getStyle(this.baseStyle, visualState);
+		} else {
+			return getStyle(this, visualState);
+		}
+	}
+	
+	private Style getStyle(Style style, int visualState) {
+		if (visualState == Field.VISUAL_STATE_NORMAL) {
+			return style;
+		} else if (visualState == Field.VISUAL_STATE_FOCUS) {
+			if(style.focusedStyle != null) {
+				return style.focusedStyle;
+			} else {
+				return style;
+			}
 		} else if (visualState == Field.VISUAL_STATE_ACTIVE) {
-			return this.activeStyle;
+			if(style.activeStyle != null) {
+				return style.activeStyle;
+			} else {
+				if(style.focusedStyle != null) {
+					return style.focusedStyle;
+				} else {
+					return style;
+				}
+			}
 		} else if (visualState == Field.VISUAL_STATE_DISABLED) {
-			return this.disabledStyle;
-		} else if (visualState == Field.VISUAL_STATE_ACTIVE) {
-			return this.disabledFocusedStyle;
+			if(style.disabledStyle != null) {
+				return style.disabledStyle;
+			} else {
+				return style;
+			}
+		} else if (visualState == Field.VISUAL_STATE_DISABLED_FOCUS) {
+			if(style.disabledFocusedStyle != null) {
+				return style.disabledFocusedStyle;
+			} else {
+				return style;
+			}
 		} else {
 			throw new IllegalArgumentException(visualState
 					+ " is not a valid visual state");

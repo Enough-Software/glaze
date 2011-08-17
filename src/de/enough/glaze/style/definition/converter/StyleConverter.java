@@ -45,6 +45,8 @@ public class StyleConverter implements Converter {
 
 			addIds(MarginConverter.getInstance(), idCollection);
 			addIds(PaddingConverter.getInstance(), idCollection);
+			addIds(BorderConverter.getInstance(), idCollection);
+			addIds(BackgroundConverter.getInstance(), idCollection);
 			addIds(FontConverter.getInstance(), idCollection);
 			addIds(new String[] { "background", "border", "font" },
 					idCollection);
@@ -102,7 +104,7 @@ public class StyleConverter implements Converter {
 				GzBackground background = StyleSheet.getInstance()
 						.getBackground(backgroundId);
 				if (background != null) {
-					if (definition.hasProperties(FontConverter.getInstance())) {
+					if (definition.hasProperties(BackgroundConverter.getInstance())) {
 						Definition backgroundDefinition = background
 								.getDefinition();
 						definition.addDefinition(backgroundDefinition);
@@ -130,14 +132,14 @@ public class StyleConverter implements Converter {
 				String borderId = (String) result;
 				GzBorder border = StyleSheet.getInstance().getBorder(borderId);
 				if (border != null) {
-					if (definition.hasProperties(FontConverter.getInstance())) {
+					if (definition.hasProperties(BorderConverter.getInstance())) {
 						Definition borderDefinition = border.getDefinition();
 						definition.addDefinition(borderDefinition);
 					} else {
 						return border;
 					}
 				} else {
-					throw new CssSyntaxError("unable to resolve background",
+					throw new CssSyntaxError("unable to resolve border",
 							borderProp);
 				}
 			} else {
