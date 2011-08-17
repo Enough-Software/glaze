@@ -36,6 +36,10 @@ public class Color {
 		return this.color;
 	}
 	
+	public void someRandomMethod() {
+		
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
