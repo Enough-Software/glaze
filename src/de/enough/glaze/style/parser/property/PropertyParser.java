@@ -1,9 +1,13 @@
 package de.enough.glaze.style.parser.property;
 
+import java.util.Vector;
+
+import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.style.parser.utils.ParserUtils;
 
 public abstract class PropertyParser {
+	
 	/**
 	 * Parses the given value into an array or single value
 	 * 
@@ -21,19 +25,26 @@ public abstract class PropertyParser {
 		if (ParserUtils.isArray(value)) {
 			// parse all array values ...
 			String[] arrayValues = ParserUtils.toArray(value);
-			Object[] result = new Object[arrayValues.length];
+			Vector result = new Vector(); 
 			for (int index = 0; index < arrayValues.length; index++) {
 				String arrayValue = arrayValues[index];
-				result[index] = parse(arrayValue);
+				result.addElement(parse(arrayValue));
 			}
 			// and return the array
-			return result;
+			return toArray(result);
 			// otherwise ...
 		} else {
 			// parse and return the single value
 			return parse(value);
 		}
 	}
+	
+	/**
+	 * @param vector
+	 * @return
+	 */
+	protected abstract Object toArray(Vector vector);
+
 
 	/**
 	 * Parses a single value and returns it

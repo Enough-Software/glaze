@@ -19,16 +19,16 @@ public class StyleConverter implements Converter {
 	/**
 	 * the instance
 	 */
-	private static PaddingConverter INSTANCE;
+	private static StyleConverter INSTANCE;
 
 	/**
 	 * Returns the instance
 	 * 
 	 * @return the instance
 	 */
-	public static PaddingConverter getInstance() {
+	public static StyleConverter getInstance() {
 		if (INSTANCE == null) {
-			INSTANCE = new PaddingConverter();
+			INSTANCE = new StyleConverter();
 		}
 
 		return INSTANCE;
@@ -75,7 +75,7 @@ public class StyleConverter implements Converter {
 				definition);
 		style.setMargin(margin);
 
-		Padding padding = (Padding) MarginConverter.getInstance().convert(
+		Padding padding = (Padding) PaddingConverter.getInstance().convert(
 				definition);
 		style.setPadding(padding);
 

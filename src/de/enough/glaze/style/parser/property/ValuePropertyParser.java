@@ -1,5 +1,7 @@
 package de.enough.glaze.style.parser.property;
 
+import java.util.Vector;
+
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 
 public class ValuePropertyParser extends PropertyParser {
@@ -27,5 +29,14 @@ public class ValuePropertyParser extends PropertyParser {
 	 */
 	public Object parse(String value) throws CssSyntaxError {
 		return value;
+	}
+	
+	/* (non-Javadoc)
+	 * @see de.enough.glaze.style.parser.property.PropertyParser#toArray(java.util.Vector)
+	 */
+	protected Object toArray(Vector vector) {
+		String[] values = new String[vector.size()];
+		vector.copyInto(values);
+		return values;
 	}
 }

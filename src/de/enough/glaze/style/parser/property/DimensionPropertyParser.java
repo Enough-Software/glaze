@@ -1,5 +1,7 @@
 package de.enough.glaze.style.parser.property;
 
+import java.util.Vector;
+
 import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 
@@ -71,5 +73,14 @@ public class DimensionPropertyParser extends PropertyParser {
 		} else {
 			throw new CssSyntaxError("invalid dimension", value);
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see de.enough.glaze.style.parser.property.PropertyParser#toArray(java.util.Vector)
+	 */
+	protected Object toArray(Vector vector) {
+		Dimension[] dimension = new Dimension[vector.size()];
+		vector.copyInto(dimension);
+		return dimension;
 	}
 }
