@@ -26,7 +26,7 @@ public class Color {
 		DEFAULT_COLORS.put("yellow", new Color(0xffff00) );
 	}
 	
-	private int color;
+	private int color; 
 	
 	public Color(int color) {
 		this.color = color;
