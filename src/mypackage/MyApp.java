@@ -36,7 +36,7 @@ public class MyApp extends UiApplication
     {        
     	Log.setLevel(Log.DEBUG);
         try {
-			StyleSheet.getInstance().load("/test.css");
+			StyleSheet.getInstance().load("/mytest.css");
 		} catch (IOException e) {
 			System.out.println(e);
 		} catch (CssSyntaxError e) {

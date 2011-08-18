@@ -1,5 +1,7 @@
 package mypackage;
 
+import net.rim.device.api.system.Bitmap;
+import net.rim.device.api.system.EncodedImage;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Font;
 import net.rim.device.api.ui.Ui;
@@ -9,6 +11,11 @@ import net.rim.device.api.ui.container.MainScreen;
 import net.rim.device.api.ui.decor.Border;
 import net.rim.device.api.ui.decor.BorderFactory;
 import de.enough.glaze.style.Color;
+import de.enough.glaze.style.Dimension;
+import de.enough.glaze.style.background.HorizontalGradientBackground;
+import de.enough.glaze.style.background.RoundrectBackground;
+import de.enough.glaze.style.background.VerticalGradientBackground;
+import de.enough.glaze.style.background.ImageBackground;
 import de.enough.glaze.style.background.SolidBackground;
 import de.enough.glaze.ui.component.GzButtonField;
 import de.enough.glaze.ui.component.GzTextField;
@@ -47,6 +54,31 @@ public final class MyScreen extends MainScreen
         labelField.setBackground(VISUAL_STATE_ACTIVE, new SolidBackground(new Color(0x00FFFF)));
         Font myFont = Font.getDefault().derive(Font.BOLD | Font.UNDERLINED | Font.ITALIC, 50, Ui.UNITS_px);
         labelField.setFont(myFont);
+        manager.add(labelField);
+        
+        Bitmap image = EncodedImage.getEncodedImageResource("img/icon.png").getBitmap();
+        labelField = new GzTextField(Field.USE_ALL_WIDTH);
+        myFont = Font.getDefault().derive(Font.BOLD | Font.UNDERLINED | Font.ITALIC, 150, Ui.UNITS_px);
+        labelField.setFont(myFont);
+        labelField.setBackground(VISUAL_STATE_NORMAL, new ImageBackground(image, ImageBackground.POSITION_BOTTOM | ImageBackground.POSITION_RIGHT, ImageBackground.REPEAT_X));
+        labelField.setBackground(VISUAL_STATE_FOCUS, new ImageBackground(image, ImageBackground.POSITION_BOTTOM | ImageBackground.POSITION_RIGHT, ImageBackground.REPEAT_Y | ImageBackground.REPEAT_X ));
+        labelField.setBackground(VISUAL_STATE_ACTIVE, new ImageBackground(image, ImageBackground.POSITION_BOTTOM | ImageBackground.POSITION_RIGHT, 0));
+        manager.add(labelField);
+        
+        labelField = new GzTextField(Field.USE_ALL_WIDTH);
+        myFont = Font.getDefault().derive(Font.BOLD | Font.UNDERLINED | Font.ITALIC, 150, Ui.UNITS_px);
+        labelField.setFont(myFont);
+        labelField.setBackground(new VerticalGradientBackground(new Color[] { new Color(0xAA00FF00), new Color(0xAAFF0000) },
+        		new Dimension[] { new Dimension(20,Dimension.UNIT_PERCENT), new Dimension(80,Dimension.UNIT_PERCENT)}));
+        labelField.setBackground(VISUAL_STATE_FOCUS, new HorizontalGradientBackground(new Color[] { new Color(0xAA00FF00), new Color(0xAAFF0000) },
+        		new Dimension[] { new Dimension(20,Dimension.UNIT_PERCENT), new Dimension(80,Dimension.UNIT_PERCENT)}));
+        manager.add(labelField);
+        
+        labelField = new GzTextField(Field.USE_ALL_WIDTH);
+        myFont = Font.getDefault().derive(Font.BOLD | Font.UNDERLINED | Font.ITALIC, 150, Ui.UNITS_px);
+        labelField.setFont(myFont);        
+        labelField.setBackground(new RoundrectBackground(new Color(0xAA00FF00), new Dimension[] {
+        	new Dimension(20,Dimension.UNIT_PX), new Dimension(15,Dimension.UNIT_PERCENT), null, new Dimension(2,Dimension.UNIT_PERCENT) }));
         manager.add(labelField);
         
         add(manager);
