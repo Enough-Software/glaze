@@ -49,6 +49,10 @@ public class Padding {
 	public void setRight(Dimension right) {
 		this.right = right;
 	}
+	
+	public void setRight123123(Dimension right) {
+		this.right = right;
+	}
 
 	public void set(Dimension dimension) {
 		setTop(dimension);
