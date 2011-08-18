@@ -1,11 +1,15 @@
 package de.enough.glaze.style.handler;
 
+import java.util.Enumeration;
+
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Font;
 import net.rim.device.api.ui.XYEdges;
 import de.enough.glaze.style.Margin;
 import de.enough.glaze.style.Padding;
 import de.enough.glaze.style.Style;
+import de.enough.glaze.style.extension.Extension;
+import de.enough.glaze.style.extension.Processor;
 import de.enough.glaze.style.font.GzFont;
 
 public class FieldStyleHandler {
@@ -14,34 +18,42 @@ public class FieldStyleHandler {
 
 	private Style style;
 
-	private int visualState;
+	private int visualState = Integer.MIN_VALUE;
 
 	public FieldStyleHandler(Field field) {
 		this.field = field;
-		updateVisualState();
 	}
 
 	public void setStyle(Style style) {
 		this.style = style;
+		applyBackgrounds();
+		applyBorders();
+		applyFont();
+		applyExtensions();
 	}
 
-	public void updateStyle(int visualState) {
+	public void updateStyle(int availableWidth) {
+		int visualState = this.field.getVisualState();
 		this.style = this.style.getStyle(visualState);
+		applyMargin(availableWidth);
+		applyPadding(availableWidth);
+		applyFont();
+		applyExtensions();
 	}
 
-	public void applyMargin(int availableWidth) {
+	protected void applyMargin(int availableWidth) {
 		Margin margin = this.style.getMargin();
 		XYEdges marginEdges = margin.toXYEdges(availableWidth);
 		this.field.setMargin(marginEdges);
 	}
 
-	public void applyPadding(int availableWidth) {
+	protected void applyPadding(int availableWidth) {
 		Padding padding = this.style.getPadding();
 		XYEdges paddingEdges = padding.toXYEdges(availableWidth);
 		this.field.setPadding(paddingEdges);
 	}
 
-	public void applyBackgrounds() {
+	protected void applyBackgrounds() {
 		Style normalStyle = this.style.getStyle(Field.VISUAL_STATE_NORMAL);
 		this.field.setBackground(Field.VISUAL_STATE_NORMAL,
 				normalStyle.getBackground());
@@ -64,7 +76,7 @@ public class FieldStyleHandler {
 				disabledFocusStyle.getBackground());
 	}
 
-	public void applyBorders() {
+	protected void applyBorders() {
 		Style normalStyle = this.style.getStyle(Field.VISUAL_STATE_NORMAL);
 		this.field.setBorder(Field.VISUAL_STATE_NORMAL,
 				normalStyle.getBorder());
@@ -87,12 +99,22 @@ public class FieldStyleHandler {
 				disabledFocusStyle.getBorder());
 	}
 
-	public void applyFont() {
+	protected void applyFont() {
 		GzFont font = this.style.getFont();
 		if (font != null) {
 			this.field.setFont(font.getFont());
 		} else {
 			this.field.setFont(Font.getDefault());
+		}
+	}
+	
+	protected void applyExtensions() {
+		Enumeration extensions = this.style.getExtensions();
+		while(extensions.hasMoreElements()) {
+			Extension extension = (Extension)extensions.nextElement();
+			Object extensionData = this.style.getExtensionData(extension);
+			Processor processor = extension.getProcessor();
+			processor.process(this.field, extensionData);
 		}
 	}
 

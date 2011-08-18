@@ -14,11 +14,12 @@ content {
 	background-color: silver;
 	margin: 5%;
 	padding: 2%;
+	my-dimension: 0.5%;
 }
 
 textfield {
-	font-size: 1cm;
-	padding: 1cm;
+	font-size: 8pt;
+	padding: 5%;
 	background-color: white;
 	border: textfield;
 }

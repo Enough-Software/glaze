@@ -37,7 +37,7 @@ public class DimensionPropertyParser extends PropertyParser {
 		for (; index < value.length(); index++) {
 			char character = value.charAt(index);
 			// while the characters in the value are digits ...
-			if (Character.isDigit(character)) {
+			if (Character.isDigit(character) || character == ',' || character == '.') {
 				// append the digit to the value buffer
 				valueBuffer.append(character);
 			} else {
@@ -45,10 +45,10 @@ public class DimensionPropertyParser extends PropertyParser {
 			}
 		}
 
-		int dimensionValue;
+		float dimensionValue;
 		try {
 			// parse the value buffer for the dimensional value
-			dimensionValue = Integer.parseInt(valueBuffer.toString());
+			dimensionValue = Float.parseFloat(valueBuffer.toString());
 		} catch (NumberFormatException e) {
 			throw new CssSyntaxError("invalid dimension", value);
 		}

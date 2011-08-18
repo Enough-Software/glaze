@@ -1,13 +1,17 @@
 package de.enough.glaze.style;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Vector;
 
 import de.enough.glaze.style.background.GzBackground;
 import de.enough.glaze.style.border.GzBorder;
+import de.enough.glaze.style.definition.converter.Converter;
+import de.enough.glaze.style.extension.Extension;
+import de.enough.glaze.style.extension.Processor;
 import de.enough.glaze.style.font.GzFont;
 import de.enough.glaze.style.parser.CssContentHandlerImpl;
 import de.enough.glaze.style.parser.CssParser;
@@ -17,15 +21,17 @@ public class StyleSheet {
 
 	private static StyleSheet INSTANCE;
 
-	private Hashtable colors;
+	private final Hashtable colors;
 
-	private Hashtable backgrounds;
+	private final Hashtable backgrounds;
 
-	private Hashtable borders;
+	private final Hashtable borders;
 
-	private Hashtable fonts;
+	private final Hashtable fonts;
 
-	private Hashtable styles;
+	private final Hashtable styles;
+	
+	private final Vector extensions;
 
 	public static StyleSheet getInstance() {
 		if (INSTANCE == null) {
@@ -41,6 +47,7 @@ public class StyleSheet {
 		this.borders = new Hashtable();
 		this.fonts = new Hashtable();
 		this.styles = new Hashtable();
+		this.extensions = new Vector();
 	}
 
 	public void load(String url) throws IOException, CssSyntaxError {
@@ -96,4 +103,17 @@ public class StyleSheet {
 	public Style getStyle(String id) {
 		return (Style) this.styles.get(id);
 	}
+	
+	public void addExtension(Converter converter, Processor processor) {
+		Extension extension = new Extension(converter, processor);
+		addExtension(extension);
+	}
+	
+	public void addExtension(Extension extension) {
+		this.extensions.addElement(extension);
+	}
+	
+	public Enumeration getExtensions() {
+		return this.extensions.elements();
+	} 
 }

@@ -1,5 +1,6 @@
 package de.enough.glaze.style.definition.converter;
 
+import java.util.Enumeration;
 import java.util.Vector;
 
 import de.enough.glaze.style.Margin;
@@ -9,6 +10,7 @@ import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.background.GzBackground;
 import de.enough.glaze.style.border.GzBorder;
 import de.enough.glaze.style.definition.Definition;
+import de.enough.glaze.style.extension.Extension;
 import de.enough.glaze.style.font.GzFont;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.style.parser.property.Property;
@@ -48,9 +50,17 @@ public class StyleConverter implements Converter {
 			addIds(BorderConverter.getInstance(), idCollection);
 			addIds(BackgroundConverter.getInstance(), idCollection);
 			addIds(FontConverter.getInstance(), idCollection);
+			
+			Enumeration extensions = StyleSheet.getInstance().getExtensions();
+			while(extensions.hasMoreElements()) {
+				Extension extension = (Extension)extensions.nextElement();
+				Converter extensionConverter = extension.getConverter();
+				addIds(extensionConverter, idCollection);
+			}
+			
 			addIds(new String[] { "background", "border", "font" },
 					idCollection);
-
+			
 			this.ids = new String[idCollection.size()];
 			idCollection.copyInto(this.ids);
 		}
@@ -89,6 +99,16 @@ public class StyleConverter implements Converter {
 
 		GzFont font = convertFont(definition);
 		style.setFont(font);
+		
+		Enumeration extensions = StyleSheet.getInstance().getExtensions();
+		while(extensions.hasMoreElements()) {
+			Extension extension = (Extension)extensions.nextElement();
+			Converter extensionConverter = extension.getConverter();
+			Object result = extensionConverter.convert(definition);
+			if(result != null) {
+				style.addExtension(extension, result);
+			}
+		}
 
 		return style;
 	}

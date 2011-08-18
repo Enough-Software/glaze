@@ -1,10 +1,14 @@
 package de.enough.glaze.style;
 
+import java.util.Enumeration;
+import java.util.Hashtable;
+
 import net.rim.device.api.ui.Field;
 import de.enough.glaze.style.background.GzBackground;
 import de.enough.glaze.style.border.GzBorder;
 import de.enough.glaze.style.definition.Definable;
 import de.enough.glaze.style.definition.Definition;
+import de.enough.glaze.style.extension.Extension;
 import de.enough.glaze.style.font.GzFont;
 
 public class Style implements Definable {
@@ -26,6 +30,8 @@ public class Style implements Definable {
 	private GzFont font;
 
 	private GzBorder border;
+	
+	private final Hashtable extensions;
 
 	private Style baseStyle;
 
@@ -38,9 +44,13 @@ public class Style implements Definable {
 	private Style disabledStyle;
 
 	private Style disabledFocusedStyle;
-
-	public void setBaseStyle(Style parentStyle) {
-		this.baseStyle = parentStyle;
+	
+	public Style() {
+		this.extensions = new Hashtable();
+	}
+	
+	public void setBaseStyle(Style baseStyle) {
+		this.baseStyle = baseStyle;
 	}
 
 	public Style getBaseStyle() {
@@ -62,10 +72,10 @@ public class Style implements Definable {
 		}
 	}
 
-	public static boolean isValidClass(String styleClass) {
-		return (FOCUSED.equals(styleClass) || ACTIVE.equals(styleClass)
-				|| DISABLED.equals(styleClass) || DISABLED_FOCUSED
-				.equals(styleClass));
+	public static boolean isClass(String id) {
+		return (FOCUSED.equals(id) || ACTIVE.equals(id)
+				|| DISABLED.equals(id) || DISABLED_FOCUSED
+				.equals(id));
 	}
 
 	public Style getStyle(int visualState) {
@@ -159,5 +169,17 @@ public class Style implements Definable {
 
 	public Definition getDefinition() {
 		return this.definition;
+	}
+	
+	public void addExtension(Extension extension, Object object) {
+		this.extensions.put(extension, object);
+	}
+	
+	public Enumeration getExtensions() {
+		return this.extensions.keys();
+	}
+	
+	public Object getExtensionData(Extension extension) {
+		return this.extensions.get(extension);
 	}
 }

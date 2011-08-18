@@ -54,7 +54,7 @@ public class Dimension {
 	/**
 	 * the value
 	 */
-	private final int value;
+	private final float value;
 
 	/**
 	 * the unit
@@ -84,7 +84,7 @@ public class Dimension {
 	 * @param unit
 	 *            the unit
 	 */
-	public Dimension(int value, String unit) {
+	public Dimension(float value, String unit) {
 		this.value = value;
 		this.unit = unit;
 	}
@@ -122,17 +122,22 @@ public class Dimension {
 	 */
 	private int getValue(int availableWidth, int deviceWidth) {
 		if (UNIT_PX.equals(this.unit)) {
-			this.pixels = this.value;
+			this.pixels = MathUtilities.round(this.value);
 		} else if (UNIT_CM.equals(this.unit)) {
-			this.pixels = Ui.convertSize(this.value, Ui.UNITS_cm, Ui.UNITS_px);
+			float mmFloatValue = this.value * 10;
+			int mmValue = MathUtilities.round(mmFloatValue);
+			this.pixels = Ui.convertSize(mmValue, Ui.UNITS_mm, Ui.UNITS_px);
 		} else if (UNIT_MM.equals(this.unit)) {
-			this.pixels = Ui.convertSize(this.value, Ui.UNITS_mm, Ui.UNITS_px);
+			int mmValue = MathUtilities.round(this.value);
+			this.pixels = Ui.convertSize(mmValue, Ui.UNITS_mm, Ui.UNITS_px);
 		} else if (UNIT_INCH.equals(this.unit)) {
 			float cmValue = (float) this.value / (float) CONVERT_INCH_CM;
-			int mmValue = MathUtilities.round(cmValue / 10);
+			float mmFloatValue = cmValue * 10;
+			int mmValue = MathUtilities.round(mmFloatValue);
 			this.pixels = Ui.convertSize(mmValue, Ui.UNITS_mm, Ui.UNITS_px);
 		} else if (UNIT_PT.equals(this.unit)) {
-			this.pixels = Ui.convertSize(this.value, Ui.UNITS_pt, Ui.UNITS_px);
+			int ptValue = MathUtilities.round(this.value); 
+			this.pixels = Ui.convertSize(ptValue, Ui.UNITS_pt, Ui.UNITS_px);
 		} else if (UNIT_PERCENT.equals(this.unit)) {
 			if (availableWidth != this.availableWidth) {
 				float pxValue = ((float) availableWidth / 100) * this.value;

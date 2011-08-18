@@ -37,9 +37,6 @@ public class VerticalFieldManager extends net.rim.device.api.ui.container.Vertic
 			FieldStyleHandler handler = this.handlers.get(field);
 			Style style = StyleSheet.getInstance().getStyle(id);
 			handler.setStyle(style);
-			handler.applyBackgrounds();
-			handler.applyBorders();
-			handler.applyFont();
 		}
 	}
 
@@ -110,15 +107,11 @@ public class VerticalFieldManager extends net.rim.device.api.ui.container.Vertic
 	 */
 	protected void sublayout(int maxWidth, int maxHeight) {
 		for (int index = 0; index < getFieldCount(); index++) {
-			Field field = getField(index);
 			FieldStyleHandler handler = this.handlers.get(index);
 			if(handler.isVisualStateChanged()) {
-				handler.updateStyle(field.getVisualState());
+				handler.updateStyle(maxWidth);
 				handler.updateVisualState();
 			}
-			handler.applyMargin(maxWidth);
-			handler.applyPadding(maxWidth);
-			handler.applyFont();
 		}
 		
 		super.sublayout(maxWidth, maxHeight);

@@ -117,7 +117,7 @@ public class CssContentHandlerImpl implements CssContentHandler {
 					this.styleDefinition = new Definition();
 				} else {
 					if (this.styleClass != null) {
-						if (Style.isValidClass(this.styleClass)) {
+						if (Style.isClass(this.styleClass)) {
 							this.styleBase = this.stylesheet
 									.getStyle(this.styleId);
 							Log.d("style class : " + blockId + " : "
