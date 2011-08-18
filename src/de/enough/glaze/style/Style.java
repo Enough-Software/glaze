@@ -13,7 +13,7 @@ import de.enough.glaze.style.font.GzFont;
 
 public class Style implements Definable {
 
-	private static final String FOCUSED = "focused";
+	private static final String FOCUS = "focus";
 
 	private static final String ACTIVE = "active";
 
@@ -37,7 +37,7 @@ public class Style implements Definable {
 
 	private Definition definition;
 
-	private Style focusedStyle;
+	private Style focusStyle;
 
 	private Style activeStyle;
 
@@ -58,8 +58,8 @@ public class Style implements Definable {
 	}
 
 	public void setClass(String id, Style style) {
-		if (FOCUSED.equals(id)) {
-			this.focusedStyle = style;
+		if (FOCUS.equals(id)) {
+			this.focusStyle = style;
 		} else if (ACTIVE.equals(id)) {
 			this.activeStyle = style;
 		} else if (DISABLED.equals(id)) {
@@ -73,7 +73,7 @@ public class Style implements Definable {
 	}
 
 	public static boolean isClass(String id) {
-		return (FOCUSED.equals(id) || ACTIVE.equals(id)
+		return (FOCUS.equals(id) || ACTIVE.equals(id)
 				|| DISABLED.equals(id) || DISABLED_FOCUSED
 				.equals(id));
 	}
@@ -90,8 +90,8 @@ public class Style implements Definable {
 		if (visualState == Field.VISUAL_STATE_NORMAL) {
 			return style;
 		} else if (visualState == Field.VISUAL_STATE_FOCUS) {
-			if(style.focusedStyle != null) {
-				return style.focusedStyle;
+			if(style.focusStyle != null) {
+				return style.focusStyle;
 			} else {
 				return style;
 			}
@@ -99,8 +99,8 @@ public class Style implements Definable {
 			if(style.activeStyle != null) {
 				return style.activeStyle;
 			} else {
-				if(style.focusedStyle != null) {
-					return style.focusedStyle;
+				if(style.focusStyle != null) {
+					return style.focusStyle;
 				} else {
 					return style;
 				}
