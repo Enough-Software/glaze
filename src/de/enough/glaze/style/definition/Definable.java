@@ -5,4 +5,6 @@ public interface Definable {
 	public void setDefinition(Definition definition);
 	
 	public Definition getDefinition();
+	
+	public void finalize();
 }

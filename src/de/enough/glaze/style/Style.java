@@ -162,14 +162,6 @@ public class Style implements Definable {
 	public void setBorder(GzBorder border) {
 		this.border = border;
 	}
-
-	public void setDefinition(Definition definition) {
-		this.definition = definition;
-	}
-
-	public Definition getDefinition() {
-		return this.definition;
-	}
 	
 	public void addExtension(Extension extension, Object object) {
 		this.extensions.put(extension, object);
@@ -181,5 +173,17 @@ public class Style implements Definable {
 	
 	public Object getExtensionData(Extension extension) {
 		return this.extensions.get(extension);
+	}
+	
+	public void setDefinition(Definition definition) {
+		this.definition = definition;
+	}
+
+	public Definition getDefinition() {
+		return this.definition;
+	}
+	
+	public void finalize() {
+		this.definition = null;
 	}
 }

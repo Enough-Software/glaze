@@ -15,5 +15,9 @@ public abstract class GzBackground extends Background implements Definable {
 	public Definition getDefinition() {
 		return this.definition;
 	}
+	
+	public void finalize() {
+		this.definition = null;
+	}
 
 }

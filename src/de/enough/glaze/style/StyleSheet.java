@@ -9,6 +9,7 @@ import java.util.Vector;
 
 import de.enough.glaze.style.background.GzBackground;
 import de.enough.glaze.style.border.GzBorder;
+import de.enough.glaze.style.definition.Definable;
 import de.enough.glaze.style.definition.converter.Converter;
 import de.enough.glaze.style.extension.Extension;
 import de.enough.glaze.style.extension.Processor;
@@ -30,8 +31,10 @@ public class StyleSheet {
 	private final Hashtable fonts;
 
 	private final Hashtable styles;
-	
+
 	private final Vector extensions;
+
+	private final Vector listeners;
 
 	public static StyleSheet getInstance() {
 		if (INSTANCE == null) {
@@ -48,14 +51,70 @@ public class StyleSheet {
 		this.fonts = new Hashtable();
 		this.styles = new Hashtable();
 		this.extensions = new Vector();
+		this.listeners = new Vector();
 	}
 
-	public void load(String url) throws IOException, CssSyntaxError {
-		InputStream stream = getClass().getResourceAsStream(url);
-		load(stream);
+	public void addListener(StyleSheetListener listener) {
+		if (!this.listeners.contains(listener)) {
+			this.listeners.addElement(listener);
+		}
 	}
 
-	public void load(InputStream stream) throws IOException, CssSyntaxError {
+	public void removeListener(StyleSheetListener listener) {
+		if (this.listeners.contains(listener)) {
+			this.listeners.removeElement(listener);
+		}
+	}
+
+	private void notifyLoaded(String url) {
+		for (int index = 0; index < this.listeners.size(); index++) {
+			StyleSheetListener listener = (StyleSheetListener) this.listeners
+					.elementAt(index);
+			listener.onLoaded(url);
+		}
+	}
+
+	private void notifySyntaxError(CssSyntaxError syntaxError) {
+		for (int index = 0; index < this.listeners.size(); index++) {
+			StyleSheetListener listener = (StyleSheetListener) this.listeners
+					.elementAt(index);
+			listener.onSyntaxError(syntaxError);
+		}
+	}
+
+	private void notifyError(Exception exception) {
+		for (int index = 0; index < this.listeners.size(); index++) {
+			StyleSheetListener listener = (StyleSheetListener) this.listeners
+					.elementAt(index);
+			listener.onError(exception);
+		}
+	}
+
+	public void load(final String url, StyleSheetListener listener) {
+		addListener(listener);
+
+		new Thread() {
+			public void run() {
+				try {
+					load(url);
+					notifyLoaded(url);
+				} catch (CssSyntaxError e) {
+					notifySyntaxError(e);
+				} catch (Exception e) {
+					notifyError(e);
+				}
+			}
+		}.start();
+	}
+
+	public void load(final String url) throws IOException, CssSyntaxError {
+		synchronized (this) {
+			InputStream stream = new URL(url).openStream();
+			load(stream);
+		}
+	}
+
+	private void load(InputStream stream) throws IOException, CssSyntaxError {
 		InputStreamReader reader = new InputStreamReader(stream);
 		CssParser cssParser = new CssParser(reader);
 		CssContentHandlerImpl cssContentHandler = new CssContentHandlerImpl(
@@ -103,17 +162,33 @@ public class StyleSheet {
 	public Style getStyle(String id) {
 		return (Style) this.styles.get(id);
 	}
-	
+
 	public void addExtension(Converter converter, Processor processor) {
 		Extension extension = new Extension(converter, processor);
 		addExtension(extension);
 	}
-	
+
 	public void addExtension(Extension extension) {
 		this.extensions.addElement(extension);
 	}
-	
+
 	public Enumeration getExtensions() {
 		return this.extensions.elements();
-	} 
+	}
+
+	public void finalize() {
+		synchronized (this) {
+			finalize(this.backgrounds.elements());
+			finalize(this.borders.elements());
+			finalize(this.fonts.elements());
+			finalize(this.styles.elements());
+		}
+	}
+
+	private void finalize(Enumeration enumeration) {
+		while (enumeration.hasMoreElements()) {
+			Definable definable = (Definable) enumeration.nextElement();
+			definable.finalize();
+		}
+	}
 }

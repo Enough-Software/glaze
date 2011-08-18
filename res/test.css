@@ -1,11 +1,10 @@
+colors {
+	myColor: #FFFFFFFF;
+}
+
 borders {
-	textfield {
+	textfield_focus {
 		width: 1%;
-	 	color: silver;
-	 	style: solid;
-	}
-	
-	textfield_focus extends textfield {
 		color: red;
 	}
 }
@@ -14,17 +13,16 @@ content {
 	background-color: silver;
 	margin: 5%;
 	padding: 2%;
-	my-dimension: 0.5%;
 }
 
 textfield {
 	font-size: 8pt;
 	padding: 5%;
+	margin: 1%;
 	background-color: white;
-	border: textfield;
 }
 
 textfield:focused {
+	margin: 0;
 	border: textfield_focus;
-	border-color: blue;
 }

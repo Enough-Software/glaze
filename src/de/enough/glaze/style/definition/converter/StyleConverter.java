@@ -80,6 +80,8 @@ public class StyleConverter implements Converter {
 	}
 
 	public Object convert(Definition definition) throws CssSyntaxError {
+		validate(definition);
+		
 		Style style = new Style();
 		style.setDefinition(definition);
 
@@ -193,6 +195,27 @@ public class StyleConverter implements Converter {
 		}
 
 		return (GzFont) FontConverter.getInstance().convert(definition);
+	}
+	
+	public void validate(Definition definition) throws CssSyntaxError {
+		Enumeration properties = definition.getProperties();
+		while(properties.hasMoreElements()) {
+			Property property = (Property)properties.nextElement();
+			validate(property);
+		}
+	}
+	
+	private void validate(Property property) throws CssSyntaxError {
+		String[] ids = getIds();
+		String propertyId = property.getId();
+		for (int index = 0; index < ids.length; index++) {
+			String id = ids[index];
+			if (id.equals(propertyId)) {
+				return;
+			}
+		}
+
+		throw new CssSyntaxError("unknown property", property.getId(), property.getLine());
 	}
 
 }
