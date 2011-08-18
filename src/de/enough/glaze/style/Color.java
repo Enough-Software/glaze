@@ -2,6 +2,8 @@ package de.enough.glaze.style;
 
 import java.util.Hashtable;
 
+import net.rim.device.api.ui.Graphics;
+
 public class Color {
 	
 	public static Hashtable DEFAULT_COLORS = new Hashtable();
@@ -26,10 +28,27 @@ public class Color {
 		DEFAULT_COLORS.put("yellow", new Color(0xffff00) );
 	}
 	
-	private int color;
+	private static final int RGB_MASK = 0x00FFFFFF;
 	
-	public Color(int color) {
-		this.color = color;
+	private static final int ALPHA_MASK = 0xFF000000;
+	
+	private final int color;
+	
+	private final int rgb;
+	
+	private final int alpha;
+	
+	public Color(int argb) {
+		this.color = argb;
+		this.rgb = argb & RGB_MASK;
+		System.out.println(Integer.toHexString(this.rgb));
+		this.alpha = (argb & ALPHA_MASK) >> 32;
+		System.out.println(Integer.toHexString(this.alpha));
+	}
+	
+	public void set(Graphics graphics) {
+		graphics.setGlobalAlpha(this.alpha);
+		graphics.setColor(this.rgb);
 	}
 	
 	public int getColor() {
