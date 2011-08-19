@@ -68,10 +68,10 @@ public class RoundedBackgroundConverter implements Converter {
 				arcs = DimensionConverterUtils.toArray(dimension, 1);
 			} else if (result instanceof Dimension[]) {
 				Dimension[] dimensions = (Dimension[]) result;
-				if (dimensions.length <= 4) {
+				if (dimensions.length == 4) {
 					arcs = dimensions;
 				} else {
-					throw new CssSyntaxError("must be 1,2,3 or 4 dimensions",
+					throw new CssSyntaxError("must be 1 or 4 dimensions",
 							backgroundArcsProp);
 				}
 			}
