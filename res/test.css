@@ -9,8 +9,16 @@ borders {
 	}
 }
 
+backgrounds {
+	content {
+		type: rounded;
+		color: blue;
+		arcs: 5% 5% 5% 5%;
+	}
+}
+
 content {
-	background-color: silver;
+	background: content;
 	margin: 5%;
 	padding: 2%;
 }
@@ -22,7 +30,7 @@ textfield {
 	background-color: white;
 }
 
-textfield:focused {
+textfield:focus {
 	margin: 0;
 	border: textfield_focus;
 }

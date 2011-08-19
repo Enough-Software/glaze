@@ -5,12 +5,12 @@ import net.rim.device.api.ui.XYRect;
 import de.enough.glaze.style.Color;
 import de.enough.glaze.style.Dimension;
 
-public class RoundrectBackground extends GzBackground {
+public class RoundedBackground extends GzBackground {
 
 	private final int color;
 	private final Dimension [] dimensions;
 	
-	public RoundrectBackground(Color color, Dimension [] dimensions) {
+	public RoundedBackground(Color color, Dimension [] dimensions) {
 		this.color = color.getColor();
 		this.dimensions = dimensions;
 	}

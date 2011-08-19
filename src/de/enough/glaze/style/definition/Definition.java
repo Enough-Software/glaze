@@ -57,6 +57,18 @@ public class Definition {
 	public Property getProperty(String propertyId) {
 		return (Property) this.properties.get(propertyId);
 	}
+	
+	public Property getProperty(String[] propertyIds) {
+		for (int index = 0; index < propertyIds.length; index++) {
+			String propertyId = propertyIds[index];
+			Object property = this.properties.get(propertyId);
+			if(property != null) {
+				return (Property)property;
+			}
+		}
+		
+		return null;
+	}
 
 	public Enumeration getProperties() {
 		return this.properties.elements();

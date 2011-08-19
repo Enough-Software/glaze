@@ -30,4 +30,12 @@ public class DimensionConverterUtils {
 			throw new CssSyntaxError("must be 1,2,3 or 4 dimensions", dimensionProp);
 		}
 	}
+	
+	public static Dimension[] toArray(Dimension dimension, int size) {
+		Dimension[] dimensions = new Dimension[size];
+		for (int index = 0; index < dimensions.length; index++) {
+			dimensions[index] = dimension;
+		}
+		return dimensions;
+	}
 }

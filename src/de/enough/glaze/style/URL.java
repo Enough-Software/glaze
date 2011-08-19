@@ -38,4 +38,11 @@ public class URL {
 			return stream;
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return this.url;
+	}
 }

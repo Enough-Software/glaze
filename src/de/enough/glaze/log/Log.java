@@ -80,7 +80,7 @@ public class Log {
 	 */
 	public static void d(String message, Object object) {
 		if (isLevelAllowed(DEBUG)) {
-			message = toLog(message + " : " + object.toString());
+			message = toLog(message + " : " + object);
 			System.out.println(message);
 		}
 	}
@@ -110,7 +110,7 @@ public class Log {
 	 */
 	public static void i(String message, Object object) {
 		if (isLevelAllowed(INFO)) {
-			message = toLog(message + " : " + object.toString());
+			message = toLog(message + " : " + object);
 			System.out.println(message);
 		}
 	}
@@ -140,7 +140,7 @@ public class Log {
 	 */
 	public static void w(String message, Object object) {
 		if (isLevelAllowed(WARN)) {
-			message = toLog(message + " : " + object.toString());
+			message = toLog(message + " : " + object);
 			System.out.println(message);
 		}
 	}
@@ -167,7 +167,7 @@ public class Log {
 	 *            the object
 	 */
 	public static void e(String message, Object object) {
-		e(message + " : " + object.toString());
+		e(message + " : " + object);
 	}
 
 	/**
