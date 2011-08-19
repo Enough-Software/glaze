@@ -101,7 +101,7 @@ public class GzBackgroundFactory {
 	 *            the offsets
 	 * @return the created background
 	 */
-	public static GzBackground createVerticalGradientBackground(String orientation,
+	public static GzBackground createGradientBackground(String orientation,
 			Color[] colors, Dimension[] offsets) {
 		// a gradient background
 		// - orientation : a static value, either "vertical" or "horizontal"

@@ -13,6 +13,7 @@ import net.rim.device.api.ui.decor.BorderFactory;
 import de.enough.glaze.style.Color;
 import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.background.HorizontalGradientBackground;
+import de.enough.glaze.style.background.PatchBackground;
 import de.enough.glaze.style.background.RoundrectBackground;
 import de.enough.glaze.style.background.VerticalGradientBackground;
 import de.enough.glaze.style.background.ImageBackground;
@@ -56,6 +57,8 @@ public final class MyScreen extends MainScreen
         labelField.setFont(myFont);
         manager.add(labelField);
         
+        
+        
         Bitmap image = EncodedImage.getEncodedImageResource("img/icon.png").getBitmap();
         labelField = new GzTextField(Field.USE_ALL_WIDTH);
         myFont = Font.getDefault().derive(Font.BOLD | Font.UNDERLINED | Font.ITALIC, 150, Ui.UNITS_px);
@@ -63,6 +66,15 @@ public final class MyScreen extends MainScreen
         labelField.setBackground(VISUAL_STATE_NORMAL, new ImageBackground(image, ImageBackground.POSITION_BOTTOM | ImageBackground.POSITION_RIGHT, ImageBackground.REPEAT_X));
         labelField.setBackground(VISUAL_STATE_FOCUS, new ImageBackground(image, ImageBackground.POSITION_BOTTOM | ImageBackground.POSITION_RIGHT, ImageBackground.REPEAT_Y | ImageBackground.REPEAT_X ));
         labelField.setBackground(VISUAL_STATE_ACTIVE, new ImageBackground(image, ImageBackground.POSITION_BOTTOM | ImageBackground.POSITION_RIGHT, 0));
+        manager.add(labelField);
+        
+        image = EncodedImage.getEncodedImageResource("img/patch.png").getBitmap();
+        labelField = new GzTextField(Field.USE_ALL_WIDTH);
+        myFont = Font.getDefault().derive(Font.BOLD | Font.UNDERLINED | Font.ITALIC, 150, Ui.UNITS_px);
+        labelField.setFont(myFont);
+        PatchBackground patchBg = new PatchBackground(image, new Dimension [] { new Dimension(10, Dimension.UNIT_PX), new Dimension(10, Dimension.UNIT_PX), new Dimension(30, Dimension.UNIT_PX), new Dimension(10, Dimension.UNIT_PX) },
+        		new Dimension [] { new Dimension(10, Dimension.UNIT_PX), new Dimension(10, Dimension.UNIT_PX), new Dimension(10, Dimension.UNIT_PX), new Dimension(10, Dimension.UNIT_PX) });
+        labelField.setBackground(patchBg);
         manager.add(labelField);
         
         labelField = new GzTextField(Field.USE_ALL_WIDTH);
