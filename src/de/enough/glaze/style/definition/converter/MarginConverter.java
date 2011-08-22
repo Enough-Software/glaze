@@ -52,7 +52,7 @@ public class MarginConverter implements Converter {
 	 */
 	public Object convert(Definition definition) throws CssSyntaxError {
 		if (!definition.hasProperties(this)) {
-			return Margin.ZERO;
+			return null;
 		}
 
 		Property marginProp = definition.getProperty("margin");

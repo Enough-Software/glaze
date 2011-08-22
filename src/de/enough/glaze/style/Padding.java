@@ -3,8 +3,6 @@ package de.enough.glaze.style;
 import net.rim.device.api.ui.XYEdges;
 
 public class Padding {
-	
-	public static final Padding ZERO = new Padding();
 
 	private Dimension top;
 

@@ -52,7 +52,7 @@ public class PaddingConverter implements Converter {
 	 */
 	public Object convert(Definition definition) throws CssSyntaxError {
 		if (!definition.hasProperties(this)) {
-			return Padding.ZERO;
+			return null;
 		}
 
 		Property paddingProp = definition.getProperty("padding");
