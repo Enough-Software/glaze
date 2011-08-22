@@ -24,4 +24,11 @@ public class Property {
 	public int getLine() {
 		return line;
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return "Property [" + this.id + ":" + this.value + "]"; 
+	}
 }

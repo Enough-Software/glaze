@@ -9,7 +9,7 @@ import java.util.Vector;
 
 import de.enough.glaze.style.background.GzBackground;
 import de.enough.glaze.style.border.GzBorder;
-import de.enough.glaze.style.definition.Definable;
+import de.enough.glaze.style.definition.StyleSheetDefinition;
 import de.enough.glaze.style.definition.converter.Converter;
 import de.enough.glaze.style.extension.Extension;
 import de.enough.glaze.style.extension.Processor;
@@ -35,6 +35,8 @@ public class StyleSheet {
 	private final Vector extensions;
 
 	private final Vector listeners;
+	
+	private StyleSheetDefinition definition;
 
 	public static StyleSheet getInstance() {
 		if (INSTANCE == null) {
@@ -52,6 +54,7 @@ public class StyleSheet {
 		this.styles = new Hashtable();
 		this.extensions = new Vector();
 		this.listeners = new Vector();
+		this.definition = new StyleSheetDefinition();
 	}
 
 	public void addListener(StyleSheetListener listener) {
@@ -96,7 +99,8 @@ public class StyleSheet {
 		new Thread() {
 			public void run() {
 				try {
-					load(url);
+					InputStream stream = new URL(url).openStream();
+					load(stream);
 					notifyLoaded(url);
 				} catch (CssSyntaxError e) {
 					notifySyntaxError(e);
@@ -107,10 +111,19 @@ public class StyleSheet {
 		}.start();
 	}
 
-	public void load(final String url) throws IOException, CssSyntaxError {
+	public void load(final String url) throws CssSyntaxError, Exception {
 		synchronized (this) {
-			InputStream stream = new URL(url).openStream();
-			load(stream);
+			try {
+				InputStream stream = new URL(url).openStream();
+				load(stream);
+				notifyLoaded(url);
+			} catch (CssSyntaxError e) {
+				notifySyntaxError(e);
+				throw e;
+			} catch (Exception e) {
+				notifyError(e);
+				throw e;
+			}
 		}
 	}
 
@@ -175,20 +188,9 @@ public class StyleSheet {
 	public Enumeration getExtensions() {
 		return this.extensions.elements();
 	}
-
-	public void finalize() {
-		synchronized (this) {
-			finalize(this.backgrounds.elements());
-			finalize(this.borders.elements());
-			finalize(this.fonts.elements());
-			finalize(this.styles.elements());
-		}
+	
+	public StyleSheetDefinition getDefinition() {
+		return this.definition;
 	}
 
-	private void finalize(Enumeration enumeration) {
-		while (enumeration.hasMoreElements()) {
-			Definable definable = (Definable) enumeration.nextElement();
-			definable.finalize();
-		}
-	}
 }

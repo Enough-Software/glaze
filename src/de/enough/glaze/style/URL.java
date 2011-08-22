@@ -25,9 +25,14 @@ public class URL {
 	}
 	
 	private InputStream openHttpStream(String url) throws IOException {
+		url = prepareUrl(url);
 		HttpConnection httpConnection = (HttpConnection)Connector.open(url);
 		InputStream stream = httpConnection.openInputStream();
 		return stream;
+	}
+	
+	private String prepareUrl(String url) {
+		return url + ";deviceside=true";
 	}
 	
 	private InputStream openResourceStream(String url) throws IOException {
@@ -37,5 +42,12 @@ public class URL {
 		} else {
 			return stream;
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return this.url;
 	}
 }

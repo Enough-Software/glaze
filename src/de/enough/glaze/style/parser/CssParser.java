@@ -75,9 +75,11 @@ public class CssParser {
 	public void parse() throws IOException, CssSyntaxError {
 		StringBuffer parseBuffer = new StringBuffer();
 		try {
+			this.handler.onDocumentStart(this);
 			while (hasNextToken()) {
 				parseNextToken(parseBuffer);
 			}
+			this.handler.onDocumentEnd(this);
 		} catch (CssSyntaxError e) {
 			Log.s(e);
 			throw e;

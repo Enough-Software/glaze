@@ -1,11 +1,8 @@
 package mypackage;
 
-import java.io.IOException;
-
 import net.rim.device.api.ui.UiApplication;
 import de.enough.glaze.log.Log;
 import de.enough.glaze.style.StyleSheet;
-import de.enough.glaze.style.StyleSheetListener;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 
 /**
@@ -28,16 +25,22 @@ public class MyApp extends UiApplication {
 	 * Creates a new MyApp object
 	 */
 	public MyApp() {
-		Log.setLevel(Log.DEBUG);
+		Log.setLevel(Log.ERROR);
 
+		updateStyle();
+		pushScreen(new MyScreen());
+
+	}
+
+	public static void updateStyle() {
 		try {
-			StyleSheet.getInstance().load("/test.css");
-			StyleSheet.getInstance().finalize();
-			pushScreen(new MyScreen());
-		} catch (IOException e) {
-			e.printStackTrace();
+			StyleSheet.getInstance().load(
+					"http://pastebin.com/raw.php?i=XAVz9Lds");
 		} catch (CssSyntaxError e) {
-			e.printStackTrace();
+			// do nothing
+		} catch (Exception e) {
+			Log.e("error", e);
+			((Throwable)e).printStackTrace();
 		}
 	}
 }

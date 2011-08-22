@@ -9,20 +9,29 @@ borders {
 	}
 }
 
+fonts {
+	fnt_textfield {
+		size: 16pt;
+	}
+}
+
+backgrounds {
+	content {
+		type: gradient;
+		colors: yellow green;
+	}
+}
+
 content {
-	background-color: silver;
+	background: content;
 	margin: 5%;
 	padding: 2%;
 }
 
 textfield {
-	font-size: 8pt;
+	font: fnt_textfield;
+	font-style: italic;
 	padding: 5%;
 	margin: 1%;
 	background-color: white;
-}
-
-textfield:focused {
-	margin: 0;
-	border: textfield_focus;
 }

@@ -59,6 +59,19 @@ public class StyleResources {
 		this.contentLoader.attachSource(rmsStorage);
 		this.contentLoader.attachSource(resourceSource);
 	}
+	
+	/**
+	 * Loads the bitmap from the given url and returns it
+	 * 
+	 * @param url
+	 *            the url
+	 * @return the loaded bitmap
+	 * @throws ContentException
+	 *             if an error occurs while loading the bitmap
+	 */
+	public Bitmap loadBitmap(URL url) throws ContentException {
+		return loadBitmap(url.toString());
+	}
 
 	/**
 	 * Loads the bitmap from the given url and returns it

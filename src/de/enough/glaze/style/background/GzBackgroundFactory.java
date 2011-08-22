@@ -30,12 +30,10 @@ public class GzBackgroundFactory {
 			Dimension[] arcs) {
 		// a background with round edges, specified by arcs
 		// - color : the color for the background
-		// - arcs : must be 1,2,3 or 4 values and are mapped like shorthand
-		// margins in W3C CSS :
-		// http://www.w3schools.com/css/css_margin.asp. If an arc is null, no
-		// round edges is drawn
-		// for the given edge
-		return null;
+		// - arcs : must be 4 values, corresponding to the arc size for the upper-left, upper-right, lower-right
+		// and lower-left corners of the background. If an arc is null, no round edges is drawn
+		// for the given corner.
+		return new RoundedBackground(color, arcs);
 	}
 
 	/**
@@ -50,7 +48,7 @@ public class GzBackgroundFactory {
 	 * @return the created background
 	 */
 	public static GzBackground createImageBackground(Bitmap bitmap,
-			String[] position, String repeat) {
+			int position, int repeat) {
 		// a background displaying an image
 		// - bitmap : the image to draw
 		// - position : must be 1 or 2 values of the following :
@@ -58,11 +56,12 @@ public class GzBackgroundFactory {
 		// alignment, the second is the horizontal alignment. The default values are
 		// center center. Single values are set to their corresponding position 
 		// (top, bottom, center: first value, left, right: second value)
-		// - repeat : must be 1 value of the following : no-repeat, repeat-x, repeat-y.
+		// - repeat : must be 1 value of the following : no-repeat, repeat-x, repeat-y, repeat.
 		// no repeat obviously doesn't repeat the image, 
 		// repeat-x repeats the image across the horizontal space, the vertical position is still respected
-		// repeat-y repeats the image accorss the vertical space, the horizontal position is still respected
-		return null;
+		// repeat-y repeats the image across the vertical space, the horizontal position is still respected
+				
+		return new ImageBackground(bitmap, position, repeat);
 	}
 
 	/**
@@ -86,7 +85,11 @@ public class GzBackgroundFactory {
 		// e.g. the gradient color is drawn from 0% of the available width to
 		// 50%,
 		// the rest is filled with the end color
-		return null;
+		if ( "horizontal".equals(orientation)) {
+			return new HorizontalGradientBackground(colors, offsets);
+		} else {
+			return new VerticalGradientBackground(colors, offsets);
+		} 
 	}
 
 	/**

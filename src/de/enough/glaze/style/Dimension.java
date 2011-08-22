@@ -62,21 +62,6 @@ public class Dimension {
 	private final String unit;
 
 	/**
-	 * the available width
-	 */
-	private int availableWidth = Integer.MIN_VALUE;
-
-	/**
-	 * the device width
-	 */
-	private int deviceWidth = Integer.MIN_VALUE;
-
-	/**
-	 * the calculated pixels
-	 */
-	private int pixels;
-
-	/**
 	 * Creates a new {@link Dimension} instance
 	 * 
 	 * @param value
@@ -121,41 +106,36 @@ public class Dimension {
 	 * @return the calculated pixels
 	 */
 	private int getValue(int availableWidth, int deviceWidth) {
+		int pixels = 0;
 		if (UNIT_PX.equals(this.unit)) {
-			this.pixels = MathUtilities.round(this.value);
+			pixels = MathUtilities.round(this.value);
 		} else if (UNIT_CM.equals(this.unit)) {
 			float mmFloatValue = this.value * 10;
 			int mmValue = MathUtilities.round(mmFloatValue);
-			this.pixels = Ui.convertSize(mmValue, Ui.UNITS_mm, Ui.UNITS_px);
+			pixels = Ui.convertSize(mmValue, Ui.UNITS_mm, Ui.UNITS_px);
 		} else if (UNIT_MM.equals(this.unit)) {
 			int mmValue = MathUtilities.round(this.value);
-			this.pixels = Ui.convertSize(mmValue, Ui.UNITS_mm, Ui.UNITS_px);
+			pixels = Ui.convertSize(mmValue, Ui.UNITS_mm, Ui.UNITS_px);
 		} else if (UNIT_INCH.equals(this.unit)) {
 			float cmValue = (float) this.value / (float) CONVERT_INCH_CM;
 			float mmFloatValue = cmValue * 10;
 			int mmValue = MathUtilities.round(mmFloatValue);
-			this.pixels = Ui.convertSize(mmValue, Ui.UNITS_mm, Ui.UNITS_px);
+			pixels = Ui.convertSize(mmValue, Ui.UNITS_mm, Ui.UNITS_px);
 		} else if (UNIT_PT.equals(this.unit)) {
-			int ptValue = MathUtilities.round(this.value); 
-			this.pixels = Ui.convertSize(ptValue, Ui.UNITS_pt, Ui.UNITS_px);
+			int ptValue = MathUtilities.round(this.value);
+			pixels = Ui.convertSize(ptValue, Ui.UNITS_pt, Ui.UNITS_px);
 		} else if (UNIT_PERCENT.equals(this.unit)) {
-			if (availableWidth != this.availableWidth) {
-				float pxValue = ((float) availableWidth / 100) * this.value;
-				this.pixels = MathUtilities.round(pxValue);
-				this.availableWidth = availableWidth;
-			}
+			float pxValue = ((float) availableWidth / 100) * this.value;
+			pixels = MathUtilities.round(pxValue);
 		} else if (UNIT_SP.equals(this.unit)) {
-			if (deviceWidth != this.deviceWidth) {
-				float pxValue = ((float) deviceWidth / 100) * this.value;
-				this.pixels = MathUtilities.round(pxValue);
-				this.deviceWidth = deviceWidth;
-			}
+			float pxValue = ((float) deviceWidth / 100) * this.value;
+			pixels = MathUtilities.round(pxValue);
 		} else {
 			throw new IllegalArgumentException("unknown dimension unit : "
 					+ this.unit);
 		}
 
-		return this.pixels;
+		return pixels;
 	}
 
 	/*

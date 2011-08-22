@@ -9,6 +9,8 @@ import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.background.GzBackground;
 import de.enough.glaze.style.border.GzBorder;
 import de.enough.glaze.style.definition.Definition;
+import de.enough.glaze.style.definition.DefinitionCollection;
+import de.enough.glaze.style.definition.StyleSheetDefinition;
 import de.enough.glaze.style.definition.converter.BackgroundConverter;
 import de.enough.glaze.style.definition.converter.BorderConverter;
 import de.enough.glaze.style.definition.converter.FontConverter;
@@ -42,21 +44,18 @@ public class CssContentHandlerImpl implements CssContentHandler {
 
 	private String blockId;
 
-	private String styleId;
-
-	private Style styleBase;
-
-	private String styleClass;
-
 	private Definition styleDefinition;
 
 	private Definition blockDefinition;
 
 	private final StyleSheet stylesheet;
 
+	private final StyleSheetDefinition styleSheetDefinition;
+
 	public CssContentHandlerImpl(StyleSheet stylesheet) {
 		this.blockStack = new Stack();
 		this.stylesheet = stylesheet;
+		this.styleSheetDefinition = stylesheet.getDefinition();
 	}
 
 	private void pushBlockType(String id) {
@@ -78,6 +77,18 @@ public class CssContentHandlerImpl implements CssContentHandler {
 		} else {
 			return null;
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.enough.glaze.style.parser.CssContentHandler#onDocumentStart(de.enough
+	 * .glaze.style.parser.CssParser)
+	 */
+	public void onDocumentStart(CssParser parser) {
+		// TODO Auto-generated method stub
+
 	}
 
 	/*
@@ -107,42 +118,37 @@ public class CssContentHandlerImpl implements CssContentHandler {
 			} else {
 				pushBlockType(BLOCK_STYLE);
 
-				this.styleId = blockId;
-				this.styleClass = blockClass;
-				this.styleBase = null;
-
 				Log.d("starting style : " + blockId);
 
-				if (blockExtends == null && blockClass == null) {
-					this.styleDefinition = new Definition();
-				} else {
-					if (this.styleClass != null) {
-						if (Style.isClass(this.styleClass)) {
-							this.styleBase = this.stylesheet
-									.getStyle(this.styleId);
-							Log.d("style class : " + blockId + " : "
-									+ this.styleClass);
+				DefinitionCollection styleDefinitions = this.styleSheetDefinition
+						.getStyleDefinitions();
+				Definition parentDefinition;
+				if (blockClass != null) {
+					if (Style.isClass(blockClass)) {
+						parentDefinition = styleDefinitions.getDefinition(blockId);
+						if(parentDefinition != null) {
+							this.styleDefinition = new Definition(blockId, blockClass);
+							this.styleDefinition.setParent(parentDefinition);
 						} else {
-							throw new CssSyntaxError("invalid style class", this.styleClass, lineNumber);
+								throw new CssSyntaxError("unable to resolve style",
+										blockId, lineNumber);
 						}
-					} else if (blockExtends != null) {
-						this.styleBase = this.stylesheet.getStyle(blockExtends);
-						Log.d("style extends : " + blockExtends);
-					}
-
-					if (this.styleBase != null) {
-						Definition baseDefinition = this.styleBase
-								.getDefinition();
-						this.styleDefinition = new Definition(baseDefinition);
 					} else {
-						if (this.styleClass != null) {
-							throw new CssSyntaxError("unable to resolve style",
-									blockId, lineNumber);
-						} else if (blockExtends != null) {
-							throw new CssSyntaxError("unable to resolve style",
-									blockExtends, lineNumber);
-						}
+						throw new CssSyntaxError("invalid style class",
+								blockClass, lineNumber);
 					}
+				} else if (blockExtends != null) {
+					parentDefinition = styleDefinitions
+							.getDefinition(blockExtends);
+					if (parentDefinition != null) {
+						this.styleDefinition = new Definition(blockId);
+						this.styleDefinition.setParent(parentDefinition);
+					} else {
+						throw new CssSyntaxError("unable to resolve style",
+								blockExtends, lineNumber);
+					}
+				} else {
+					this.styleDefinition = new Definition(blockId);
 				}
 			}
 		} else if (BLOCK_SECTION_BACKGROUNDS.equals(blockType)
@@ -153,11 +159,11 @@ public class CssContentHandlerImpl implements CssContentHandler {
 				Log.d("starting background : " + blockId);
 				pushBlockType(BLOCK_BACKGROUND);
 				if (blockExtends != null) {
-					GzBackground backgroundExtends = this.stylesheet
-							.getBackground(blockExtends);
-					if (backgroundExtends != null) {
-						parentDefinition = backgroundExtends.getDefinition();
-					} else {
+					DefinitionCollection backgroundDefinitions = this.styleSheetDefinition
+							.getBackgroundDefinitions();
+					parentDefinition = backgroundDefinitions
+							.getDefinition(blockExtends);
+					if (parentDefinition != null) {
 						throw new CssSyntaxError(
 								"could not resolve background", blockId,
 								lineNumber);
@@ -167,11 +173,11 @@ public class CssContentHandlerImpl implements CssContentHandler {
 				Log.d("starting border : " + blockId);
 				pushBlockType(BLOCK_BORDER);
 				if (blockExtends != null) {
-					GzBorder borderExtends = this.stylesheet
-							.getBorder(blockExtends);
-					if (borderExtends != null) {
-						parentDefinition = borderExtends.getDefinition();
-					} else {
+					DefinitionCollection borderDefinitions = this.styleSheetDefinition
+							.getBorderDefinitions();
+					parentDefinition = borderDefinitions
+							.getDefinition(blockExtends);
+					if (parentDefinition != null) {
 						throw new CssSyntaxError("could not resolve border",
 								blockId, lineNumber);
 					}
@@ -180,17 +186,18 @@ public class CssContentHandlerImpl implements CssContentHandler {
 				Log.d("starting font : " + blockId);
 				pushBlockType(BLOCK_FONT);
 				if (blockExtends != null) {
-					GzFont fontExtends = this.stylesheet.getFont(blockExtends);
-					if (fontExtends != null) {
-						parentDefinition = fontExtends.getDefinition();
-					} else {
+					DefinitionCollection fontDefinitions = this.styleSheetDefinition
+							.getFontDefinitions();
+					parentDefinition = fontDefinitions
+							.getDefinition(blockExtends);
+					if (parentDefinition != null) {
 						throw new CssSyntaxError("could not resolve font",
 								blockId, lineNumber);
 					}
 				}
 			}
-			this.blockId = blockId;
-			this.blockDefinition = new Definition(parentDefinition);
+			this.blockDefinition = new Definition(blockId);
+			this.blockDefinition.setParent(parentDefinition);
 		} else if (BLOCK_SECTION_COLORS.equals(blockType)) {
 			throw new CssSyntaxError(
 					"block declarations are not allowed in the colors section",
@@ -202,6 +209,13 @@ public class CssContentHandlerImpl implements CssContentHandler {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.enough.glaze.style.parser.CssContentHandler#onProperty(de.enough.glaze
+	 * .style.parser.CssParser, java.lang.String, java.lang.String)
+	 */
 	public void onProperty(CssParser parser, String propertyId,
 			String propertyValue) throws CssSyntaxError {
 		int lineNumber = parser.getLineNumber();
@@ -243,40 +257,83 @@ public class CssContentHandlerImpl implements CssContentHandler {
 		String blockType = popBlockType();
 		if (blockType != null) {
 			if (BLOCK_STYLE.equals(blockType)) {
-				Style style = (Style) StyleConverter.getInstance().convert(
-						this.styleDefinition);
-				style.setDefinition(this.styleDefinition);
-
-				if (this.styleClass != null) {
-					Log.d("setting style class : " + this.styleId + ":"
-							+ this.styleClass);
-					style.setBaseStyle(this.styleBase);
-					this.styleBase.setClass(this.styleClass, style);
-				} else {
-					Log.d("adding style : " + this.styleId);
-					this.stylesheet.addStyle(this.styleId, style);
-				}
+				DefinitionCollection styleDefinitions = this.styleSheetDefinition
+						.getStyleDefinitions();
+				styleDefinitions.addDefinition(this.styleDefinition);
 			} else if (BLOCK_BACKGROUND.equals(blockType)) {
-				GzBackground background = (GzBackground) BackgroundConverter
-						.getInstance().convert(this.blockDefinition);
-				background.setDefinition(this.blockDefinition);
-				this.stylesheet.addBackground(this.blockId, background);
-				Log.d("added background : " + this.blockId);
+				DefinitionCollection backgroundDefinitions = this.styleSheetDefinition
+						.getBackgroundDefinitions();
+				backgroundDefinitions.addDefinition(this.blockDefinition);
+				Log.d("added background definition : " + this.blockDefinition.getId());
 			} else if (BLOCK_BORDER.equals(blockType)) {
-				GzBorder border = (GzBorder) BorderConverter.getInstance()
-						.convert(this.blockDefinition);
-				border.setDefinition(this.blockDefinition);
-				this.stylesheet.addBorder(this.blockId, border);
-				Log.d("added border : " + this.blockId);
+				DefinitionCollection borderDefinitions = this.styleSheetDefinition
+						.getBorderDefinitions();
+				borderDefinitions.addDefinition(this.blockDefinition);
+				Log.d("added border definition : " + this.blockDefinition.getId());
 			} else if (BLOCK_FONT.equals(blockType)) {
-				GzFont font = (GzFont) FontConverter.getInstance().convert(
-						this.blockDefinition);
-				font.setDefinition(this.blockDefinition);
-				this.stylesheet.addFont(this.blockId, font);
-				Log.d("added font : " + this.blockId);
+				DefinitionCollection fontDefinitions = this.styleSheetDefinition
+						.getFontDefinitions();
+				fontDefinitions.addDefinition(this.blockDefinition);
+				Log.d("added font definition : " + this.blockId);
 			}
 		} else {
 			throw new CssSyntaxError("invalid block", lineNumber);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.enough.glaze.style.parser.CssContentHandler#onDocumentEnd(de.enough
+	 * .glaze.style.parser.CssParser)
+	 */
+	public void onDocumentEnd(CssParser parser) throws CssSyntaxError {
+		DefinitionCollection backgroundDefinitions = this.styleSheetDefinition
+				.getBackgroundDefinitions();
+		for (int index = 0; index < backgroundDefinitions.size(); index++) {
+			Definition definition = backgroundDefinitions.getDefinition(index);
+			GzBackground background = (GzBackground) BackgroundConverter
+					.getInstance().convert(definition);
+			this.stylesheet.addBackground(definition.getId(), background);
+		}
+
+		DefinitionCollection borderDefinitions = this.styleSheetDefinition
+				.getBorderDefinitions();
+		for (int index = 0; index < borderDefinitions.size(); index++) {
+			Definition definition = borderDefinitions.getDefinition(index);
+			GzBorder border = (GzBorder) BorderConverter.getInstance().convert(
+					definition);
+			this.stylesheet.addBorder(definition.getId(), border);
+		}
+
+		DefinitionCollection fontDefinitions = this.styleSheetDefinition
+				.getFontDefinitions();
+		for (int index = 0; index < fontDefinitions.size(); index++) {
+			Definition definition = fontDefinitions.getDefinition(index);
+			GzFont font = (GzFont) FontConverter.getInstance().convert(
+					definition);
+			this.stylesheet.addFont(definition.getId(), font);
+		}
+
+		DefinitionCollection styleDefinitions = this.styleSheetDefinition
+				.getStyleDefinitions();
+		for (int index = 0; index < styleDefinitions.size(); index++) {
+			Definition definition = styleDefinitions.getDefinition(index);
+			Style style = (Style) StyleConverter.getInstance().convert(
+					definition);
+			
+			String classId = definition.getClassId();
+			if(classId != null) {
+				Definition parentDefinition = definition.getParent();
+				String parentId = parentDefinition.getId();
+				Style parentStyle = this.stylesheet.getStyle(parentId);
+				parentStyle.setClass(classId, style);
+				style.setParentStyle(parentStyle);
+			} else {
+				this.stylesheet.addStyle(definition.getId(), style);
+			}
+		}
+
 	}
 }
