@@ -46,7 +46,7 @@ public class MaskBackground extends GzBackground {
 		
 		Bitmap result = new Bitmap(rect.width, rect.height);
 		result.setARGB(backgroundData, 0, rect.width, 0, 0, rect.width, rect.height);		
-		graphics.drawBitmap(0, 0, rect.width, rect.height, result, 0, 0);
+		graphics.drawBitmap(rect.x, rect.y, rect.width, rect.height, result, 0, 0);
 		
 		// restore original color
 		graphics.setColor(originalColor);

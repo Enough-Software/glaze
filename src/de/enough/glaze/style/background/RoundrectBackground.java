@@ -33,38 +33,38 @@ public class RoundrectBackground extends GzBackground {
 		
 		if ( this.dimensions[0] != null ) {
 			int arcSize = dimensions[0].getValue();
-			graphics.fillArc(0, 0, arcSize*2, arcSize*2, 180, -90);
-			graphics.fillRect(arcSize, 0, width/2-arcSize, height/2);
-			graphics.fillRect(0, arcSize, width/2, height/2-arcSize);
+			graphics.fillArc(rect.x, rect.y, arcSize*2, arcSize*2, 180, -90);
+			graphics.fillRect(rect.x + arcSize, rect.y,  width/2-arcSize, height/2);
+			graphics.fillRect(rect.x, arcSize, rect.y + width/2, height/2-arcSize);
 		} else {
-			graphics.fillRect(0, 0, width/2, height/2);
+			graphics.fillRect(rect.x, rect.y, width/2, height/2);
 		}
 		
 		if ( this.dimensions[1] != null ) {
 			int arcSize = dimensions[1].getValue();
-			graphics.fillArc(width-arcSize*2, 0, arcSize*2, arcSize*2, 90, -90);
-			graphics.fillRect(width/2, 0, width/2-arcSize, height/2);
-			graphics.fillRect(width/2, arcSize, width/2, height/2-arcSize);
+			graphics.fillArc(rect.x + width-arcSize*2, rect.y, arcSize*2, arcSize*2, 90, -90);
+			graphics.fillRect(rect.x + width/2, rect.y, width/2-arcSize, height/2);
+			graphics.fillRect(rect.x + width/2, rect.y + arcSize, width/2, height/2-arcSize);
 		} else {
-			graphics.fillRect(width/2, 0, width/2,height/2);
+			graphics.fillRect(rect.x + width/2, rect.y, width/2,height/2);
 		}
 		
 		if ( this.dimensions[2] != null ) {
 			int arcSize = dimensions[2].getValue();
-			graphics.fillArc(width-arcSize*2, height-arcSize*2, arcSize*2, arcSize*2, 0, -90);
-			graphics.fillRect(width/2, height/2, width/2, height/2-arcSize);
-			graphics.fillRect(width/2, height/2, width/2-arcSize, height/2);
+			graphics.fillArc(rect.x + width-arcSize*2, rect.y + height-arcSize*2, arcSize*2, arcSize*2, 0, -90);
+			graphics.fillRect(rect.x + width/2, rect.y + height/2, width/2, height/2-arcSize);
+			graphics.fillRect(rect.x + width/2, rect.y + height/2, width/2-arcSize, height/2);
 		} else {
-			graphics.fillRect(width/2, height/2,  width/2,height/2);
+			graphics.fillRect(rect.x + width/2, rect.y + height/2,  width/2,height/2);
 		}
 		
 		if ( this.dimensions[3] != null ) {
 			int arcSize = dimensions[3].getValue();
-			graphics.fillArc(0, height-arcSize*2, arcSize*2, arcSize*2, 180, 90);
-			graphics.fillRect(0, height/2, width/2, height/2-arcSize);
-			graphics.fillRect(arcSize, height/2, width/2-arcSize, height/2);
+			graphics.fillArc(rect.x, rect.y + height-arcSize*2, arcSize*2, arcSize*2, 180, 90);
+			graphics.fillRect(rect.x, rect.y + height/2, width/2, height/2-arcSize);
+			graphics.fillRect(rect.x + arcSize, rect.y + height/2, width/2-arcSize, height/2);
 		} else {
-			graphics.fillRect(0, height/2,  width/2,height/2);
+			graphics.fillRect(rect.x, rect.y + height/2,  width/2,height/2);
 		}
 		
 		// restore original color

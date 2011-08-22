@@ -53,7 +53,7 @@ public class HorizontalGradientBackground extends GzBackground {
 		
 		// Draw the pre-gradient area
 		graphics.setColor(this.startColor.getColor());
-		graphics.fillRect(0, 0, startGradientPixels, height);
+		graphics.fillRect(rect.x, rect.y, startGradientPixels, height);
 		
 		// Draw the gradient
 		int [] gradientColors = DrawUtils.getGradient(startColor.getColor(), endColor.getColor(), Math.abs(endGradientPixels-startGradientPixels));
@@ -61,14 +61,14 @@ public class HorizontalGradientBackground extends GzBackground {
 		int i=0;
 		while (pos < endGradientPixels ) {
 			graphics.setColor(gradientColors[i]);
-			graphics.drawLine(pos, 0, pos, height);
+			graphics.drawLine(rect.x + pos, rect.y, rect.x + pos, rect.y + height);
 			i++;
 			pos++;
 		}
 		
 		// Draw the post-gradient area
 		graphics.setColor(this.endColor.getColor());
-		graphics.fillRect(endGradientPixels, 0, width, height);
+		graphics.fillRect(rect.x + endGradientPixels, rect.y, width - endGradientPixels, height);
 		
 		// restore original color
 		graphics.setColor(originalColor);

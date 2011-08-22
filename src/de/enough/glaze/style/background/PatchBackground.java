@@ -32,10 +32,10 @@ public class PatchBackground extends GzBackground {
 		// remember original color
 		int originalColor = graphics.getColor();
 		
-		paintHorizontalTiles(this.margins[POS_LEFT].getValue(), this.margins[POS_TOP].getValue(), rect.width-this.margins[POS_RIGHT].getValue()-this.margins[POS_LEFT].getValue(), rect.height-this.margins[POS_TOP].getValue()-this.margins[POS_BOTTOM].getValue(), graphics);
-		paintVerticalTiles(this.margins[POS_LEFT].getValue(), this.margins[POS_TOP].getValue(), rect.width-this.margins[POS_RIGHT].getValue()-this.margins[POS_LEFT].getValue(), rect.height-this.margins[POS_TOP].getValue()-this.margins[POS_BOTTOM].getValue(), graphics);
-		paintCorners(this.margins[POS_LEFT].getValue(), this.margins[POS_TOP].getValue(), rect.width-this.margins[POS_RIGHT].getValue()-this.margins[POS_LEFT].getValue(), rect.height-this.margins[POS_TOP].getValue()-this.margins[POS_BOTTOM].getValue(), graphics);
-		paintCenterTiles(this.margins[POS_LEFT].getValue(), this.margins[POS_TOP].getValue(), rect.width-this.margins[POS_RIGHT].getValue()-this.margins[POS_LEFT].getValue(), rect.height-this.margins[POS_TOP].getValue()-this.margins[POS_BOTTOM].getValue(), graphics);
+		paintHorizontalTiles(rect.x + this.margins[POS_LEFT].getValue(), rect.y + this.margins[POS_TOP].getValue(), rect.width-this.margins[POS_RIGHT].getValue()-this.margins[POS_LEFT].getValue(), rect.height-this.margins[POS_TOP].getValue()-this.margins[POS_BOTTOM].getValue(), graphics);
+		paintVerticalTiles(rect.x + this.margins[POS_LEFT].getValue(), rect.y + this.margins[POS_TOP].getValue(), rect.width-this.margins[POS_RIGHT].getValue()-this.margins[POS_LEFT].getValue(), rect.height-this.margins[POS_TOP].getValue()-this.margins[POS_BOTTOM].getValue(), graphics);
+		paintCorners(rect.x + this.margins[POS_LEFT].getValue(), rect.y + this.margins[POS_TOP].getValue(), rect.width-this.margins[POS_RIGHT].getValue()-this.margins[POS_LEFT].getValue(), rect.height-this.margins[POS_TOP].getValue()-this.margins[POS_BOTTOM].getValue(), graphics);
+		paintCenterTiles(rect.x + this.margins[POS_LEFT].getValue(), rect.y + this.margins[POS_TOP].getValue(), rect.width-this.margins[POS_RIGHT].getValue()-this.margins[POS_LEFT].getValue(), rect.height-this.margins[POS_TOP].getValue()-this.margins[POS_BOTTOM].getValue(), graphics);
 		
 		// restore original color
 		graphics.setColor(originalColor);

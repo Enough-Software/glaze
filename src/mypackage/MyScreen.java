@@ -60,12 +60,8 @@ public final class MyScreen extends MainScreen
         Font myFont = Font.getDefault().derive(Font.BOLD | Font.UNDERLINED | Font.ITALIC, 50, Ui.UNITS_px);
         labelField.setFont(myFont);
         manager.add(labelField);
-        
-
-        
-        Bitmap image = EncodedImage.getEncodedImageResource("img/icon.png").getBitmap();
-        
-        
+                
+        Bitmap image = EncodedImage.getEncodedImageResource("img/icon.png").getBitmap();             
         RoundrectBackground roundRectBg = new RoundrectBackground(new Color(0xAA00FF00), new Dimension[] {
         	new Dimension(20,Dimension.UNIT_PX), new Dimension(15,Dimension.UNIT_PERCENT), null, new Dimension(2,Dimension.UNIT_PERCENT) });
         VerticalGradientBackground gradientBg = new VerticalGradientBackground(new Color[] { new Color(0xAA00FF00), new Color(0xAAFF0000) },

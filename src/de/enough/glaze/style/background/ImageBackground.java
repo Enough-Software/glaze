@@ -61,22 +61,32 @@ public class ImageBackground extends GzBackground {
 		if ( (this.repeatFlag & REPEAT_X) != 0 ) {
 			endX = width;
 			startX = 0;
+			if ( (this.positionFlag & POSITION_RIGHT)  != 0) {
+				int offset = (rect.width % this.image.getWidth()) - image.getWidth();
+				startX += offset;
+			}
 		}
 		if ( (this.repeatFlag & REPEAT_Y) != 0 ) {
 			endY = height;
 			startY = 0;
+			if ( (this.positionFlag & POSITION_BOTTOM)  != 0) {
+				int offset = (rect.height % this.image.getHeight()) - image.getHeight();
+				startY += offset;
+			}
 		}
 		
 		// Draw the image
 		int x = startX, y = startY;
+		graphics.pushContext(rect.x, rect.y, rect.width, rect.height, 0, 0);
 		while ( x <=  endX ) {
 			while ( y <= endY ) {
-				graphics.drawBitmap(x, y, imageWidth, imageHeight, this.image,0,0);
+				graphics.drawBitmap(rect.x + x, rect.y + y, imageWidth, imageHeight, this.image,0,0);
 				y+= imageHeight;
 			}
 			x+= imageWidth;
 			y=startY;
 		}
+		graphics.popContext();
 	
 	}
 
