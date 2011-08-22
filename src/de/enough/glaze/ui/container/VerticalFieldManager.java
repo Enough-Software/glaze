@@ -135,6 +135,7 @@ public class VerticalFieldManager extends
 	 * .device.api.ui.Graphics)
 	 */
 	protected void subpaint(Graphics graphics) {
+		Log.d("paint", this);
 		super.subpaint(graphics);
 		
 		for (int index = 0; index < getFieldCount(); index++) {
@@ -145,7 +146,5 @@ public class VerticalFieldManager extends
 				return;
 			}
 		}
-
-		Log.d("paint", this);
 	}
 }
