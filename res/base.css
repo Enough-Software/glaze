@@ -9,11 +9,16 @@ borders {
 	}
 }
 
+fonts {
+	fnt_textfield {
+		size: 16pt;
+	}
+}
+
 backgrounds {
 	content {
-		type: rounded;
-		color: blue;
-		arcs: 5% 5% 5% 5%;
+		type: gradient;
+		colors: yellow green;
 	}
 }
 
@@ -24,13 +29,9 @@ content {
 }
 
 textfield {
-	font-size: 8pt;
+	font: fnt_textfield;
+	font-style: italic;
 	padding: 5%;
 	margin: 1%;
 	background-color: white;
-}
-
-textfield:focus {
-	margin: 0;
-	border: textfield_focus;
 }

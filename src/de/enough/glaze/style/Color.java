@@ -41,9 +41,7 @@ public class Color {
 	public Color(int argb) {
 		this.color = argb;
 		this.rgb = argb & RGB_MASK;
-		System.out.println(Integer.toHexString(this.rgb));
 		this.alpha = (argb & ALPHA_MASK) >> 32;
-		System.out.println(Integer.toHexString(this.alpha));
 	}
 	
 	public void set(Graphics graphics) {

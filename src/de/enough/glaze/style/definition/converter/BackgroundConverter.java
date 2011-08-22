@@ -47,6 +47,9 @@ public class BackgroundConverter implements Converter {
 			Vector idCollection = new Vector();
 
 			addIds(SolidBackgroundConverter.getInstance(), idCollection);
+			addIds(ImageBackgroundConverter.getInstance(), idCollection);
+			addIds(RoundedBackgroundConverter.getInstance(), idCollection);
+			addIds(GradientBackgroundConverter.getInstance(), idCollection);
 			addIds(new String[] { "background-type" }, idCollection);
 
 			this.ids = new String[idCollection.size()];

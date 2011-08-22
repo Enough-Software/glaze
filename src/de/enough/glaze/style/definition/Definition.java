@@ -8,34 +8,43 @@ import de.enough.glaze.style.parser.property.Property;
 
 public class Definition {
 
-	protected Hashtable properties;
+	private final String id;
+
+	private String classId;
+
+	private final Hashtable properties;
+
+	private Definition parent;
 
 	public Definition() {
 		this(null);
 	}
 
-	public Definition(Definition base) {
+	public Definition(String id, String classId) {
+		this.id = id + ":" + classId;
+		this.classId = classId;
 		this.properties = new Hashtable();
-		if (base != null) {
-			addDefinition(base, false);
-		}
 	}
 
-	public void addDefinition(Definition definition) {
-		addDefinition(definition, true);
+	public Definition(String id) {
+		this.id = id;
+		this.properties = new Hashtable();
 	}
 
-	private void addDefinition(Definition definition, boolean preserveValues) {
-		Enumeration properties = definition.getProperties();
-		while (properties.hasMoreElements()) {
-			Property property = (Property) properties.nextElement();
-			if (preserveValues) {
-				if (this.properties.containsKey(property.getId())) {
-					continue;
-				}
-			}
-			addProperty(property);
-		}
+	public String getId() {
+		return this.id;
+	}
+
+	public String getClassId() {
+		return this.classId;
+	}
+
+	public void setParent(Definition parent) {
+		this.parent = parent;
+	}
+
+	public Definition getParent() {
+		return this.parent;
 	}
 
 	public void addProperty(String blockId, String propertyId,
@@ -54,20 +63,34 @@ public class Definition {
 		this.properties.put(property.getId(), property);
 	}
 
-	public Property getProperty(String propertyId) {
-		return (Property) this.properties.get(propertyId);
+	public void addProperties(Definition definition) {
+		Enumeration properties = definition.getProperties();
+		while (properties.hasMoreElements()) {
+			Property property = (Property) properties.nextElement();
+			addProperty(property);
+		}
 	}
-	
+
 	public Property getProperty(String[] propertyIds) {
 		for (int index = 0; index < propertyIds.length; index++) {
 			String propertyId = propertyIds[index];
-			Object property = this.properties.get(propertyId);
-			if(property != null) {
-				return (Property)property;
+			Property property = getProperty(propertyId);
+			if (property != null) {
+				return (Property) property;
 			}
 		}
-		
+
 		return null;
+	}
+
+	public Property getProperty(String propertyId) {
+		Property property = (Property) this.properties.get(propertyId);
+
+		if (property == null && this.parent != null) {
+			return this.parent.getProperty(propertyId);
+		} else {
+			return property;
+		}
 	}
 
 	public Enumeration getProperties() {
@@ -76,33 +99,16 @@ public class Definition {
 
 	public boolean hasProperties(Converter converter) {
 		String[] ids = converter.getIds();
-		Enumeration properties = getProperties();
-		while (properties.hasMoreElements()) {
-			Property property = (Property) properties.nextElement();
-			if (hasProperty(ids, property)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	private boolean hasProperty(String[] ids, Property property) {
 		for (int index = 0; index < ids.length; index++) {
 			String id = ids[index];
-			String propertyId = property.getId();
-			if (id.equals(propertyId)) {
+			if (getProperty(id) != null) {
 				return true;
 			}
 		}
 
 		return false;
 	}
-
-	public void finalize() {
-		this.properties.clear();
-	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
