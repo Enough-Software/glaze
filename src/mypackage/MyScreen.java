@@ -1,6 +1,8 @@
 package mypackage;
 
 import net.rim.device.api.ui.Field;
+import net.rim.device.api.ui.MenuItem;
+import net.rim.device.api.ui.component.ButtonField;
 import net.rim.device.api.ui.component.TextField;
 import net.rim.device.api.ui.container.MainScreen;
 import de.enough.glaze.ui.container.VerticalFieldManager;
@@ -21,7 +23,7 @@ public final class MyScreen extends MainScreen
         
         VerticalFieldManager root = new VerticalFieldManager();
         
-        VerticalFieldManager content = new VerticalFieldManager();
+        VerticalFieldManager content = new VerticalFieldManager(Field.FIELD_RIGHT);
         
         TextField usernameField = new TextField(Field.USE_ALL_WIDTH);
         content.add(usernameField,"textfield");
@@ -29,7 +31,18 @@ public final class MyScreen extends MainScreen
         usernameField = new TextField(Field.USE_ALL_WIDTH);
         content.add(usernameField,"textfield");
         
+        ButtonField loginButton = new ButtonField("Login", Field.FIELD_RIGHT);
+        content.add(loginButton, "button");
+        
         root.add(content,"content");
         add(root);
+        
+        MenuItem updateItem = new MenuItem("Update", 0, 0) {
+        	public void run() {
+        		MyApp.updateStyle();
+        	}
+        };
+        
+        addMenuItem(updateItem);
     }
 }

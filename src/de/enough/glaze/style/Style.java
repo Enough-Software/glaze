@@ -6,12 +6,10 @@ import java.util.Hashtable;
 import net.rim.device.api.ui.Field;
 import de.enough.glaze.style.background.GzBackground;
 import de.enough.glaze.style.border.GzBorder;
-import de.enough.glaze.style.definition.Definable;
-import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.extension.Extension;
 import de.enough.glaze.style.font.GzFont;
 
-public class Style implements Definable {
+public class Style {
 
 	private static final String FOCUS = "focus";
 
@@ -20,6 +18,8 @@ public class Style implements Definable {
 	private static final String DISABLED = "disabled";
 
 	private static final String DISABLED_FOCUSED = "disabled_focused";
+	
+	private final String id;
 	
 	private Margin margin;
 
@@ -33,9 +33,7 @@ public class Style implements Definable {
 	
 	private final Hashtable extensions;
 
-	private Style baseStyle;
-
-	private Definition definition;
+	private Style parentStyle;
 
 	private Style focusStyle;
 
@@ -45,16 +43,21 @@ public class Style implements Definable {
 
 	private Style disabledFocusedStyle;
 	
-	public Style() {
+	public Style(String id) {
+		this.id = id;
 		this.extensions = new Hashtable();
 	}
 	
-	public void setBaseStyle(Style baseStyle) {
-		this.baseStyle = baseStyle;
+	public String getId() {
+		return this.id;
+	}
+	
+	public void setParentStyle(Style parentStyle) {
+		this.parentStyle = parentStyle;
 	}
 
-	public Style getBaseStyle() {
-		return this.baseStyle;
+	public Style getParentStyle() {
+		return this.parentStyle;
 	}
 
 	public void setClass(String id, Style style) {
@@ -79,8 +82,8 @@ public class Style implements Definable {
 	}
 
 	public Style getStyle(int visualState) {
-		if(this.baseStyle != null) {
-			return getStyle(this.baseStyle, visualState);
+		if(this.parentStyle != null) {
+			return getStyle(this.parentStyle, visualState);
 		} else {
 			return getStyle(this, visualState);
 		}
@@ -173,17 +176,5 @@ public class Style implements Definable {
 	
 	public Object getExtensionData(Extension extension) {
 		return this.extensions.get(extension);
-	}
-	
-	public void setDefinition(Definition definition) {
-		this.definition = definition;
-	}
-
-	public Definition getDefinition() {
-		return this.definition;
-	}
-	
-	public void finalize() {
-		this.definition = null;
 	}
 }
