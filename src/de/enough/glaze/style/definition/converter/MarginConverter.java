@@ -7,6 +7,12 @@ import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.style.parser.property.DimensionPropertyParser;
 import de.enough.glaze.style.parser.property.Property;
 
+/**
+ * Converts a given definition to a margin
+ * 
+ * @author Andre
+ * 
+ */
 public class MarginConverter implements Converter {
 
 	/**

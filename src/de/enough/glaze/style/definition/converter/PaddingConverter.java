@@ -1,13 +1,18 @@
 package de.enough.glaze.style.definition.converter;
 
 import de.enough.glaze.style.Dimension;
-import de.enough.glaze.style.Margin;
 import de.enough.glaze.style.Padding;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.style.parser.property.DimensionPropertyParser;
 import de.enough.glaze.style.parser.property.Property;
 
+/**
+ * Converts a given definition to a padding
+ * 
+ * @author Andre
+ * 
+ */
 public class PaddingConverter implements Converter {
 
 	/**
