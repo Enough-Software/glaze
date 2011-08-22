@@ -170,7 +170,7 @@ public class GzBackgroundFactory {
 		// - maskColor : the color to fill with the given background
 		// - maskBackground : the background to use as the mark
 		// - background: the background to draw into the mask
-		return null;
+		return new MaskBackground(maskColor, maskBackground, background);
 	}
 
 	/**
@@ -190,6 +190,6 @@ public class GzBackgroundFactory {
 		// - margins: the margins for the single backgrounds, must be null or
 		// the count
 		// of backgrounds
-		return null;
+		return new LayerBackground(backgrounds, margins);
 	}
 }

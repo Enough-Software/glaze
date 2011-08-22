@@ -53,7 +53,7 @@ public class VerticalGradientBackground extends GzBackground {
 		
 		// Draw the pre-gradient area
 		graphics.setColor(this.startColor.getColor());
-		graphics.fillRect(0, 0, width, startGradientPixels);
+		graphics.fillRect(rect.x, rect.y, width, startGradientPixels);
 		
 		// Draw the gradient
 		int [] gradientColors = DrawUtils.getGradient(startColor.getColor(), endColor.getColor(), Math.abs(endGradientPixels-startGradientPixels));
@@ -61,14 +61,14 @@ public class VerticalGradientBackground extends GzBackground {
 		int i=0;
 		while (pos < endGradientPixels ) {
 			graphics.setColor(gradientColors[i]);
-			graphics.drawLine(0, pos, width, pos);
+			graphics.drawLine(rect.x, rect.y + pos, rect.x + width-1, rect.y + pos);
 			i++;
 			pos++;
 		}
 		
 		// Draw the post-gradient area
 		graphics.setColor(this.endColor.getColor());
-		graphics.fillRect(0, endGradientPixels, width, endGradientPixels);
+		graphics.fillRect(rect.x, rect.y + endGradientPixels, width, endGradientPixels);
 		
 		// restore original color
 		graphics.setColor(originalColor);
@@ -79,6 +79,6 @@ public class VerticalGradientBackground extends GzBackground {
 	 * @see net.rim.device.api.ui.decor.Background#isTransparent()
 	 */
 	public boolean isTransparent() {
-		return false;
+		return true;
 	} 
 }

@@ -84,6 +84,6 @@ public class ImageBackground extends GzBackground {
 	 * @see net.rim.device.api.ui.decor.Background#isTransparent()
 	 */
 	public boolean isTransparent() {
-		return false;
+		return true;
 	} 
 }
