@@ -46,6 +46,10 @@ public class StyleSheetDefinition {
 	public DefinitionCollection getBackgroundDefinitions() {
 		return this.backgroundDefinitions;
 	}
+	
+	public Definition getBackgroundDefinition(String id) {
+		return this.backgroundDefinitions.getDefinition(id);
+	}
 
 	/**
 	 * Returns the border definitions
@@ -54,6 +58,10 @@ public class StyleSheetDefinition {
 	 */
 	public DefinitionCollection getBorderDefinitions() {
 		return this.borderDefinitions;
+	}
+	
+	public Definition getBorderDefinition(String id) {
+		return this.borderDefinitions.getDefinition(id);
 	}
 
 	/**
@@ -65,6 +73,10 @@ public class StyleSheetDefinition {
 		return this.fontDefinitions;
 	}
 
+	public Definition getFontDefinition(String id) {
+		return this.fontDefinitions.getDefinition(id);
+	}
+
 	/**
 	 * Returns the style definitions
 	 * 
@@ -72,5 +84,9 @@ public class StyleSheetDefinition {
 	 */
 	public DefinitionCollection getStyleDefinitions() {
 		return this.styleDefinitions;
+	}
+
+	public Definition getStyleDefinition(String id) {
+		return this.styleDefinitions.getDefinition(id);
 	}
 }

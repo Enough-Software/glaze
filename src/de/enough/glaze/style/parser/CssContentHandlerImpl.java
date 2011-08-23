@@ -125,13 +125,15 @@ public class CssContentHandlerImpl implements CssContentHandler {
 				Definition parentDefinition;
 				if (blockClass != null) {
 					if (Style.isClass(blockClass)) {
-						parentDefinition = styleDefinitions.getDefinition(blockId);
-						if(parentDefinition != null) {
-							this.styleDefinition = new Definition(blockId, blockClass);
+						parentDefinition = styleDefinitions
+								.getDefinition(blockId);
+						if (parentDefinition != null) {
+							this.styleDefinition = new Definition(blockId,
+									blockClass);
 							this.styleDefinition.setParent(parentDefinition);
 						} else {
-								throw new CssSyntaxError("unable to resolve style",
-										blockId, lineNumber);
+							throw new CssSyntaxError("unable to resolve style",
+									blockId, lineNumber);
 						}
 					} else {
 						throw new CssSyntaxError("invalid style class",
@@ -264,12 +266,14 @@ public class CssContentHandlerImpl implements CssContentHandler {
 				DefinitionCollection backgroundDefinitions = this.styleSheetDefinition
 						.getBackgroundDefinitions();
 				backgroundDefinitions.addDefinition(this.blockDefinition);
-				Log.d("added background definition : " + this.blockDefinition.getId());
+				Log.d("added background definition : "
+						+ this.blockDefinition.getId());
 			} else if (BLOCK_BORDER.equals(blockType)) {
 				DefinitionCollection borderDefinitions = this.styleSheetDefinition
 						.getBorderDefinitions();
 				borderDefinitions.addDefinition(this.blockDefinition);
-				Log.d("added border definition : " + this.blockDefinition.getId());
+				Log.d("added border definition : "
+						+ this.blockDefinition.getId());
 			} else if (BLOCK_FONT.equals(blockType)) {
 				DefinitionCollection fontDefinitions = this.styleSheetDefinition
 						.getFontDefinitions();
@@ -289,31 +293,40 @@ public class CssContentHandlerImpl implements CssContentHandler {
 	 * .glaze.style.parser.CssParser)
 	 */
 	public void onDocumentEnd(CssParser parser) throws CssSyntaxError {
+		// clear the whole stylesheet 
+		this.stylesheet.clear();
+
 		DefinitionCollection backgroundDefinitions = this.styleSheetDefinition
 				.getBackgroundDefinitions();
 		for (int index = 0; index < backgroundDefinitions.size(); index++) {
 			Definition definition = backgroundDefinitions.getDefinition(index);
-			GzBackground background = (GzBackground) BackgroundConverter
-					.getInstance().convert(definition);
-			this.stylesheet.addBackground(definition.getId(), background);
+			if (this.stylesheet.getBackground(definition.getId()) == null) {
+				GzBackground background = (GzBackground) BackgroundConverter
+						.getInstance().convert(definition);
+				this.stylesheet.addBackground(definition.getId(), background);
+			}
 		}
 
 		DefinitionCollection borderDefinitions = this.styleSheetDefinition
 				.getBorderDefinitions();
 		for (int index = 0; index < borderDefinitions.size(); index++) {
 			Definition definition = borderDefinitions.getDefinition(index);
-			GzBorder border = (GzBorder) BorderConverter.getInstance().convert(
-					definition);
-			this.stylesheet.addBorder(definition.getId(), border);
+			if (this.stylesheet.getBorder(definition.getId()) == null) {
+				GzBorder border = (GzBorder) BorderConverter.getInstance()
+						.convert(definition);
+				this.stylesheet.addBorder(definition.getId(), border);
+			}
 		}
 
 		DefinitionCollection fontDefinitions = this.styleSheetDefinition
 				.getFontDefinitions();
 		for (int index = 0; index < fontDefinitions.size(); index++) {
 			Definition definition = fontDefinitions.getDefinition(index);
-			GzFont font = (GzFont) FontConverter.getInstance().convert(
-					definition);
-			this.stylesheet.addFont(definition.getId(), font);
+			if (this.stylesheet.getFont(definition.getId()) == null) {
+				GzFont font = (GzFont) FontConverter.getInstance().convert(
+						definition);
+				this.stylesheet.addFont(definition.getId(), font);
+			}
 		}
 
 		DefinitionCollection styleDefinitions = this.styleSheetDefinition
@@ -322,9 +335,9 @@ public class CssContentHandlerImpl implements CssContentHandler {
 			Definition definition = styleDefinitions.getDefinition(index);
 			Style style = (Style) StyleConverter.getInstance().convert(
 					definition);
-			
+
 			String classId = definition.getClassId();
-			if(classId != null) {
+			if (classId != null) {
 				Definition parentDefinition = definition.getParent();
 				String parentId = parentDefinition.getId();
 				Style parentStyle = this.stylesheet.getStyle(parentId);

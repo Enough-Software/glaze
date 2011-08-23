@@ -1,15 +1,16 @@
 package de.enough.glaze.style.definition.converter.background;
 
+import net.rim.device.api.ui.decor.Background;
 import de.enough.glaze.style.Color;
-import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.background.GzBackground;
 import de.enough.glaze.style.background.GzBackgroundFactory;
 import de.enough.glaze.style.definition.Definition;
+import de.enough.glaze.style.definition.StyleSheetDefinition;
+import de.enough.glaze.style.definition.converter.BackgroundConverter;
 import de.enough.glaze.style.definition.converter.Converter;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.style.parser.property.ColorPropertyParser;
-import de.enough.glaze.style.parser.property.DimensionPropertyParser;
 import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.parser.property.ValuePropertyParser;
 
@@ -33,7 +34,9 @@ public class MaskBackgroundConverter implements Converter {
 		return INSTANCE;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.enough.glaze.style.definition.converter.Converter#getIds()
 	 */
 	public String[] getIds() {
@@ -41,8 +44,12 @@ public class MaskBackgroundConverter implements Converter {
 				"background-background" };
 	}
 
-	/* (non-Javadoc)
-	 * @see de.enough.glaze.style.definition.converter.Converter#convert(de.enough.glaze.style.definition.Definition)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.enough.glaze.style.definition.converter.Converter#convert(de.enough
+	 * .glaze.style.definition.Definition)
 	 */
 	public Object convert(Definition definition) throws CssSyntaxError {
 		if (!definition.hasProperties(this)) {
@@ -64,8 +71,7 @@ public class MaskBackgroundConverter implements Converter {
 					backgroundMaskProp);
 			if (result instanceof String) {
 				String backgroundId = (String) result;
-				maskBackground = StyleSheet.getInstance().getBackground(
-						backgroundId);
+				maskBackground = getBackground(backgroundId);
 				if (maskBackground == null) {
 					throw new CssSyntaxError("unable to resolve background",
 							backgroundMaskProp);
@@ -92,8 +98,7 @@ public class MaskBackgroundConverter implements Converter {
 					backgroundProp);
 			if (result instanceof String) {
 				String backgroundId = (String) result;
-				background = StyleSheet.getInstance().getBackground(
-						backgroundId);
+				background = getBackground(backgroundId);
 				if (background == null) {
 					throw new CssSyntaxError("unable to resolve background",
 							backgroundMaskProp);
@@ -110,5 +115,20 @@ public class MaskBackgroundConverter implements Converter {
 		} else {
 			return null;
 		}
+	}
+
+	public GzBackground getBackground(String id) throws CssSyntaxError {
+		GzBackground background = StyleSheet.getInstance().getBackground(id);
+
+		if (background == null) {
+			StyleSheetDefinition styleSheetDefinition = StyleSheet
+					.getInstance().getDefinition();
+			Definition backgroundDefinition = styleSheetDefinition
+					.getBackgroundDefinition(id);
+			background = (GzBackground) BackgroundConverter.getInstance()
+					.convert(backgroundDefinition);
+		}
+
+		return background;
 	}
 }

@@ -9,7 +9,9 @@ import java.util.Vector;
 
 import de.enough.glaze.style.background.GzBackground;
 import de.enough.glaze.style.border.GzBorder;
+import de.enough.glaze.style.definition.DefinitionCollection;
 import de.enough.glaze.style.definition.StyleSheetDefinition;
+import de.enough.glaze.style.definition.converter.BorderConverter;
 import de.enough.glaze.style.definition.converter.Converter;
 import de.enough.glaze.style.extension.Extension;
 import de.enough.glaze.style.extension.Processor;
@@ -128,12 +130,16 @@ public class StyleSheet {
 	}
 
 	private void load(InputStream stream) throws IOException, CssSyntaxError {
+		try {
 		InputStreamReader reader = new InputStreamReader(stream);
 		CssParser cssParser = new CssParser(reader);
 		CssContentHandlerImpl cssContentHandler = new CssContentHandlerImpl(
 				StyleSheet.getInstance());
 		cssParser.setContentHandler(cssContentHandler);
 		cssParser.parse();
+		} catch(NullPointerException e) {
+			System.out.println("NPE");
+		}
 	}
 
 	public Color getColor(String id) {
@@ -191,6 +197,13 @@ public class StyleSheet {
 	
 	public StyleSheetDefinition getDefinition() {
 		return this.definition;
+	}
+	
+	public void clear() {
+		this.backgrounds.clear();
+		this.borders.clear();
+		this.fonts.clear();
+		this.styles.clear();
 	}
 
 }

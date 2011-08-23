@@ -3,35 +3,100 @@ colors {
 }
 
 borders {
-	textfield_focus {
-		width: 1%;
-		color: red;
+	bdr_textfield {
+		width: 0.5sp;
+		color: silver;
+	}
+
+	bdr_button {
+		color: silver;
+		width: 0.5sp;
+	}
+
+	bdr_button_focus {
+		color: #AAAAFF;
+		width: 0.5sp;
 	}
 }
 
 fonts {
 	fnt_textfield {
-		size: 16pt;
+		size: 8pt;
+	}
+
+	fnt_button {
+		size: 8pt;
+		style: bold;
 	}
 }
 
 backgrounds {
-	content {
+	content_mask {
+		type: rounded;
+		color: blue;
+		arcs: 3% 3% 3% 3%;		
+	}
+
+	content_base {
 		type: gradient;
 		colors: yellow green;
+	}	
+
+	content {
+		/*color: orange;*/
+		type: mask;
+		mask: content_mask;
+		mask-color: blue;
+		background: content_base;
 	}
+
+	textfield {
+		type: gradient;
+		colors: #666666 white;	
+		offsets: 0% 1sp;
+	}
+
+	button {
+		color: white;
+	}
+
+	bg_button_focus {
+		color: blue;
+	}
+
+	bg_button_active {
+		color: #AAAAFF;
+	}	
 }
 
 content {
 	background: content;
-	margin: 5%;
 	padding: 2%;
+	margin: 3%;
 }
 
 textfield {
 	font: fnt_textfield;
-	font-style: italic;
-	padding: 5%;
+	padding: 2%;
 	margin: 1%;
-	background-color: white;
+	background: textfield;
+	border: bdr_textfield;
+}
+
+button {
+	padding: 2%;
+	margin: 1%;
+	border: bdr_button;
+	background: button;
+	font: fnt_button;
+}
+
+button:focus {
+	border: bdr_button_focus;
+	background: bg_button_focus;
+}
+
+button:active {
+	border: bdr_button_focus;
+	background: bg_button_active;
 }

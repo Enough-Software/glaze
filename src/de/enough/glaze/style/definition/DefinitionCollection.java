@@ -14,12 +14,18 @@ public class DefinitionCollection {
 	 * the definitions
 	 */
 	private final Vector definitions;
+	
+	private int cursor;
 
 	/**
 	 * Creates a new {@link DefinitionCollection} instance
 	 */
 	public DefinitionCollection() {
 		this.definitions = new Vector();
+	}
+	
+	public void resetCursor() {
+		this.cursor = 0;
 	}
 
 	/**
@@ -30,9 +36,9 @@ public class DefinitionCollection {
 	 */
 	public void addDefinition(Definition definition) {
 		String id = definition.getId();
-		Definition originalDefinition = getDefinition(id);
-		if (originalDefinition != null) {
-			int index = this.definitions.indexOf(originalDefinition);
+		Definition storedDefinition = getDefinition(id);
+		if (storedDefinition != null) {
+			int index = this.definitions.indexOf(storedDefinition);
 			this.definitions.setElementAt(definition, index);
 		} else {
 			this.definitions.addElement(definition);

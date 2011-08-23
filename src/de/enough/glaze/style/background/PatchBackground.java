@@ -3,7 +3,6 @@ package de.enough.glaze.style.background;
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.ui.XYRect;
-import de.enough.glaze.style.Color;
 import de.enough.glaze.style.Dimension;
 
 public class PatchBackground extends GzBackground {

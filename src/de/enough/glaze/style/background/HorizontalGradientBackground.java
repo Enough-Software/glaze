@@ -1,9 +1,7 @@
 package de.enough.glaze.style.background;
 
-import net.rim.device.api.system.EncodedImage;
 import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.ui.XYRect;
-import net.rim.device.api.ui.image.Image;
 import de.enough.glaze.drawing.DrawUtils;
 import de.enough.glaze.style.Color;
 import de.enough.glaze.style.Dimension;

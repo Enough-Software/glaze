@@ -6,6 +6,7 @@ import de.enough.glaze.style.background.GzBackground;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.converter.background.GradientBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.ImageBackgroundConverter;
+import de.enough.glaze.style.definition.converter.background.MaskBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.RoundedBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.SolidBackgroundConverter;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
@@ -58,6 +59,7 @@ public class BackgroundConverter implements Converter {
 			addIds(ImageBackgroundConverter.getInstance(), idCollection);
 			addIds(RoundedBackgroundConverter.getInstance(), idCollection);
 			addIds(GradientBackgroundConverter.getInstance(), idCollection);
+			addIds(MaskBackgroundConverter.getInstance(), idCollection);
 			addIds(new String[] { "background-type" }, idCollection);
 
 			// store the ids
@@ -169,6 +171,9 @@ public class BackgroundConverter implements Converter {
 					.convert(definition);
 		} else if ("gradient".equals(backgroundType)) {
 			return (GzBackground) GradientBackgroundConverter.getInstance()
+					.convert(definition);
+		} else if ("mask".equals(backgroundType)) {
+			return (GzBackground) MaskBackgroundConverter.getInstance()
 					.convert(definition);
 		} else {
 			throw new CssSyntaxError("unknown background type",
