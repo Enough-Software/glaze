@@ -42,6 +42,7 @@ public class GradientBackgroundConverter implements Converter {
 			return null;
 		}
 
+		Property backgroundTypeProp = definition.getProperty("background-type");
 		Property backgroundOrientationProp = definition
 				.getProperty("background-orientation");
 		Property backgroundColorsProp = definition
@@ -62,53 +63,57 @@ public class GradientBackgroundConverter implements Converter {
 				throw new CssSyntaxError("must be 2 colors",
 						backgroundColorsProp);
 			}
+		}
 
-			if (backgroundOrientationProp != null) {
-				result = ValuePropertyParser.getInstance().parse(
-						backgroundOrientationProp);
-				if (result instanceof String) {
-					String orientationValue = (String) result;
-					if ("vertical".equals(orientationValue)
-							|| "horizontal".equals(orientationValue)) {
-						orientation = orientationValue;
-					} else {
-						throw new CssSyntaxError(
-								"invalid background gradient orientation",
-								backgroundOrientationProp);
-					}
+		if (backgroundOrientationProp != null) {
+			Object result = ValuePropertyParser.getInstance().parse(
+					backgroundOrientationProp);
+			if (result instanceof String) {
+				String orientationValue = (String) result;
+				if ("vertical".equals(orientationValue)
+						|| "horizontal".equals(orientationValue)) {
+					orientation = orientationValue;
 				} else {
-					throw new CssSyntaxError("must be a single id",
+					throw new CssSyntaxError(
+							"invalid background gradient orientation",
 							backgroundOrientationProp);
 				}
 			} else {
-				orientation = "vertical";
+				throw new CssSyntaxError("must be a single id",
+						backgroundOrientationProp);
 			}
+		} else {
+			orientation = "vertical";
+		}
 
-			if (backgroundOffsetsProp != null) {
-				result = DimensionPropertyParser.getInstance().parse(
-						backgroundOffsetsProp);
-				if (result instanceof Dimension[]) {
-					Dimension[] dimensions = (Dimension[]) result;
-					if (dimensions.length == 2) {
-						offsets = (Dimension[]) result;
-					} else {
-						throw new CssSyntaxError("must be 2 dimensions",
-								backgroundOffsetsProp);
-					}
+		if (backgroundOffsetsProp != null) {
+			Object result = DimensionPropertyParser.getInstance().parse(
+					backgroundOffsetsProp);
+			if (result instanceof Dimension[]) {
+				Dimension[] dimensions = (Dimension[]) result;
+				if (dimensions.length == 2) {
+					offsets = (Dimension[]) result;
 				} else {
 					throw new CssSyntaxError("must be 2 dimensions",
 							backgroundOffsetsProp);
 				}
 			} else {
-				offsets = new Dimension[] {
-						new Dimension(0, Dimension.UNIT_PERCENT),
-						new Dimension(100, Dimension.UNIT_PERCENT) };
+				throw new CssSyntaxError("must be 2 dimensions",
+						backgroundOffsetsProp);
 			}
-
-			return GzBackgroundFactory.createGradientBackground(orientation,
-					colors, offsets);
+		} else {
+			offsets = new Dimension[] {
+					new Dimension(0, Dimension.UNIT_PERCENT),
+					new Dimension(100, Dimension.UNIT_PERCENT) };
 		}
 
-		return null;
+		if (orientation != null && colors != null && offsets != null) {
+			return GzBackgroundFactory.createGradientBackground(orientation,
+					colors, offsets);
+		} else {
+			throw new CssSyntaxError(
+					"unable to create gradient background, properties are missing",
+					backgroundTypeProp);
+		}
 	}
 }

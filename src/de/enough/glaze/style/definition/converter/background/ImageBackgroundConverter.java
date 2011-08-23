@@ -44,12 +44,15 @@ public class ImageBackgroundConverter implements Converter {
 			return null;
 		}
 
+		Property backgroundTypeProp = definition.getProperty("background-type");
 		Property backgroundImageProp = definition
 				.getProperty("background-image");
 		Property backgroundImagePositionProp = definition
-				.getProperty(new String[]{"background-image-position","background-position"});
+				.getProperty(new String[] { "background-image-position",
+						"background-position" });
 		Property backgroundImageRepeatProp = definition
-				.getProperty(new String[]{"background-image-repeat","background-repeat"});
+				.getProperty(new String[] { "background-image-repeat",
+						"background-repeat" });
 
 		Bitmap imageBitmap = null;
 		int imagePosition = ImageBackground.REPEAT_NONE;
@@ -101,8 +104,14 @@ public class ImageBackgroundConverter implements Converter {
 				}
 			}
 
-			return GzBackgroundFactory.createImageBackground(imageBitmap,
-					imagePosition, imageRepeat);
+			if (imageBitmap != null) {
+				return GzBackgroundFactory.createImageBackground(imageBitmap,
+						imagePosition, imageRepeat);
+			} else {
+				throw new CssSyntaxError(
+						"unable to create image background, properties are missing",
+						backgroundTypeProp);
+			}
 		}
 
 		return null;

@@ -6,6 +6,7 @@ import de.enough.glaze.style.background.GzBackground;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.converter.background.GradientBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.ImageBackgroundConverter;
+import de.enough.glaze.style.definition.converter.background.LayerBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.MaskBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.RoundedBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.SolidBackgroundConverter;
@@ -175,11 +176,12 @@ public class BackgroundConverter implements Converter {
 		} else if ("mask".equals(backgroundType)) {
 			return (GzBackground) MaskBackgroundConverter.getInstance()
 					.convert(definition);
-		} else if ("layer".equals(backgroundType) ) {
-			//return (GzBackground) Layer
-		} else throw new CssSyntaxError("unknown background type",
+		} else if ("layer".equals(backgroundType)) {
+			return (GzBackground) LayerBackgroundConverter.getInstance()
+					.convert(definition);
+		} else {
+			throw new CssSyntaxError("unknown background type",
 					backgroundTypeProperty);
-	
-		return null;
-	}
+		}
+		}
 }
