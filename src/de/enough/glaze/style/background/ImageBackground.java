@@ -33,27 +33,26 @@ public class ImageBackground extends GzBackground {
 	 */
 	public void draw(Graphics graphics, int x, int y, int width, int height) {
 		int imageWidth = this.image.getWidth();
-		int imageHeight = this.image.getHeight();
-		
+		int imageHeight = this.image.getHeight();		
 
 		// Calculate startX and startY for drawing the image, based on the
 		// position flag
 		int startX = 0, startY = 0;
 		if ((this.positionFlag & POSITION_TOP) != 0) {
-			startY = 0;
+			startY = y;
 		}
 		if ((this.positionFlag & POSITION_BOTTOM) != 0) {
-			startY = height - imageHeight;
+			startY = y + height - imageHeight;
 		}
 		if ((this.positionFlag & POSITION_LEFT) != 0) {
-			startX = 0;
+			startX = x;
 		}
 		if ((this.positionFlag & POSITION_RIGHT) != 0) {
-			startX = width - imageWidth;
+			startX = x + width - imageWidth;
 		}
 		if ((this.positionFlag & POSITION_CENTER) != 0) {
-			startX = (width - imageWidth) / 2;
-			startY = (height - imageHeight) / 2;
+			startX = x + (width - imageWidth) / 2;
+			startY = y + (height - imageHeight) / 2;
 		}
 
 		// Calculate endX and endY for drawing the image, based on the repeat
@@ -63,10 +62,18 @@ public class ImageBackground extends GzBackground {
 		if ((this.repeatFlag & REPEAT_X) != 0) {
 			endX = width;
 			startX = 0;
+			if ( (this.positionFlag & POSITION_RIGHT)  != 0) {
+				int offset = (width % this.image.getWidth()) - image.getWidth();
+				startX += offset;
+			}
 		}
 		if ((this.repeatFlag & REPEAT_Y) != 0) {
 			endY = height;
 			startY = 0;
+			if ( (this.positionFlag & POSITION_BOTTOM)  != 0) {
+				int offset = (height % this.image.getHeight()) - image.getHeight();
+				startY += offset;
+			}
 		}
 
 		// Draw the image

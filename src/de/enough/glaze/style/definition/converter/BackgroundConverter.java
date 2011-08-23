@@ -176,10 +176,10 @@ public class BackgroundConverter implements Converter {
 			return (GzBackground) MaskBackgroundConverter.getInstance()
 					.convert(definition);
 		} else if ("layer".equals(backgroundType) ) {
-			return (GzBackground) Layer
+			//return (GzBackground) Layer
 		} else throw new CssSyntaxError("unknown background type",
 					backgroundTypeProperty);
-		}
+	
+		return null;
 	}
-
 }
