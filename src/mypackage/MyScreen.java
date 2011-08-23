@@ -35,7 +35,7 @@ public final class MyScreen extends MainScreen
         content.add(usernameField,"textfield");
         
         ButtonField loginButton = new ButtonField("Login", Field.FIELD_RIGHT);
-        content.add(loginButton, "button");
+        content.add(loginButton, "content");
         
         root.add(content,"content");
         add(root);

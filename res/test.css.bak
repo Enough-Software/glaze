@@ -1,0 +1,19 @@
+fonts {
+	redFont {
+		size: 16pt;
+		color: red;
+		style: italic;
+	}
+	
+	blueFont extends redFont{
+		color: blue;
+		style: bold underlined;
+	}
+}
+
+block {
+	font: blueFont;
+	font-size: 18pt;
+	margin: 5%;
+	padding: 1% 2%;
+}

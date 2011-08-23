@@ -9,6 +9,7 @@ import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.background.GzBackground;
 import de.enough.glaze.style.handler.FieldStyleHandler;
 import de.enough.glaze.style.handler.FieldStyleHandlerList;
+import net.rim.device.api.ui.Manager;
 
 public class VerticalFieldManager extends
 		net.rim.device.api.ui.container.VerticalFieldManager {
@@ -127,6 +128,10 @@ public class VerticalFieldManager extends
 		}
 
 		super.sublayout(maxWidth, maxHeight);
+	}
+	
+	public void paint(Graphics g) {
+		subpaint(g);
 	}
 
 	/*

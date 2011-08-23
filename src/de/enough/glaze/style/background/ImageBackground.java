@@ -34,6 +34,7 @@ public class ImageBackground extends GzBackground {
 	public void draw(Graphics graphics, int x, int y, int width, int height) {
 		int imageWidth = this.image.getWidth();
 		int imageHeight = this.image.getHeight();
+		
 
 		// Calculate startX and startY for drawing the image, based on the
 		// position flag
@@ -80,5 +81,15 @@ public class ImageBackground extends GzBackground {
 			x += imageWidth;
 			y = startY;
 		}
+		graphics.popContext();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.rim.device.api.ui.decor.Background#isTransparent()
+	 */
+	public boolean isTransparent() {
+		return true;
+	} 
 }

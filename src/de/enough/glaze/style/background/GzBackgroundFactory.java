@@ -121,7 +121,7 @@ public class GzBackgroundFactory {
 		// 11px and the bottom height is 12px
 		// 10px 11px 12px 13px : the top height is 10px, the right width is
 		// 11px, the bottom height is 12px and the left width is 13px
-		return null;
+		return new PatchBackground(bitmap, margin, tiling);
 	}
 
 	/**

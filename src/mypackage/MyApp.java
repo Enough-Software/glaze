@@ -1,7 +1,6 @@
 package mypackage;
 
 import net.rim.device.api.ui.UiApplication;
-import net.rim.device.api.ui.component.Dialog;
 import de.enough.glaze.log.Log;
 import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
@@ -36,13 +35,11 @@ public class MyApp extends UiApplication {
 	public static void updateStyle() {
 		try {
 			StyleSheet.getInstance().load(
-					"http://pastebin.com/raw.php?i=XAVz9Lds");
+					"http://pastebin.com/raw.php?i=taVfCkAT");
 		} catch (CssSyntaxError e) {
 			// do nothing
 		} catch (Throwable t) {
 			Log.e("error", t);
-			Dialog dialog = new Dialog(Dialog.D_OK,t.getMessage(),Dialog.OK,null,0);
-			dialog.show();
 			t.printStackTrace();
 		}
 	}
