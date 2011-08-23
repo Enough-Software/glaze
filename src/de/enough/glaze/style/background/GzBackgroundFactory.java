@@ -155,7 +155,7 @@ public class GzBackgroundFactory {
 	 *            the margins
 	 * @return the created background
 	 */
-	public static GzBackground createLayerBackground(Background[] backgrounds,
+	public static GzBackground createLayerBackground(GzBackground[] backgrounds,
 			Dimension[] margins) {
 		// a layer background which layers the given backgrounds onto each other
 		// (see de.enough.polish.ui.backgrounds.LayerBackground)

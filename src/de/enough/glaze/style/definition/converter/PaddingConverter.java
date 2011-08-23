@@ -51,8 +51,10 @@ public class PaddingConverter implements Converter {
 	 * .glaze.style.definition.Definition)
 	 */
 	public Object convert(Definition definition) throws CssSyntaxError {
+		Padding padding = new Padding();
+		
 		if (!definition.hasProperties(this)) {
-			return null;
+			return padding;
 		}
 
 		Property paddingProp = definition.getProperty("padding");
@@ -61,12 +63,10 @@ public class PaddingConverter implements Converter {
 		Property paddingRightProp = definition.getProperty("padding-right");
 		Property paddingBottomProp = definition.getProperty("padding-bottom");
 
-		Padding padding = null;
 
 		if (paddingProp != null) {
 			Object result = DimensionPropertyParser.getInstance().parse(
 					paddingProp);
-			padding = new Padding();
 			if (result instanceof Dimension) {
 				Dimension dimension = (Dimension) result;
 				padding.set(dimension);
@@ -91,9 +91,6 @@ public class PaddingConverter implements Converter {
 		}
 
 		if (paddingLeftProp != null) {
-			if (padding == null) {
-				padding = new Padding();
-			}
 			Object result = (Dimension) DimensionPropertyParser.getInstance()
 					.parse(paddingLeftProp);
 			if (result instanceof Dimension) {
@@ -106,9 +103,6 @@ public class PaddingConverter implements Converter {
 		}
 
 		if (paddingTopProp != null) {
-			if (padding == null) {
-				padding = new Padding();
-			}
 			Object result = (Dimension) DimensionPropertyParser.getInstance()
 					.parse(paddingTopProp);
 			if (result instanceof Dimension) {
@@ -121,9 +115,6 @@ public class PaddingConverter implements Converter {
 		}
 
 		if (paddingRightProp != null) {
-			if (padding == null) {
-				padding = new Padding();
-			}
 			Object result = (Dimension) DimensionPropertyParser.getInstance()
 					.parse(paddingRightProp);
 			if (result instanceof Dimension) {
@@ -136,9 +127,6 @@ public class PaddingConverter implements Converter {
 		}
 
 		if (paddingBottomProp != null) {
-			if (padding == null) {
-				padding = new Padding();
-			}
 			Object result = (Dimension) DimensionPropertyParser.getInstance()
 					.parse(paddingBottomProp);
 			if (result instanceof Dimension) {

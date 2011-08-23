@@ -2,9 +2,11 @@ package de.enough.glaze.ui.container;
 
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
+import net.rim.device.api.ui.Manager;
 import de.enough.glaze.log.Log;
 import de.enough.glaze.style.Style;
 import de.enough.glaze.style.StyleSheet;
+import de.enough.glaze.style.background.GzBackground;
 import de.enough.glaze.style.handler.FieldStyleHandler;
 import de.enough.glaze.style.handler.FieldStyleHandlerList;
 
@@ -12,7 +14,7 @@ public class VerticalFieldManager extends
 		net.rim.device.api.ui.container.VerticalFieldManager {
 
 	private FieldStyleHandlerList handlers;
-	
+
 	public VerticalFieldManager() {
 		this(0);
 	}
@@ -136,8 +138,22 @@ public class VerticalFieldManager extends
 	 */
 	protected void subpaint(Graphics graphics) {
 		Log.d("paint", this);
-		super.subpaint(graphics);
-		
+
+		for (int index = 0; index < getFieldCount(); index++) {
+			Field field = getField(index);
+			if (field instanceof Manager) {
+				FieldStyleHandler handler = this.handlers.get(index);
+				GzBackground background = handler.getStyle().getBackground();
+				background.setField(field);
+				paintChild(graphics, field);
+				background.setField(null);
+			} else {
+				paintChild(graphics, field);
+			}
+		}
+
+		// super.subpaint(graphics);
+
 		for (int index = 0; index < getFieldCount(); index++) {
 			FieldStyleHandler handler = this.handlers.get(index);
 			if (handler.isVisualStateChanged()) {

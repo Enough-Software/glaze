@@ -26,7 +26,7 @@ public class MyApp extends UiApplication {
 	 * Creates a new MyApp object
 	 */
 	public MyApp() {
-		Log.setLevel(Log.DEBUG);
+		Log.setLevel(Log.ERROR);
 
 		updateStyle();
 		pushScreen(new MyScreen());

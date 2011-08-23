@@ -37,7 +37,7 @@ public class StyleSheet {
 	private final Vector extensions;
 
 	private final Vector listeners;
-	
+
 	private StyleSheetDefinition definition;
 
 	public static StyleSheet getInstance() {
@@ -130,16 +130,12 @@ public class StyleSheet {
 	}
 
 	private void load(InputStream stream) throws IOException, CssSyntaxError {
-		try {
 		InputStreamReader reader = new InputStreamReader(stream);
 		CssParser cssParser = new CssParser(reader);
 		CssContentHandlerImpl cssContentHandler = new CssContentHandlerImpl(
 				StyleSheet.getInstance());
 		cssParser.setContentHandler(cssContentHandler);
 		cssParser.parse();
-		} catch(NullPointerException e) {
-			System.out.println("NPE");
-		}
 	}
 
 	public Color getColor(String id) {
@@ -194,11 +190,11 @@ public class StyleSheet {
 	public Enumeration getExtensions() {
 		return this.extensions.elements();
 	}
-	
+
 	public StyleSheetDefinition getDefinition() {
 		return this.definition;
 	}
-	
+
 	public void clear() {
 		this.backgrounds.clear();
 		this.borders.clear();

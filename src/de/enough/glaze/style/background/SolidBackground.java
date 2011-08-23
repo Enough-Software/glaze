@@ -1,7 +1,6 @@
 package de.enough.glaze.style.background;
 
 import net.rim.device.api.ui.Graphics;
-import net.rim.device.api.ui.XYRect;
 import de.enough.glaze.style.Color;
 
 public class SolidBackground extends GzBackground {
@@ -15,12 +14,12 @@ public class SolidBackground extends GzBackground {
 	/* (non-Javadoc)
 	 * @see net.rim.device.api.ui.decor.Background#draw(net.rim.device.api.ui.Graphics, net.rim.device.api.ui.XYRect)
 	 */
-	public void draw(Graphics graphics, XYRect rect) {
+	public void draw(Graphics graphics, int x, int y, int width, int height) {
 		// remember original color
 		int originalColor = graphics.getColor();
 		
 		graphics.setColor(this.color);
-		graphics.fillRect(rect.x, rect.y, rect.width, rect.height);
+		graphics.fillRect(x, y, width, height);
 		
 		// restore original color
 		graphics.setColor(originalColor);
