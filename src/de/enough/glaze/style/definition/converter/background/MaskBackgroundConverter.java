@@ -56,6 +56,7 @@ public class MaskBackgroundConverter implements Converter {
 			return null;
 		}
 
+		Property backgroundTypeProp = definition.getProperty("background-type");
 		Property backgroundMaskProp = definition.getProperty("background-mask");
 		Property backgroundMaskColorProp = definition
 				.getProperty("background-mask-color");
@@ -113,7 +114,7 @@ public class MaskBackgroundConverter implements Converter {
 			return GzBackgroundFactory.createMaskBackground(maskColor,
 					maskBackground, background);
 		} else {
-			return null;
+			throw new CssSyntaxError("unable to create mask background, properties are missing", backgroundTypeProp);
 		}
 	}
 

@@ -40,6 +40,7 @@ public class RoundedBackgroundConverter implements Converter {
 			return null;
 		}
 
+		Property backgroundTypeProp = definition.getProperty("background-type");
 		Property backgroundColorProp = definition
 				.getProperty("background-color");
 		Property backgroundArcsProp = definition.getProperty("background-arcs");
@@ -56,8 +57,6 @@ public class RoundedBackgroundConverter implements Converter {
 				throw new CssSyntaxError("must be a single color",
 						backgroundColorProp);
 			}
-		} else {
-			color = new Color(0);
 		}
 
 		if (backgroundArcsProp != null) {
@@ -75,11 +74,14 @@ public class RoundedBackgroundConverter implements Converter {
 							backgroundArcsProp);
 				}
 			}
-		} else {
-			arcs = DimensionConverterUtils.toArray(new Dimension(5,
-					Dimension.UNIT_PERCENT), 1);
 		}
 
-		return GzBackgroundFactory.createRoundrectBackground(color, arcs);
+		if (color != null && arcs != null) {
+			return GzBackgroundFactory.createRoundrectBackground(color, arcs);
+		} else {
+			throw new CssSyntaxError(
+					"uanble to create rounded background, properties are missing",
+					backgroundTypeProp);
+		}
 	}
 }
