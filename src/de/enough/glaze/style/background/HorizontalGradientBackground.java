@@ -1,9 +1,7 @@
 package de.enough.glaze.style.background;
 
-import net.rim.device.api.system.EncodedImage;
 import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.ui.XYRect;
-import net.rim.device.api.ui.image.Image;
 import de.enough.glaze.drawing.DrawUtils;
 import de.enough.glaze.style.Color;
 import de.enough.glaze.style.Dimension;
@@ -53,7 +51,7 @@ public class HorizontalGradientBackground extends GzBackground {
 		
 		// Draw the pre-gradient area
 		graphics.setColor(this.startColor.getColor());
-		graphics.fillRect(rect.x, rect.y, startGradientPixels, height);
+		graphics.fillRect(0, 0, startGradientPixels, height);
 		
 		// Draw the gradient
 		int [] gradientColors = DrawUtils.getGradient(startColor.getColor(), endColor.getColor(), Math.abs(endGradientPixels-startGradientPixels));
@@ -61,7 +59,7 @@ public class HorizontalGradientBackground extends GzBackground {
 		int i=0;
 		while (pos < endGradientPixels ) {
 			graphics.setColor(gradientColors[i]);
-			graphics.drawLine(rect.x + pos, rect.y, rect.x + pos, rect.y + height);
+			graphics.drawLine(pos, 0, pos, height);
 			i++;
 			pos++;
 		}
@@ -80,6 +78,6 @@ public class HorizontalGradientBackground extends GzBackground {
 	 * @see net.rim.device.api.ui.decor.Background#isTransparent()
 	 */
 	public boolean isTransparent() {
-		return true;
+		return false;
 	} 
 }

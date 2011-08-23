@@ -13,6 +13,12 @@ import de.enough.glaze.style.parser.property.DimensionPropertyParser;
 import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.parser.property.ValuePropertyParser;
 
+/**
+ * Converts a given definition to a font
+ * 
+ * @author Andre
+ * 
+ */
 public class FontConverter implements Converter {
 
 	/**
@@ -33,7 +39,9 @@ public class FontConverter implements Converter {
 		return INSTANCE;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.enough.glaze.style.definition.converter.Converter#getIds()
 	 */
 	public String[] getIds() {
@@ -49,16 +57,17 @@ public class FontConverter implements Converter {
 	 * .glaze.style.definition.Definition)
 	 */
 	public Object convert(Definition definition) throws CssSyntaxError {
-		if(!definition.hasProperties(this)) {
+		if (!definition.hasProperties(this)) {
 			return null;
 		}
-		
+
 		Property fontfamilyAttr = definition.getProperty("font-family");
 		Property fontSizeAttr = definition.getProperty("font-size");
 		Property fontStyleAttr = definition.getProperty("font-style");
 		Property fontColorAttr = definition.getProperty("font-color");
 		Property colorAttr = definition.getProperty("color");
 
+		// prepare the default values
 		Font defaultFont = Font.getDefault();
 		FontFamily fontFamily = defaultFont.getFontFamily();
 		Dimension fontSize = new Dimension(defaultFont.getHeight(),
@@ -66,6 +75,7 @@ public class FontConverter implements Converter {
 		int fontStyle = defaultFont.getStyle();
 		Color fontColor = new Color(0x000000);
 
+		// convert the font-family property
 		if (fontfamilyAttr != null) {
 			String fontName = fontFamily.getName();
 			try {
@@ -75,11 +85,13 @@ public class FontConverter implements Converter {
 			}
 		}
 
+		// convert the font-size property
 		if (fontSizeAttr != null) {
 			fontSize = (Dimension) DimensionPropertyParser.getInstance().parse(
 					fontSizeAttr);
 		}
 
+		// convert the font-style property
 		if (fontStyleAttr != null) {
 			Object result = ValuePropertyParser.getInstance().parse(
 					fontStyleAttr);
@@ -95,33 +107,49 @@ public class FontConverter implements Converter {
 			}
 		}
 
+		// convert the font-color property
 		if (fontColorAttr != null) {
 			fontColor = (Color) ColorPropertyParser.getInstance().parse(
 					fontColorAttr);
 		}
 
+		// convert the color property
 		if (colorAttr != null) {
 			fontColor = (Color) ColorPropertyParser.getInstance().parse(
 					colorAttr);
 		}
 
-		int fontHeight = fontSize.getValue();
-		Font resultFont = fontFamily
-				.getFont(fontStyle, fontHeight, Ui.UNITS_px);
+		// get the font size in pixels
+		int fontHeightPixels = fontSize.getValue();
+
+		// create the result font
+		Font resultFont = fontFamily.getFont(fontStyle, fontHeightPixels,
+				Ui.UNITS_px);
 
 		return new GzFont(resultFont, fontColor);
 	}
 
-	private int getFontStyle(String fontStyleEnum, Property fontStyleAttr)
+	/**
+	 * Returns the font style bit for the given font style value
+	 * 
+	 * @param fontStyleValue
+	 *            the font style value
+	 * @param fontStyleProp
+	 *            the font style property
+	 * @return the font style bit
+	 * @throws CssSyntaxError
+	 *             if the css syntax is wrong
+	 */
+	private int getFontStyle(String fontStyleValue, Property fontStyleProp)
 			throws CssSyntaxError {
-		if (GzFont.STYLE_BOLD.equals(fontStyleEnum)) {
+		if (GzFont.STYLE_BOLD.equals(fontStyleValue)) {
 			return Font.BOLD;
-		} else if (GzFont.STYLE_UNDERLINED.equals(fontStyleEnum)) {
+		} else if (GzFont.STYLE_UNDERLINED.equals(fontStyleValue)) {
 			return Font.UNDERLINED;
-		} else if (GzFont.STYLE_ITALIC.equals(fontStyleEnum)) {
+		} else if (GzFont.STYLE_ITALIC.equals(fontStyleValue)) {
 			return Font.ITALIC;
 		} else {
-			throw new CssSyntaxError("unknown font style", fontStyleAttr);
+			throw new CssSyntaxError("unknown font style", fontStyleProp);
 		}
 	}
 }

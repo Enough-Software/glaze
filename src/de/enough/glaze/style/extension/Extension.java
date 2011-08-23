@@ -2,6 +2,11 @@ package de.enough.glaze.style.extension;
 
 import de.enough.glaze.style.definition.converter.Converter;
 
+/**
+ * An stylesheet extension
+ * @author Andre
+ *
+ */
 public class Extension {
 	
 	private final Converter converter;

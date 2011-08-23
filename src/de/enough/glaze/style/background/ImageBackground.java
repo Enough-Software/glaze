@@ -65,18 +65,10 @@ public class ImageBackground extends GzBackground {
 		if ((this.repeatFlag & REPEAT_X) != 0) {
 			endX = width;
 			startX = 0;
-			if ( (this.positionFlag & POSITION_RIGHT)  != 0) {
-				int offset = (rect.width % this.image.getWidth()) - image.getWidth();
-				startX += offset;
-			}
 		}
 		if ((this.repeatFlag & REPEAT_Y) != 0) {
 			endY = height;
 			startY = 0;
-			if ( (this.positionFlag & POSITION_BOTTOM)  != 0) {
-				int offset = (rect.height % this.image.getHeight()) - image.getHeight();
-				startY += offset;
-			}
 		}
 
 		// Draw the image

@@ -140,7 +140,7 @@ public class Log {
 	 */
 	public static void w(String message, Object object) {
 		if (isLevelAllowed(WARN)) {
-			message = toLog(message + " : " + object.toString());
+			message = toLog(message + " : " + object);
 			System.out.println(message);
 		}
 	}
@@ -167,7 +167,7 @@ public class Log {
 	 *            the object
 	 */
 	public static void e(String message, Object object) {
-		e(message + " : " + object.toString());
+		e(message + " : " + object);
 	}
 
 	/**
@@ -179,11 +179,9 @@ public class Log {
 	 *            the {@link Throwable}
 	 */
 	public static void e(String message, Throwable t) {
-		if (isLevelAllowed(ERROR)) {
-			message = toLog(t.getMessage());
-			System.err.println(message);
-			t.printStackTrace();
-		}
+		message = toLog(t.getMessage());
+		System.err.println(message);
+		t.printStackTrace();
 	}
 
 	/**
@@ -229,7 +227,7 @@ public class Log {
 
 		messageBuffer.append(" : ");
 		messageBuffer.append(error);
-		if(value != null) {
+		if (value != null) {
 			messageBuffer.append(" : ");
 			messageBuffer.append("'" + value + "'");
 		}

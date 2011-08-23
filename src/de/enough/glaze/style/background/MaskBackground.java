@@ -24,11 +24,11 @@ public class MaskBackground extends GzBackground {
 		int originalColor = graphics.getColor();
 			
 		Bitmap maskBitmap = new Bitmap(rect.width,rect.height);
-		Graphics maskBuffer = new Graphics(maskBitmap);
+		Graphics maskBuffer = Graphics.create(maskBitmap);
 		this.mask.draw(maskBuffer, new XYRect(0,0,rect.width,rect.height));
 		
 		Bitmap backgroundBitmap = new Bitmap(rect.width,rect.height);
-		Graphics backgroundBuffer = new Graphics(backgroundBitmap);
+		Graphics backgroundBuffer = Graphics.create(backgroundBitmap);
 		this.background.draw(backgroundBuffer, new XYRect(0,0,rect.width,rect.height));
 			
 		int [] maskData = new int[rect.width*rect.height];
