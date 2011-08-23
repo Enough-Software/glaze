@@ -183,5 +183,5 @@ public class BackgroundConverter implements Converter {
 			throw new CssSyntaxError("unknown background type",
 					backgroundTypeProperty);
 		}
-	}
+		}
 }

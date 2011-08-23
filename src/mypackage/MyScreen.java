@@ -3,11 +3,8 @@ package mypackage;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.MenuItem;
 import net.rim.device.api.ui.component.ButtonField;
-import net.rim.device.api.ui.component.LabelField;
 import net.rim.device.api.ui.component.TextField;
-import net.rim.device.api.ui.container.HorizontalFieldManager;
 import net.rim.device.api.ui.container.MainScreen;
-import net.rim.device.api.ui.decor.BackgroundFactory;
 import de.enough.glaze.ui.container.VerticalFieldManager;
 
 /**
@@ -35,7 +32,7 @@ public final class MyScreen extends MainScreen
         content.add(usernameField,"textfield");
         
         ButtonField loginButton = new ButtonField("Login", Field.FIELD_RIGHT);
-        content.add(loginButton, "content");
+        content.add(loginButton, "button");
         
         root.add(content,"content");
         add(root);
