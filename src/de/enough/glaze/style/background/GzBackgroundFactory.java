@@ -33,7 +33,7 @@ public class GzBackgroundFactory {
 		// - arcs : must be 4 values, corresponding to the arc size for the upper-left, upper-right, lower-right
 		// and lower-left corners of the background. If an arc is null, no round edges is drawn
 		// for the given corner.
-		return new RoundrectBackground(color, arcs);
+		return new RoundedBackground(color, arcs);
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class GzBackgroundFactory {
 	 * @return the created background
 	 */
 	public static GzBackground createImageBackground(Bitmap bitmap,
-			String[] position, String repeat) {
+			int position, int repeat) {
 		// a background displaying an image
 		// - bitmap : the image to draw
 		// - position : must be 1 or 2 values of the following :
@@ -59,34 +59,9 @@ public class GzBackgroundFactory {
 		// - repeat : must be 1 value of the following : no-repeat, repeat-x, repeat-y, repeat.
 		// no repeat obviously doesn't repeat the image, 
 		// repeat-x repeats the image across the horizontal space, the vertical position is still respected
-		// repeat-y repeats the image accorss the vertical space, the horizontal position is still respected
-		
-		int positionFlag =0;		
-		int repeatFlag = 0;
-		
-		for (int i=0;i<position.length;i++) {
-			if ( "top".equals(position[i])) {
-				positionFlag |= ImageBackground.POSITION_TOP;
-			} else if ( "bottom".equals(position[i]) ) {
-				positionFlag |= ImageBackground.POSITION_BOTTOM;
-			} else if ( "left".equals(position[i]) ) {
-				positionFlag |= ImageBackground.POSITION_LEFT;
-			} else if ( "right".equals(position[i]) ) {
-				positionFlag |= ImageBackground.POSITION_RIGHT;
-			} else if ( "center".equals(position[i]) ) {
-				positionFlag |= ImageBackground.POSITION_CENTER;
-			}
-		}
-		
-		if ( "repeat".equals(repeat) ) {
-			repeatFlag = ImageBackground.REPEAT_X | ImageBackground.REPEAT_Y;
-		} else if ( "repeat-x".equals(repeat) ) {
-			repeatFlag = ImageBackground.REPEAT_X;
-		} else if ( "repeat-y".equals(repeat) ) {
-			repeatFlag = ImageBackground.REPEAT_Y;
-		}
+		// repeat-y repeats the image across the vertical space, the horizontal position is still respected
 				
-		return new ImageBackground(bitmap, positionFlag, repeatFlag);
+		return new ImageBackground(bitmap, position, repeat);
 	}
 
 	/**
@@ -110,13 +85,11 @@ public class GzBackgroundFactory {
 		// e.g. the gradient color is drawn from 0% of the available width to
 		// 50%,
 		// the rest is filled with the end color
-		if ( "vertical".equals(orientation)) {
-			return new VerticalGradientBackground(colors, offsets);
-		} else if ( "horizontal".equals(orientation) ) {
+		if ( "horizontal".equals(orientation)) {
 			return new HorizontalGradientBackground(colors, offsets);
 		} else {
-			return null;
-		}
+			return new VerticalGradientBackground(colors, offsets);
+		} 
 	}
 
 	/**
@@ -148,7 +121,7 @@ public class GzBackgroundFactory {
 		// 11px and the bottom height is 12px
 		// 10px 11px 12px 13px : the top height is 10px, the right width is
 		// 11px, the bottom height is 12px and the left width is 13px
-		return null;
+		return new PatchBackground(bitmap, margin, tiling);
 	}
 
 	/**

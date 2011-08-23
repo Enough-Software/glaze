@@ -3,13 +3,23 @@ package de.enough.glaze.style.handler;
 import java.util.Vector;
 
 import net.rim.device.api.ui.Field;
+import net.rim.device.api.ui.UiApplication;
+import de.enough.glaze.style.Style;
+import de.enough.glaze.style.StyleSheet;
+import de.enough.glaze.style.StyleSheetListener;
+import de.enough.glaze.style.parser.exception.CssSyntaxError;
+import de.enough.glaze.ui.container.VerticalFieldManager;
 
-public class FieldStyleHandlerList {
+public class FieldStyleHandlerList implements StyleSheetListener {
 
-	private Vector list;
-	
-	public FieldStyleHandlerList() {
+	private final Vector list;
+
+	private final VerticalFieldManager manager;
+
+	public FieldStyleHandlerList(VerticalFieldManager manager) {
+		this.manager = manager;
 		this.list = new Vector();
+		StyleSheet.getInstance().addListener(this);
 	}
 
 	public void add(Field field) {
@@ -41,13 +51,15 @@ public class FieldStyleHandlerList {
 
 	public void delete(Field field) {
 		for (int index = 0; index < this.list.size(); index++) {
-			FieldStyleHandler fieldStyleHandler = (FieldStyleHandler) this.list.elementAt(index);
-			if (fieldStyleHandler.getField().equals(fieldStyleHandler)) {
+			FieldStyleHandler fieldStyleHandler = (FieldStyleHandler) this.list
+					.elementAt(index);
+			if (fieldStyleHandler.getField().equals(field)) {
 				delete(index);
 			}
 		}
 
-		throw new IllegalArgumentException("a field style handler for field " + field + " is already registered");
+		throw new IllegalArgumentException("a field style handler for field "
+				+ field + " is already registered");
 	}
 
 	public void deleteAll() {
@@ -65,8 +77,45 @@ public class FieldStyleHandlerList {
 		delete(index);
 		insert(newField, index);
 	}
-	
+
 	public FieldStyleHandler get(int index) {
-		return (FieldStyleHandler)this.list.elementAt(index);
+		return (FieldStyleHandler) this.list.elementAt(index);
+	}
+
+	public FieldStyleHandler get(Field field) {
+		for (int index = 0; index < this.list.size(); index++) {
+			FieldStyleHandler fieldStyleHandler = (FieldStyleHandler) this.list
+					.elementAt(index);
+			if (fieldStyleHandler.getField().equals(field)) {
+				return fieldStyleHandler;
+			}
+		}
+
+		return null;
+	}
+
+	public void onLoaded(String url) {
+		synchronized (UiApplication.getEventLock()) {
+			for (int index = 0; index < this.list.size(); index++) {
+				FieldStyleHandler fieldStyleHandler = (FieldStyleHandler) this.list
+						.elementAt(index);
+				Style style = fieldStyleHandler.getStyle();
+				Style newStyle = StyleSheet.getInstance().getStyle(style.getId());
+				fieldStyleHandler.setStyle(newStyle);
+			}
+		}
+
+		this.manager.setDirty(true);
+		this.manager.invalidate();
+	}
+
+	public void onSyntaxError(CssSyntaxError syntaxError) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void onError(Exception e) {
+		// TODO Auto-generated method stub
+
 	}
 }

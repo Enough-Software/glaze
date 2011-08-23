@@ -1,22 +1,26 @@
 package de.enough.glaze.style;
 
+import java.util.Enumeration;
+import java.util.Hashtable;
+
 import net.rim.device.api.ui.Field;
 import de.enough.glaze.style.background.GzBackground;
 import de.enough.glaze.style.border.GzBorder;
-import de.enough.glaze.style.definition.Definable;
-import de.enough.glaze.style.definition.Definition;
+import de.enough.glaze.style.extension.Extension;
 import de.enough.glaze.style.font.GzFont;
 
-public class Style implements Definable {
+public class Style {
 
-	private static final String FOCUSED = "focused";
+	private static final String FOCUS = "focus";
 
 	private static final String ACTIVE = "active";
 
 	private static final String DISABLED = "disabled";
 
 	private static final String DISABLED_FOCUSED = "disabled_focused";
-
+	
+	private final String id;
+	
 	private Margin margin;
 
 	private Padding padding;
@@ -26,19 +30,28 @@ public class Style implements Definable {
 	private GzFont font;
 
 	private GzBorder border;
+	
+	private final Hashtable extensions;
 
 	private Style parentStyle;
 
-	private Definition definition;
-
-	private Style focusedStyle;
+	private Style focusStyle;
 
 	private Style activeStyle;
 
 	private Style disabledStyle;
 
 	private Style disabledFocusedStyle;
-
+	
+	public Style(String id) {
+		this.id = id;
+		this.extensions = new Hashtable();
+	}
+	
+	public String getId() {
+		return this.id;
+	}
+	
 	public void setParentStyle(Style parentStyle) {
 		this.parentStyle = parentStyle;
 	}
@@ -47,36 +60,66 @@ public class Style implements Definable {
 		return this.parentStyle;
 	}
 
-	public void setStyle(String styleClass, Style style) {
-		if (FOCUSED.equals(styleClass)) {
-			this.focusedStyle = style;
-		} else if (ACTIVE.equals(styleClass)) {
+	public void setClass(String id, Style style) {
+		if (FOCUS.equals(id)) {
+			this.focusStyle = style;
+		} else if (ACTIVE.equals(id)) {
 			this.activeStyle = style;
-		} else if (DISABLED.equals(styleClass)) {
+		} else if (DISABLED.equals(id)) {
 			this.disabledStyle = style;
-		} else if (DISABLED_FOCUSED.equals(styleClass)) {
+		} else if (DISABLED_FOCUSED.equals(id)) {
 			this.activeStyle = style;
 		} else {
-			throw new IllegalArgumentException(styleClass
+			throw new IllegalArgumentException(id
 					+ " is not a valid style class");
 		}
 	}
 
-	public static boolean isValidClass(String styleClass) {
-		return (FOCUSED.equals(styleClass) || ACTIVE.equals(styleClass)
-				|| DISABLED.equals(styleClass) || DISABLED_FOCUSED
-				.equals(styleClass));
+	public static boolean isClass(String id) {
+		return (FOCUS.equals(id) || ACTIVE.equals(id)
+				|| DISABLED.equals(id) || DISABLED_FOCUSED
+				.equals(id));
 	}
 
 	public Style getStyle(int visualState) {
-		if (visualState == Field.VISUAL_STATE_FOCUS) {
-			return this.focusedStyle;
+		if(this.parentStyle != null) {
+			return getStyle(this.parentStyle, visualState);
+		} else {
+			return getStyle(this, visualState);
+		}
+	}
+	
+	private Style getStyle(Style style, int visualState) {
+		if (visualState == Field.VISUAL_STATE_NORMAL) {
+			return style;
+		} else if (visualState == Field.VISUAL_STATE_FOCUS) {
+			if(style.focusStyle != null) {
+				return style.focusStyle;
+			} else {
+				return style;
+			}
 		} else if (visualState == Field.VISUAL_STATE_ACTIVE) {
-			return this.activeStyle;
+			if(style.activeStyle != null) {
+				return style.activeStyle;
+			} else {
+				if(style.focusStyle != null) {
+					return style.focusStyle;
+				} else {
+					return style;
+				}
+			}
 		} else if (visualState == Field.VISUAL_STATE_DISABLED) {
-			return this.disabledStyle;
-		} else if (visualState == Field.VISUAL_STATE_ACTIVE) {
-			return this.disabledFocusedStyle;
+			if(style.disabledStyle != null) {
+				return style.disabledStyle;
+			} else {
+				return style;
+			}
+		} else if (visualState == Field.VISUAL_STATE_DISABLED_FOCUS) {
+			if(style.disabledFocusedStyle != null) {
+				return style.disabledFocusedStyle;
+			} else {
+				return style;
+			}
 		} else {
 			throw new IllegalArgumentException(visualState
 					+ " is not a valid visual state");
@@ -122,12 +165,16 @@ public class Style implements Definable {
 	public void setBorder(GzBorder border) {
 		this.border = border;
 	}
-
-	public void setDefinition(Definition definition) {
-		this.definition = definition;
+	
+	public void addExtension(Extension extension, Object object) {
+		this.extensions.put(extension, object);
 	}
-
-	public Definition getDefinition() {
-		return this.definition;
+	
+	public Enumeration getExtensions() {
+		return this.extensions.keys();
+	}
+	
+	public Object getExtensionData(Extension extension) {
+		return this.extensions.get(extension);
 	}
 }

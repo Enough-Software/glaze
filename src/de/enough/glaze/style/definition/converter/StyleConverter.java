@@ -1,5 +1,6 @@
 package de.enough.glaze.style.definition.converter;
 
+import java.util.Enumeration;
 import java.util.Vector;
 
 import de.enough.glaze.style.Margin;
@@ -9,6 +10,9 @@ import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.background.GzBackground;
 import de.enough.glaze.style.border.GzBorder;
 import de.enough.glaze.style.definition.Definition;
+import de.enough.glaze.style.definition.DefinitionCollection;
+import de.enough.glaze.style.definition.StyleSheetDefinition;
+import de.enough.glaze.style.extension.Extension;
 import de.enough.glaze.style.font.GzFont;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.style.parser.property.Property;
@@ -46,9 +50,17 @@ public class StyleConverter implements Converter {
 			addIds(MarginConverter.getInstance(), idCollection);
 			addIds(PaddingConverter.getInstance(), idCollection);
 			addIds(FontConverter.getInstance(), idCollection);
+			
+			Enumeration extensions = StyleSheet.getInstance().getExtensions();
+			while(extensions.hasMoreElements()) {
+				Extension extension = (Extension)extensions.nextElement();
+				Converter extensionConverter = extension.getConverter();
+				addIds(extensionConverter, idCollection);
+			}
+			
 			addIds(new String[] { "background", "border", "font" },
 					idCollection);
-
+			
 			this.ids = new String[idCollection.size()];
 			idCollection.copyInto(this.ids);
 		}
@@ -68,8 +80,9 @@ public class StyleConverter implements Converter {
 	}
 
 	public Object convert(Definition definition) throws CssSyntaxError {
-		Style style = new Style();
-		style.setDefinition(definition);
+		validate(definition);
+		
+		Style style = new Style(definition.getId());
 
 		Margin margin = (Margin) MarginConverter.getInstance().convert(
 				definition);
@@ -87,12 +100,24 @@ public class StyleConverter implements Converter {
 
 		GzFont font = convertFont(definition);
 		style.setFont(font);
+		
+		Enumeration extensions = StyleSheet.getInstance().getExtensions();
+		while(extensions.hasMoreElements()) {
+			Extension extension = (Extension)extensions.nextElement();
+			Converter extensionConverter = extension.getConverter();
+			Object result = extensionConverter.convert(definition);
+			if(result != null) {
+				style.addExtension(extension, result);
+			}
+		}
 
 		return style;
 	}
 
 	public GzBackground convertBackground(Definition definition)
 			throws CssSyntaxError {
+		StyleSheetDefinition definitions = StyleSheet.getInstance().getDefinition();
+		DefinitionCollection backgroundDefinitions = definitions.getBackgroundDefinitions();
 		Property backgroundProp = definition.getProperty("background");
 		if (backgroundProp != null) {
 			Object result = ValuePropertyParser.getInstance().parse(
@@ -102,10 +127,9 @@ public class StyleConverter implements Converter {
 				GzBackground background = StyleSheet.getInstance()
 						.getBackground(backgroundId);
 				if (background != null) {
-					if (definition.hasProperties(FontConverter.getInstance())) {
-						Definition backgroundDefinition = background
-								.getDefinition();
-						definition.addDefinition(backgroundDefinition);
+					if (definition.hasProperties(BackgroundConverter.getInstance())) {
+						Definition backgroundDefinition = backgroundDefinitions.getDefinition(backgroundId);
+						definition.addProperties(backgroundDefinition);
 					} else {
 						return background;
 					}
@@ -123,6 +147,8 @@ public class StyleConverter implements Converter {
 	}
 
 	public GzBorder convertBorder(Definition definition) throws CssSyntaxError {
+		StyleSheetDefinition definitions = StyleSheet.getInstance().getDefinition();
+		DefinitionCollection borderDefinitions = definitions.getBorderDefinitions();
 		Property borderProp = definition.getProperty("border");
 		if (borderProp != null) {
 			Object result = ValuePropertyParser.getInstance().parse(borderProp);
@@ -130,9 +156,9 @@ public class StyleConverter implements Converter {
 				String borderId = (String) result;
 				GzBorder border = StyleSheet.getInstance().getBorder(borderId);
 				if (border != null) {
-					if (definition.hasProperties(FontConverter.getInstance())) {
-						Definition borderDefinition = border.getDefinition();
-						definition.addDefinition(borderDefinition);
+					if (definition.hasProperties(BorderConverter.getInstance())) {
+						Definition borderDefinition = borderDefinitions.getDefinition(borderId);
+						definition.addProperties(borderDefinition);
 					} else {
 						return border;
 					}
@@ -149,6 +175,8 @@ public class StyleConverter implements Converter {
 	}
 
 	public GzFont convertFont(Definition definition) throws CssSyntaxError {
+		StyleSheetDefinition definitions = StyleSheet.getInstance().getDefinition();
+		DefinitionCollection fontDefinitions = definitions.getFontDefinitions();
 		Property fontProp = definition.getProperty("font");
 		if (fontProp != null) {
 			Object result = ValuePropertyParser.getInstance().parse(fontProp);
@@ -157,8 +185,8 @@ public class StyleConverter implements Converter {
 				GzFont font = StyleSheet.getInstance().getFont(fontId);
 				if (font != null) {
 					if (definition.hasProperties(FontConverter.getInstance())) {
-						Definition fontDefinition = font.getDefinition();
-						definition.addDefinition(fontDefinition);
+						Definition fontDefinition = fontDefinitions.getDefinition(fontId);
+						definition.addProperties(fontDefinition);
 					} else {
 						return font;
 					}
@@ -168,9 +196,31 @@ public class StyleConverter implements Converter {
 			} else {
 				throw new CssSyntaxError("must be a single id", fontProp);
 			}
+		} 
+		
+		GzFont font = (GzFont) FontConverter.getInstance().convert(definition);
+		return font;
+	}
+	
+	public void validate(Definition definition) throws CssSyntaxError {
+		Enumeration properties = definition.getProperties();
+		while(properties.hasMoreElements()) {
+			Property property = (Property)properties.nextElement();
+			validate(property);
+		}
+	}
+	
+	private void validate(Property property) throws CssSyntaxError {
+		String[] ids = getIds();
+		String propertyId = property.getId();
+		for (int index = 0; index < ids.length; index++) {
+			String id = ids[index];
+			if (id.equals(propertyId)) {
+				return;
+			}
 		}
 
-		return (GzFont) FontConverter.getInstance().convert(definition);
+		throw new CssSyntaxError("unknown property", property.getId(), property.getLine());
 	}
 
 }

@@ -1,10 +1,5 @@
 package mypackage;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import net.rim.device.api.ui.UiApplication;
 import de.enough.glaze.log.Log;
 import de.enough.glaze.style.StyleSheet;
@@ -13,36 +8,41 @@ import de.enough.glaze.style.parser.CssParser;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 
 /**
- * This class extends the UiApplication class, providing a
- * graphical user interface.
+ * This class extends the UiApplication class, providing a graphical user
+ * interface.
  */
-public class MyApp extends UiApplication
-{
-    /**
-     * Entry point for application
-     * @param args Command line arguments (not used)
-     */ 
-    public static void main(String[] args)
-    {
-    	MyApp theApp = new MyApp();       
-        theApp.enterEventDispatcher();
-    }
-    
+public class MyApp extends UiApplication {
+	/**
+	 * Entry point for application
+	 * 
+	 * @param args
+	 *            Command line arguments (not used)
+	 */
+	public static void main(String[] args) {
+		MyApp theApp = new MyApp();
+		theApp.enterEventDispatcher();
+	}
 
-    /**
-     * Creates a new MyApp object
-     */
-    public MyApp()
-    {        
-    	Log.setLevel(Log.DEBUG);
-        try {
-			StyleSheet.getInstance().load("/mytest.css");
-		} catch (IOException e) {
-			System.out.println(e);
+	/**
+	 * Creates a new MyApp object
+	 */
+	public MyApp() {
+		Log.setLevel(Log.ERROR);
+
+		updateStyle();
+		pushScreen(new MyScreen());
+
+	}
+
+	public static void updateStyle() {
+		try {
+			StyleSheet.getInstance().load(
+					"http://pastebin.com/raw.php?i=XAVz9Lds");
 		} catch (CssSyntaxError e) {
-			System.out.println(e);
+			// do nothing
+		} catch (Exception e) {
+			Log.e("error", e);
+			((Throwable)e).printStackTrace();
 		}
-		
-        pushScreen(new MyScreen());
-    }    
+	}
 }
