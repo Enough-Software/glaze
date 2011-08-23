@@ -100,7 +100,11 @@ public class FieldStyleHandlerList implements StyleSheetListener {
 				FieldStyleHandler fieldStyleHandler = (FieldStyleHandler) this.list
 						.elementAt(index);
 				Style style = fieldStyleHandler.getStyle();
-				Style newStyle = StyleSheet.getInstance().getStyle(style.getId());
+				if (style == null) {
+					System.out.println(style);
+				}
+				Style newStyle = StyleSheet.getInstance().getStyle(
+						style.getId());
 				fieldStyleHandler.setStyle(newStyle);
 			}
 		}

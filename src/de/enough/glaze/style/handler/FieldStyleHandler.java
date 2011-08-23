@@ -16,14 +16,20 @@ import de.enough.glaze.style.font.GzFont;
 
 public class FieldStyleHandler {
 
-	private Field field;
+	private final Field field;
 
 	private Style style;
+	
+	private final XYEdges marginXYEdges;
+	
+	private final XYEdges paddingXYEdges;
 
 	private int visualState = Integer.MIN_VALUE;
 
 	public FieldStyleHandler(Field field) {
 		this.field = field;
+		this.marginXYEdges = new XYEdges(0,0,0,0);
+		this.paddingXYEdges = new XYEdges(0,0,0,0);
 	}
 
 	public void setStyle(Style style) {
@@ -50,14 +56,14 @@ public class FieldStyleHandler {
 
 	protected void applyMargin(int availableWidth) {
 		Margin margin = this.style.getMargin();
-		XYEdges marginEdges = margin.toXYEdges(availableWidth);
-		this.field.setMargin(marginEdges);
+		margin.setXYEdges(this.marginXYEdges, availableWidth);
+		this.field.setMargin(this.marginXYEdges);
 	}
 
 	protected void applyPadding(int availableWidth) {
 		Padding padding = this.style.getPadding();
-		XYEdges paddingEdges = padding.toXYEdges(availableWidth);
-		this.field.setPadding(paddingEdges);
+		padding.setXYEdges(this.paddingXYEdges, availableWidth);
+		this.field.setPadding(this.paddingXYEdges);
 	}
 
 	protected void applyBackgrounds() {
@@ -115,7 +121,6 @@ public class FieldStyleHandler {
 		style = this.style.getStyle(Field.VISUAL_STATE_ACTIVE);
 		border = style.getBorder();
 		if (border != null) {
-
 			this.field.setBorder(Field.VISUAL_STATE_ACTIVE, border);
 		}
 

@@ -50,10 +50,6 @@ public class Margin {
 		this.right = right;
 	}
 	
-	public void setRight123131321313(Dimension right) {
-		this.right = right;
-	}
-
 	public void set(Dimension dimension) {
 		setTop(dimension);
 		setLeft(dimension);
@@ -83,12 +79,12 @@ public class Margin {
 		setRight(right);
 	}
 
-	public XYEdges toXYEdges(int availableWidth) {
+	public void setXYEdges(XYEdges xyEdges, int availableWidth) {
 		int leftPixels = this.left.getValue(availableWidth);
 		int topPixels = this.top.getValue(availableWidth);
 		int rightPixels = this.right.getValue(availableWidth);
 		int bottomPixels = this.bottom.getValue(availableWidth);
-		return new XYEdges(topPixels, rightPixels, bottomPixels, leftPixels);
+		xyEdges.set(topPixels, rightPixels, bottomPixels, leftPixels);
 	}
 	
 	/*

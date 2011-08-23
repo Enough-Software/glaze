@@ -51,8 +51,10 @@ public class MarginConverter implements Converter {
 	 * .glaze.style.definition.Definition)
 	 */
 	public Object convert(Definition definition) throws CssSyntaxError {
+		Margin margin = new Margin();
+		
 		if (!definition.hasProperties(this)) {
-			return Margin.ZERO;
+			return margin;
 		}
 
 		Property marginProp = definition.getProperty("margin");
@@ -61,18 +63,14 @@ public class MarginConverter implements Converter {
 		Property marginRightProp = definition.getProperty("margin-right");
 		Property marginBottomProp = definition.getProperty("margin-bottom");
 
-		Margin margin = null;
-
 		if (marginProp != null) {
 			Object result = DimensionPropertyParser.getInstance().parse(
 					marginProp);
 			if (result instanceof Dimension) {
 				Dimension dimension = (Dimension) result;
-				margin = new Margin();
 				margin.set(dimension);
 			} else if (result instanceof Dimension[]) {
 				Dimension[] dimensions = (Dimension[]) result;
-				margin = new Margin();
 				switch (dimensions.length) {
 				case 2:
 					margin.set(dimensions[0], dimensions[1]);
@@ -92,9 +90,6 @@ public class MarginConverter implements Converter {
 		}
 
 		if (marginLeftProp != null) {
-			if (margin == null) {
-				margin = new Margin();
-			}
 			Object result = (Dimension) DimensionPropertyParser.getInstance()
 					.parse(marginLeftProp);
 			if (result instanceof Dimension) {
@@ -107,9 +102,6 @@ public class MarginConverter implements Converter {
 		}
 
 		if (marginTopProp != null) {
-			if (margin == null) {
-				margin = new Margin();
-			}
 			Object result = (Dimension) DimensionPropertyParser.getInstance()
 					.parse(marginTopProp);
 			if (result instanceof Dimension) {
@@ -122,9 +114,6 @@ public class MarginConverter implements Converter {
 		}
 
 		if (marginRightProp != null) {
-			if (margin == null) {
-				margin = new Margin();
-			}
 			Object result = (Dimension) DimensionPropertyParser.getInstance()
 					.parse(marginRightProp);
 			if (result instanceof Dimension) {
@@ -137,9 +126,6 @@ public class MarginConverter implements Converter {
 		}
 
 		if (marginBottomProp != null) {
-			if (margin == null) {
-				margin = new Margin();
-			}
 			Object result = (Dimension) DimensionPropertyParser.getInstance()
 					.parse(marginBottomProp);
 			if (result instanceof Dimension) {

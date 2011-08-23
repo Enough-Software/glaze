@@ -18,9 +18,9 @@ public class Style {
 	private static final String DISABLED = "disabled";
 
 	private static final String DISABLED_FOCUSED = "disabled_focused";
-	
+
 	private final String id;
-	
+
 	private Margin margin;
 
 	private Padding padding;
@@ -30,7 +30,7 @@ public class Style {
 	private GzFont font;
 
 	private GzBorder border;
-	
+
 	private final Hashtable extensions;
 
 	private Style parentStyle;
@@ -42,16 +42,20 @@ public class Style {
 	private Style disabledStyle;
 
 	private Style disabledFocusedStyle;
-	
+
 	public Style(String id) {
 		this.id = id;
 		this.extensions = new Hashtable();
 	}
-	
+
 	public String getId() {
-		return this.id;
+		if (this.parentStyle != null) {
+			return this.parentStyle.getId();
+		} else {
+			return this.id;
+		}
 	}
-	
+
 	public void setParentStyle(Style parentStyle) {
 		this.parentStyle = parentStyle;
 	}
@@ -76,46 +80,45 @@ public class Style {
 	}
 
 	public static boolean isClass(String id) {
-		return (FOCUS.equals(id) || ACTIVE.equals(id)
-				|| DISABLED.equals(id) || DISABLED_FOCUSED
+		return (FOCUS.equals(id) || ACTIVE.equals(id) || DISABLED.equals(id) || DISABLED_FOCUSED
 				.equals(id));
 	}
 
 	public Style getStyle(int visualState) {
-		if(this.parentStyle != null) {
+		if (this.parentStyle != null) {
 			return getStyle(this.parentStyle, visualState);
 		} else {
 			return getStyle(this, visualState);
 		}
 	}
-	
+
 	private Style getStyle(Style style, int visualState) {
 		if (visualState == Field.VISUAL_STATE_NORMAL) {
 			return style;
 		} else if (visualState == Field.VISUAL_STATE_FOCUS) {
-			if(style.focusStyle != null) {
+			if (style.focusStyle != null) {
 				return style.focusStyle;
 			} else {
 				return style;
 			}
 		} else if (visualState == Field.VISUAL_STATE_ACTIVE) {
-			if(style.activeStyle != null) {
+			if (style.activeStyle != null) {
 				return style.activeStyle;
 			} else {
-				if(style.focusStyle != null) {
+				if (style.focusStyle != null) {
 					return style.focusStyle;
 				} else {
 					return style;
 				}
 			}
 		} else if (visualState == Field.VISUAL_STATE_DISABLED) {
-			if(style.disabledStyle != null) {
+			if (style.disabledStyle != null) {
 				return style.disabledStyle;
 			} else {
 				return style;
 			}
 		} else if (visualState == Field.VISUAL_STATE_DISABLED_FOCUS) {
-			if(style.disabledFocusedStyle != null) {
+			if (style.disabledFocusedStyle != null) {
 				return style.disabledFocusedStyle;
 			} else {
 				return style;
@@ -165,15 +168,15 @@ public class Style {
 	public void setBorder(GzBorder border) {
 		this.border = border;
 	}
-	
+
 	public void addExtension(Extension extension, Object object) {
 		this.extensions.put(extension, object);
 	}
-	
+
 	public Enumeration getExtensions() {
 		return this.extensions.keys();
 	}
-	
+
 	public Object getExtensionData(Extension extension) {
 		return this.extensions.get(extension);
 	}

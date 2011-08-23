@@ -83,12 +83,12 @@ public class Padding {
 		setRight(right);
 	}
 
-	public XYEdges toXYEdges(int availableWidth) {
+	public void setXYEdges(XYEdges xyEdges, int availableWidth) {
 		int leftPixels = this.left.getValue(availableWidth);
 		int topPixels = this.top.getValue(availableWidth);
 		int rightPixels = this.right.getValue(availableWidth);
 		int bottomPixels = this.bottom.getValue(availableWidth);
-		return new XYEdges(topPixels, rightPixels, bottomPixels, leftPixels);
+		xyEdges.set(topPixels, rightPixels, bottomPixels, leftPixels);
 	}
 	
 	/*

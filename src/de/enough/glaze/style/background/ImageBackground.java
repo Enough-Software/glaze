@@ -2,7 +2,6 @@ package de.enough.glaze.style.background;
 
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.Graphics;
-import net.rim.device.api.ui.XYRect;
 
 public class ImageBackground extends GzBackground {
 
@@ -32,9 +31,7 @@ public class ImageBackground extends GzBackground {
 	 * net.rim.device.api.ui.decor.Background#draw(net.rim.device.api.ui.Graphics
 	 * , net.rim.device.api.ui.XYRect)
 	 */
-	public void draw(Graphics graphics, XYRect rect) {
-		int width = rect.width;
-		int height = rect.height;
+	public void draw(Graphics graphics, int x, int y, int width, int height) {
 		int imageWidth = this.image.getWidth();
 		int imageHeight = this.image.getHeight();
 		
@@ -73,12 +70,13 @@ public class ImageBackground extends GzBackground {
 		}
 
 		// Draw the image
-		int x = startX, y = startY;
-		graphics.pushContext(rect.x, rect.y, rect.width, rect.height, 0, 0);
-		while ( x <=  endX ) {
-			while ( y <= endY ) {
-				graphics.drawBitmap(rect.x + x, rect.y + y, imageWidth, imageHeight, this.image,0,0);
-				y+= imageHeight;
+		x = startX;
+		y = startY;
+		while (x <= endX) {
+			while (y <= endY) {
+				graphics.drawBitmap(x, y, imageWidth, imageHeight, this.image,
+						0, 0);
+				y += imageHeight;
 			}
 			x += imageWidth;
 			y = startY;
