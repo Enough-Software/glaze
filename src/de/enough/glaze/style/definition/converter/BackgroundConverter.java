@@ -6,12 +6,19 @@ import de.enough.glaze.style.background.GzBackground;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.converter.background.GradientBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.ImageBackgroundConverter;
+import de.enough.glaze.style.definition.converter.background.MaskBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.RoundedBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.SolidBackgroundConverter;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.parser.property.ValuePropertyParser;
 
+/**
+ * Converts a given definition to a background
+ * 
+ * @author Andre
+ * 
+ */
 public class BackgroundConverter implements Converter {
 
 	/**
@@ -43,15 +50,19 @@ public class BackgroundConverter implements Converter {
 	 * @see de.enough.glaze.style.definition.converter.Converter#getIds()
 	 */
 	public String[] getIds() {
+		// if the ids are not already set ...
 		if (this.ids == null) {
+			// collect all ids from the available converters
 			Vector idCollection = new Vector();
 
 			addIds(SolidBackgroundConverter.getInstance(), idCollection);
 			addIds(ImageBackgroundConverter.getInstance(), idCollection);
 			addIds(RoundedBackgroundConverter.getInstance(), idCollection);
 			addIds(GradientBackgroundConverter.getInstance(), idCollection);
+			addIds(MaskBackgroundConverter.getInstance(), idCollection);
 			addIds(new String[] { "background-type" }, idCollection);
 
+			// store the ids
 			this.ids = new String[idCollection.size()];
 			idCollection.copyInto(this.ids);
 		}
@@ -59,10 +70,26 @@ public class BackgroundConverter implements Converter {
 		return this.ids;
 	}
 
+	/**
+	 * Adds the ids of the given converter to the given id collection
+	 * 
+	 * @param converter
+	 *            the converter
+	 * @param idCollection
+	 *            the id collection
+	 */
 	private void addIds(Converter converter, Vector idCollection) {
 		addIds(converter.getIds(), idCollection);
 	}
 
+	/**
+	 * Adds the given ids to the given id collection
+	 * 
+	 * @param ids
+	 *            the ids
+	 * @param idCollection
+	 *            the id collection
+	 */
 	private void addIds(String[] ids, Vector idCollection) {
 		for (int index = 0; index < ids.length; index++) {
 			String id = ids[index];
@@ -78,7 +105,9 @@ public class BackgroundConverter implements Converter {
 	 * .glaze.style.definition.Definition)
 	 */
 	public Object convert(Definition definition) throws CssSyntaxError {
+		// if the definition has no properties handled by this converter ...
 		if (!definition.hasProperties(this)) {
+			// return null
 			return null;
 		}
 
@@ -88,30 +117,53 @@ public class BackgroundConverter implements Converter {
 		Property backgroundColorProp = definition
 				.getProperty("background-color");
 
+		// if a background type is given ...
 		if (backgroundTypeProp != null) {
 			Object result = ValuePropertyParser.getInstance().parse(
 					backgroundTypeProp);
 			if (result instanceof String) {
 				String backgroundType = (String) result;
-				return convertType(backgroundType, definition, backgroundTypeProp);
+				// convert the background by its type
+				return convertType(backgroundType, definition,
+						backgroundTypeProp);
 			} else if (result instanceof String[]) {
 				throw new CssSyntaxError("must be a single id",
 						backgroundTypeProp);
 			}
 			return null;
+			// if a background image is given ...
 		} else if (backgroundImageProp != null) {
+			// convert to an image background
 			return ImageBackgroundConverter.getInstance().convert(definition);
+			// if a background color is given ...
 		} else if (backgroundColorProp != null) {
+			// convert to a solid background
 			return SolidBackgroundConverter.getInstance().convert(definition);
 		} else {
 			return null;
 		}
 	}
 
+	/**
+	 * Converts the given definition by the given background type
+	 * 
+	 * @param backgroundType
+	 *            the background type
+	 * @param definition
+	 *            the definition
+	 * @param backgroundTypeProperty
+	 *            the background type property
+	 * @return the converted background
+	 * @throws CssSyntaxError
+	 *             if the css syntax is wrong
+	 */
 	public GzBackground convertType(String backgroundType,
 			Definition definition, Property backgroundTypeProperty)
 			throws CssSyntaxError {
-		if ("image".equals(backgroundType)) {
+		if ("solid".equals(backgroundType)) {
+			return (GzBackground) SolidBackgroundConverter.getInstance()
+					.convert(definition);
+		} else if ("image".equals(backgroundType)) {
 			return (GzBackground) ImageBackgroundConverter.getInstance()
 					.convert(definition);
 		} else if ("rounded".equals(backgroundType)) {
@@ -119,6 +171,9 @@ public class BackgroundConverter implements Converter {
 					.convert(definition);
 		} else if ("gradient".equals(backgroundType)) {
 			return (GzBackground) GradientBackgroundConverter.getInstance()
+					.convert(definition);
+		} else if ("mask".equals(backgroundType)) {
+			return (GzBackground) MaskBackgroundConverter.getInstance()
 					.convert(definition);
 		} else {
 			throw new CssSyntaxError("unknown background type",

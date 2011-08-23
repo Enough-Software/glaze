@@ -140,7 +140,7 @@ public class Log {
 	 */
 	public static void w(String message, Object object) {
 		if (isLevelAllowed(WARN)) {
-			message = toLog(message + " : " + object);
+			message = toLog(message + " : " + object.toString());
 			System.out.println(message);
 		}
 	}
@@ -167,7 +167,7 @@ public class Log {
 	 *            the object
 	 */
 	public static void e(String message, Object object) {
-		e(message + " : " + object);
+		e(message + " : " + object.toString());
 	}
 
 	/**

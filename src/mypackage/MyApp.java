@@ -3,8 +3,6 @@ package mypackage;
 import net.rim.device.api.ui.UiApplication;
 import de.enough.glaze.log.Log;
 import de.enough.glaze.style.StyleSheet;
-import de.enough.glaze.style.parser.CssContentHandlerImpl;
-import de.enough.glaze.style.parser.CssParser;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 
 /**
@@ -27,7 +25,7 @@ public class MyApp extends UiApplication {
 	 * Creates a new MyApp object
 	 */
 	public MyApp() {
-		Log.setLevel(Log.ERROR);
+		Log.setLevel(Log.DEBUG);
 
 		updateStyle();
 		pushScreen(new MyScreen());
@@ -40,9 +38,9 @@ public class MyApp extends UiApplication {
 					"http://pastebin.com/raw.php?i=XAVz9Lds");
 		} catch (CssSyntaxError e) {
 			// do nothing
-		} catch (Exception e) {
-			Log.e("error", e);
-			((Throwable)e).printStackTrace();
+		} catch (Throwable t) {
+			Log.e("error", t);
+			t.printStackTrace();
 		}
 	}
 }

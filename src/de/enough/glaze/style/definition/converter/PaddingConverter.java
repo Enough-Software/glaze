@@ -1,6 +1,7 @@
 package de.enough.glaze.style.definition.converter;
 
 import de.enough.glaze.style.Dimension;
+import de.enough.glaze.style.Margin;
 import de.enough.glaze.style.Padding;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
@@ -46,7 +47,7 @@ public class PaddingConverter implements Converter {
 	 */
 	public Object convert(Definition definition) throws CssSyntaxError {
 		if (!definition.hasProperties(this)) {
-			return null;
+			return Padding.ZERO;
 		}
 
 		Property paddingProp = definition.getProperty("padding");

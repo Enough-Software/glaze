@@ -6,6 +6,7 @@ import net.rim.device.api.ui.component.ButtonField;
 import net.rim.device.api.ui.component.TextField;
 import net.rim.device.api.ui.container.MainScreen;
 import de.enough.glaze.ui.container.VerticalFieldManager;
+
 /**
  * A class extending the MainScreen class, which provides default standard
  * behavior for BlackBerry GUI applications.
@@ -19,6 +20,7 @@ public final class MyScreen extends MainScreen
     {        
         // Set the displayed title of the screen       
         setTitle("MyTitle");
+        
         VerticalFieldManager root = new VerticalFieldManager();
         
         VerticalFieldManager content = new VerticalFieldManager(Field.FIELD_RIGHT);
@@ -40,6 +42,7 @@ public final class MyScreen extends MainScreen
         		MyApp.updateStyle();
         	}
         };
+        
         addMenuItem(updateItem);
     }
 }

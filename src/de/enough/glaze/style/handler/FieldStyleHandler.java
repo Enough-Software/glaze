@@ -15,7 +15,7 @@ import de.enough.glaze.style.extension.Processor;
 import de.enough.glaze.style.font.GzFont;
 
 public class FieldStyleHandler {
-	
+
 	private Field field;
 
 	private Style style;
@@ -150,15 +150,15 @@ public class FieldStyleHandler {
 			processor.process(this.field, extensionData);
 		}
 	}
-	
+
 	public boolean isVisualStateChanged() {
 		return field.getVisualState() != this.visualState;
 	}
-	
+
 	public void updateVisualState() {
 		this.visualState = field.getVisualState();
 	}
-	
+
 	public Field getField() {
 		return this.field;
 	}
