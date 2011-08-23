@@ -2,11 +2,13 @@ package de.enough.glaze.ui.container;
 
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
+import net.rim.device.api.ui.XYRect;
 import de.enough.glaze.log.Log;
 import de.enough.glaze.style.Style;
 import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.handler.FieldStyleHandler;
 import de.enough.glaze.style.handler.FieldStyleHandlerList;
+import net.rim.device.api.ui.Manager;
 
 public class VerticalFieldManager extends
 		net.rim.device.api.ui.container.VerticalFieldManager {
@@ -125,6 +127,10 @@ public class VerticalFieldManager extends
 		}
 
 		super.sublayout(maxWidth, maxHeight);
+	}
+	
+	public void paint(Graphics g) {
+		subpaint(g);
 	}
 
 	/*

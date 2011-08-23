@@ -175,8 +175,9 @@ public class BackgroundConverter implements Converter {
 		} else if ("mask".equals(backgroundType)) {
 			return (GzBackground) MaskBackgroundConverter.getInstance()
 					.convert(definition);
-		} else {
-			throw new CssSyntaxError("unknown background type",
+		} else if ("layer".equals(backgroundType) ) {
+			return (GzBackground) Layer
+		} else throw new CssSyntaxError("unknown background type",
 					backgroundTypeProperty);
 		}
 	}

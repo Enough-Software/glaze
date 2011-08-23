@@ -42,6 +42,7 @@ public class RoundedBackground extends GzBackground {
 		
 		if ( this.dimensions[1] != null ) {
 			int arcSize = dimensions[1].getValue();
+			System.out.println(rect.x + width/2 + " " + rect.y + " " + (width/2-arcSize) + " " + height/2);
 			graphics.fillArc(rect.x + width-arcSize*2, rect.y, arcSize*2, arcSize*2, 90, -90);
 			graphics.fillRect(rect.x + width/2, rect.y, width/2-arcSize, height/2);
 			graphics.fillRect(rect.x + width/2, rect.y + arcSize, width/2, height/2-arcSize);

@@ -37,6 +37,7 @@ public class ImageBackground extends GzBackground {
 		int height = rect.height;
 		int imageWidth = this.image.getWidth();
 		int imageHeight = this.image.getHeight();
+		
 
 		// Calculate startX and startY for drawing the image, based on the
 		// position flag
