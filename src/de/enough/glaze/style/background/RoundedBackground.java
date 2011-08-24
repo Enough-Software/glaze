@@ -43,11 +43,15 @@ public class RoundedBackground extends GzBackground {
 			graphics.fillRect(x + width/2, y + arcSize, width/2, height/2-arcSize);
 		} else {
 			graphics.fillRect(x + width/2, y, width/2,height/2);
-		}
+		}		
 		
 		if ( this.dimensions[2] != null ) {
 			int arcSize = dimensions[2].getValue();
-			graphics.fillArc(x + width-arcSize*2, y + height-arcSize*2, arcSize*2, arcSize*2, 0, -90);
+			int bottomY = y + height-arcSize*2;
+			if ( height % 2 == 1 ) {
+				bottomY--;
+			}
+			graphics.fillArc(x + width-arcSize*2, bottomY, arcSize*2, arcSize*2, 0, -90);
 			graphics.fillRect(x + width/2, y + height/2, width/2, height/2-arcSize);
 			graphics.fillRect(x + width/2, y + height/2, width/2-arcSize, height/2);
 		} else {
@@ -56,8 +60,11 @@ public class RoundedBackground extends GzBackground {
 		
 		if ( this.dimensions[3] != null ) {
 			int arcSize = dimensions[3].getValue();
-			System.out.println ( ">> " + (y + height-arcSize*2));
-			graphics.fillArc(x, y + height-arcSize*2, arcSize*2, arcSize*2, 180, 90);
+			int bottomY = y + height-arcSize*2;
+			if ( height % 2 == 1 ) {
+				bottomY--;
+			}
+			graphics.fillArc(x, bottomY, arcSize*2, arcSize*2, 180, 90);
 			graphics.fillRect(x, y + height/2, width/2, height/2-arcSize);
 			graphics.fillRect(x + arcSize, y + height/2, width/2-arcSize, height/2);
 		} else {

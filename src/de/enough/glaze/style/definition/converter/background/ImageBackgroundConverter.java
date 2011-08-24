@@ -83,6 +83,7 @@ public class ImageBackgroundConverter implements Converter {
 							backgroundImagePositionProp);
 				} else if (result instanceof String[]) {
 					String[] positionValues = (String[]) result;
+					imagePosition = 0;
 					for (int index = 0; index < positionValues.length; index++) {
 						String positionValue = positionValues[index];
 						int tempImagePosition = getPosition(positionValue,
