@@ -3,6 +3,7 @@ package de.enough.glaze.style.definition.converter;
 import java.util.Vector;
 
 import de.enough.glaze.style.background.GzBackground;
+import de.enough.glaze.style.background.PatchBackground;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.converter.background.GradientBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.ImageBackgroundConverter;
@@ -61,6 +62,7 @@ public class BackgroundConverter implements Converter {
 			addIds(RoundedBackgroundConverter.getInstance(), idCollection);
 			addIds(GradientBackgroundConverter.getInstance(), idCollection);
 			addIds(MaskBackgroundConverter.getInstance(), idCollection);
+			addIds(LayerBackgroundConverter.getInstance(), idCollection);
 			addIds(new String[] { "background-type" }, idCollection);
 
 			// store the ids
