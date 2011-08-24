@@ -55,8 +55,8 @@ public class ImageBackgroundConverter implements Converter {
 						"background-repeat" });
 
 		Bitmap imageBitmap = null;
-		int imagePosition = ImageBackground.REPEAT_NONE;
-		int imageRepeat = ImageBackground.POSITION_CENTER;
+		int imagePosition = ImageBackground.POSITION_CENTER;
+		int imageRepeat = ImageBackground.REPEAT_NONE;
 
 		if (backgroundImageProp != null) {
 			Object result = UrlPropertyParser.getInstance().parse(
@@ -85,8 +85,15 @@ public class ImageBackgroundConverter implements Converter {
 					String[] positionValues = (String[]) result;
 					for (int index = 0; index < positionValues.length; index++) {
 						String positionValue = positionValues[index];
-						imagePosition |= getPosition(positionValue,
+						int tempImagePosition = getPosition(positionValue,
 								backgroundImagePositionProp);
+						if ( index == 0 && tempImagePosition == ImageBackground.POSITION_CENTER ) {
+							imagePosition |= ImageBackground.POSITION_V_CENTER;
+						} else if ( index == 1 && tempImagePosition == ImageBackground.POSITION_CENTER ) {
+							imagePosition |= ImageBackground.POSITION_H_CENTER;
+						} else {
+							imagePosition |= tempImagePosition;
+						}
 					}
 				}
 			}

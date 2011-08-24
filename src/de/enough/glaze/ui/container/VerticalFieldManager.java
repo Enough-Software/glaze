@@ -129,10 +129,6 @@ public class VerticalFieldManager extends
 
 		super.sublayout(maxWidth, maxHeight);
 	}
-	
-	public void paint(Graphics g) {
-		subpaint(g);
-	}
 
 	/*
 	 * (non-Javadoc)

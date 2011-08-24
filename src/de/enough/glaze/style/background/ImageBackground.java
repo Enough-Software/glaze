@@ -10,6 +10,8 @@ public class ImageBackground extends GzBackground {
 	public static final int POSITION_LEFT = 8;
 	public static final int POSITION_RIGHT = 16;
 	public static final int POSITION_CENTER = 32;
+	public static final int POSITION_H_CENTER = 64;
+	public static final int POSITION_V_CENTER = 128;
 
 	public static final int REPEAT_NONE = 0;
 	public static final int REPEAT_X = 2;
@@ -44,11 +46,17 @@ public class ImageBackground extends GzBackground {
 		if ((this.positionFlag & POSITION_BOTTOM) != 0) {
 			startY = y + height - imageHeight;
 		}
+		if ((this.positionFlag & POSITION_V_CENTER) != 0) {
+			startY = y + (height - imageHeight) / 2;
+		}
 		if ((this.positionFlag & POSITION_LEFT) != 0) {
 			startX = x;
 		}
 		if ((this.positionFlag & POSITION_RIGHT) != 0) {
 			startX = x + width - imageWidth;
+		}
+		if ((this.positionFlag & POSITION_H_CENTER) != 0) {
+			startX = x + (width - imageWidth) / 2;
 		}
 		if ((this.positionFlag & POSITION_CENTER) != 0) {
 			startX = x + (width - imageWidth) / 2;
@@ -79,6 +87,7 @@ public class ImageBackground extends GzBackground {
 		// Draw the image
 		x = startX;
 		y = startY;
+		graphics.pushContext(x, y, width, height, 0, 0);
 		while (x <= endX) {
 			while (y <= endY) {
 				graphics.drawBitmap(x, y, imageWidth, imageHeight, this.image,
