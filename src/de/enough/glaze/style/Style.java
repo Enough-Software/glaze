@@ -30,6 +30,18 @@ public class Style {
 	private GzFont font;
 
 	private GzBorder border;
+	
+	private Dimension minWidth;
+
+	private Dimension width;
+	
+	private Dimension maxWidth;
+	
+	private Dimension minHeight;
+	
+	private Dimension height;
+	
+	private Dimension maxHeight;
 
 	private final Hashtable extensions;
 
@@ -167,6 +179,56 @@ public class Style {
 
 	public void setBorder(GzBorder border) {
 		this.border = border;
+	}
+	
+
+	
+	public Dimension getMinWidth() {
+		return minWidth;
+	}
+
+	public void setMinWidth(Dimension minWidth) {
+		this.minWidth = minWidth;
+	}
+
+	public Dimension getWidth() {
+		return width;
+	}
+
+	public void setWidth(Dimension width) {
+		this.width = width;
+	}
+
+	public Dimension getMaxWidth() {
+		return maxWidth;
+	}
+
+	public void setMaxWidth(Dimension maxWidth) {
+		this.maxWidth = maxWidth;
+	}
+
+	public Dimension getMinHeight() {
+		return minHeight;
+	}
+
+	public void setMinHeight(Dimension minHeight) {
+		this.minHeight = minHeight;
+	}
+
+	public Dimension getHeight() {
+		return height;
+	}
+
+	public void setHeight(Dimension height) {
+		this.height = height;
+	}
+
+	public Dimension getMaxHeight() {
+		return maxHeight;
+	}
+
+	public void setMaxHeight(Dimension maxHeight) {
+		this.maxHeight = maxHeight;
 	}
 
 	public void addExtension(Extension extension, Object object) {

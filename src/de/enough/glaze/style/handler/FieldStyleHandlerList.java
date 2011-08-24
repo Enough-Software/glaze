@@ -8,15 +8,15 @@ import de.enough.glaze.style.Style;
 import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.StyleSheetListener;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
-import de.enough.glaze.ui.container.VerticalFieldManager;
+import de.enough.glaze.ui.container.GzFieldManager;
 
 public class FieldStyleHandlerList implements StyleSheetListener {
 
 	private final Vector list;
 
-	private final VerticalFieldManager manager;
+	private final GzFieldManager manager;
 
-	public FieldStyleHandlerList(VerticalFieldManager manager) {
+	public FieldStyleHandlerList(GzFieldManager manager) {
 		this.manager = manager;
 		this.list = new Vector();
 		StyleSheet.getInstance().addListener(this);

@@ -42,6 +42,7 @@ public class VerticalGradientBackground extends GzBackground {
 	 * , net.rim.device.api.ui.XYRect)
 	 */
 	public void draw(Graphics graphics, int x, int y, int width, int height) {
+		System.out.println("draw at : " + x + ":" + y);
 		int startGradientPixels = this.startPosition.getValue(height);
 		int endGradientPixels = this.endPosition.getValue(height);
 
