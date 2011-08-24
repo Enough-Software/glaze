@@ -22,6 +22,9 @@ public class VerticalFieldManager extends GzFieldManager {
 		int x = 0;
 		int y = 0;
 
+		Log.d("max width : " + maxWidth);
+		Log.d("max height : " + maxHeight);
+		
 		for (int index = 0; index < fieldCount; index++) {
 			Field field = getField(index);
 			Log.d("field : " + field);
@@ -30,6 +33,8 @@ public class VerticalFieldManager extends GzFieldManager {
 			layoutChild(field, maxWidth, maxHeight);
 			Log.d("field width : " + field.getExtent().width);
 			Log.d("field height : " + field.getExtent().height);
+			y+= field.getMarginTop();
+			
 			setPositionChild(field, x, y);
 			y += field.getExtent().height;
 		}
