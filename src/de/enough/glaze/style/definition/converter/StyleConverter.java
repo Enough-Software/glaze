@@ -308,18 +308,18 @@ public class StyleConverter implements Converter {
 		Property maxWidthProp = definition.getProperty("max-width");
 		
 		if(minWidthProp != null) {
-			Dimension minHeightDimension = DimensionConverterUtils.toDimension(minWidthProp);
-			style.setMinHeight(minHeightDimension);
+			Dimension minWidthDimension = DimensionConverterUtils.toDimension(minWidthProp);
+			style.setMinWidth(minWidthDimension);
 		}
 		
 		if(widthProp != null) {
-			Dimension heightDimension = DimensionConverterUtils.toDimension(widthProp);
-			style.setHeight(heightDimension);
+			Dimension widthDimension = DimensionConverterUtils.toDimension(widthProp);
+			style.setWidth(widthDimension);
 		}
 		
 		if(maxWidthProp != null) {
-			Dimension maxHeightDimension = DimensionConverterUtils.toDimension(maxWidthProp);
-			style.setMaxHeight(maxHeightDimension);
+			Dimension maxWidthDimension = DimensionConverterUtils.toDimension(maxWidthProp);
+			style.setMaxWidth(maxWidthDimension);
 		}
 	}
 	

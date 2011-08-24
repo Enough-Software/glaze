@@ -1,7 +1,9 @@
 package de.enough.glaze.ui.container;
 
-import de.enough.glaze.log.Log;
 import net.rim.device.api.ui.Field;
+import net.rim.device.api.ui.XYRect;
+import de.enough.glaze.style.Style;
+import de.enough.glaze.ui.container.utils.ManagerUtils;
 
 public class VerticalFieldManager extends GzFieldManager {
 
@@ -18,27 +20,51 @@ public class VerticalFieldManager extends GzFieldManager {
 	 * 
 	 * @see de.enough.glaze.ui.container.GzFieldManager#sublayout(int, int, int)
 	 */
-	protected void sublayout(int maxWidth, int maxHeight, int fieldCount) {
+	protected void sublayout(int maxWidth, int maxHeight, XYRect fieldBounds) {
 		int x = 0;
 		int y = 0;
 
-		Log.d("max width : " + maxWidth);
-		Log.d("max height : " + maxHeight);
-		
-		for (int index = 0; index < fieldCount; index++) {
+		for (int index = 0; index < getFieldCount(); index++) {
 			Field field = getField(index);
-			Log.d("field : " + field);
-			Log.d("preferred width : " + field.getPreferredWidth());
-			Log.d("preferred height : " + field.getPreferredHeight());
-			layoutChild(field, maxWidth, maxHeight);
-			Log.d("field width : " + field.getExtent().width);
-			Log.d("field height : " + field.getExtent().height);
-			y+= field.getMarginTop();
-			
+			Style style = getStyle(index);
+
+			x = field.getMarginLeft();
+			// if the field is the first one ...
+			if (index == 0) {
+				y += field.getMarginTop();
+			}
+
+			int fieldMaxWidth = ManagerUtils
+					.getMaxWidth(maxWidth, field, style);
+			int fieldMaxHeight = ManagerUtils.getMaxHeight(maxHeight, field,
+					style);
+			layoutChild(field, fieldMaxWidth, fieldMaxHeight);
+
+			// calculate the bounds for the field layout
+			fieldBounds.x = x;
+			fieldBounds.y = y;
+			fieldBounds.width = fieldMaxWidth;
+			fieldBounds.height = fieldMaxHeight;
+			// get the layouted position
+			x = ManagerUtils.getLayoutX(fieldBounds, field);
+			y = ManagerUtils.getLayoutY(fieldBounds, field);
 			setPositionChild(field, x, y);
-			y += field.getExtent().height;
+
+			// add the field height
+			y += field.getHeight();
+
+			// if the current field is not the last field ...
+			if (index < getFieldCount() - 1) {
+				// add the collapsed margin
+				Field nextField = getField(index + 1);
+				y += ManagerUtils.getCollapsedVerticalMargin(field, nextField);
+				// otherwise ...
+			} else {
+				// add the bottom margin
+				y += field.getMarginBottom();
+			}
 		}
-		
+
 		setExtent(maxWidth, y);
 	}
 
