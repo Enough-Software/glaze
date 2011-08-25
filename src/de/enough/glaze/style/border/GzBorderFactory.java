@@ -1,5 +1,6 @@
 package de.enough.glaze.style.border;
 
+import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.XYEdges;
 
 public class GzBorderFactory {
@@ -19,5 +20,12 @@ public class GzBorderFactory {
             XYEdges colorsOuter,
             XYEdges colorsInner) {
 		return new BevelBorder(edges, colorsOuter, colorsInner);
+	}
+	
+	public static GzBorder createImageBorder(XYEdges padding,
+            XYEdges corners,
+            Bitmap bitmap) {
+		return new BitmapBorder(padding, corners, bitmap);
+		
 	}
 }

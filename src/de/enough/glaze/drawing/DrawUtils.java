@@ -74,5 +74,5 @@ public class DrawUtils {
 				| ( startGreen & 0x0000FF00)
 				| ( startBlue >>> 8);
 		}	
-	}
+	}	
 }

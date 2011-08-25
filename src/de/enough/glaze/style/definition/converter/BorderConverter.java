@@ -2,8 +2,10 @@ package de.enough.glaze.style.definition.converter;
 
 import java.util.Vector;
 
+import de.enough.glaze.style.border.BitmapBorder;
 import de.enough.glaze.style.border.GzBorder;
 import de.enough.glaze.style.definition.Definition;
+import de.enough.glaze.style.definition.converter.border.BitmapBorderConverter;
 import de.enough.glaze.style.definition.converter.border.RoundedBorderConverter;
 import de.enough.glaze.style.definition.converter.border.SimpleBorderConverter;
 import de.enough.glaze.style.definition.converter.border.BevelBorderConverter;
@@ -56,6 +58,7 @@ public class BorderConverter implements Converter {
 			addIds(SimpleBorderConverter.getInstance(), idCollection);
 			addIds(RoundedBorderConverter.getInstance(),idCollection);
 			addIds(BevelBorderConverter.getInstance(),idCollection);
+			addIds(BitmapBorderConverter.getInstance(),idCollection);
 			addIds(new String[] { "border-type" }, idCollection);
 
 			// store the ids
@@ -146,6 +149,8 @@ public class BorderConverter implements Converter {
 			return (GzBorder) BevelBorderConverter.getInstance().convert(definition);
 		} else if ("rounded".equals(borderType)) {
 			return (GzBorder) RoundedBorderConverter.getInstance().convert(definition);
+		} else if ( "patch".equals(borderType) || "bitmap".equals(borderType) ) {
+			return (GzBorder) BitmapBorderConverter.getInstance().convert(definition);
 		} else {
 			throw new CssSyntaxError("unknown border type",
 					borderTypeProperty);

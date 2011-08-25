@@ -53,6 +53,7 @@ public class RoundedBorder extends GzBorder {
 		int oldColor = graphics.getColor();
 		int oldStipple = graphics.getStipple();
 		
+		
 		int stipple = STIPPLE_SOLID;
 		switch ( this.style ) {
 			case Border.STYLE_DASHED:
@@ -66,6 +67,7 @@ public class RoundedBorder extends GzBorder {
 		
 		graphics.setStipple(stipple);
 		graphics.setColor(this.color);
+		graphics.setDrawingStyle(Graphics.DRAWSTYLE_AALINES, true);
 		
 		int width = rect.width;
 		int x = rect.x;
@@ -82,5 +84,6 @@ public class RoundedBorder extends GzBorder {
 		graphics.drawPathOutline(xPts, yPts, PATH_POINT_TYPES, null, true);
 		graphics.setColor(oldColor);
 		graphics.setStipple(oldStipple);
+		graphics.setDrawingStyle(Graphics.DRAWSTYLE_AALINES, false);
 	}
 }

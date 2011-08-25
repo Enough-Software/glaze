@@ -1,6 +1,7 @@
 package de.enough.glaze.style.background;
 
 import net.rim.device.api.ui.Graphics;
+import net.rim.device.api.ui.decor.Border;
 import de.enough.glaze.style.Color;
 import de.enough.glaze.style.Dimension;
 
@@ -14,65 +15,46 @@ public class RoundedBackground extends GzBackground {
 		this.dimensions = dimensions;
 	}
 	
+	private static final byte[] PATH_POINT_TYPES = {
+	    Graphics.CURVEDPATH_END_POINT, 
+	    Graphics.CURVEDPATH_QUADRATIC_BEZIER_CONTROL_POINT,
+	    Graphics.CURVEDPATH_END_POINT, 
+	    Graphics.CURVEDPATH_END_POINT, 
+	    Graphics.CURVEDPATH_QUADRATIC_BEZIER_CONTROL_POINT,
+	    Graphics.CURVEDPATH_END_POINT, 			
+	    Graphics.CURVEDPATH_END_POINT, 
+	    Graphics.CURVEDPATH_QUADRATIC_BEZIER_CONTROL_POINT,
+	    Graphics.CURVEDPATH_END_POINT, 
+	    Graphics.CURVEDPATH_END_POINT, 
+	    Graphics.CURVEDPATH_QUADRATIC_BEZIER_CONTROL_POINT,
+	    Graphics.CURVEDPATH_END_POINT, 
+	  };
+	
 	/* (non-Javadoc)
 	 * @see net.rim.device.api.ui.decor.Background#draw(net.rim.device.api.ui.Graphics, net.rim.device.api.ui.XYRect)
 	 */
 	public void draw(Graphics graphics, int x, int y, int width, int height) {
-		// remember original color
-		int originalColor = graphics.getColor();
 		
-		int startX=0, endX = width;
-		int startY=0, endY = height;
-		
+		int oldColor = graphics.getColor();
 		graphics.setColor(this.color);
+		graphics.setDrawingStyle(Graphics.DRAWSTYLE_AAPOLYGONS, true);
 		
-		if ( this.dimensions[0] != null ) {
-			int arcSize = dimensions[0].getValue();
-			graphics.fillArc(x, y, arcSize*2, arcSize*2, 180, -90);
-			graphics.fillRect(x + arcSize, y,  width/2-arcSize, height/2);
-			graphics.fillRect(x, arcSize, y + width/2, height/2-arcSize);
-		} else {
-			graphics.fillRect(x, y, width/2, height/2);
-		}
+		int marginLeft = this.dimensions[3].getValue();
+		int marginRight = this.dimensions[1].getValue();
+		int marginTop = this.dimensions[0].getValue();
+		int marginBottom = this.dimensions[2].getValue();
 		
-		if ( this.dimensions[1] != null ) {
-			int arcSize = dimensions[1].getValue();
-
-			graphics.fillArc(x + width-arcSize*2, y, arcSize*2, arcSize*2, 90, -90);
-			graphics.fillRect(x + width/2, y, width/2-arcSize, height/2);
-			graphics.fillRect(x + width/2, y + arcSize, width/2, height/2-arcSize);
-		} else {
-			graphics.fillRect(x + width/2, y, width/2,height/2);
-		}		
+		int xPts [] = new int[] { x, x, x+marginLeft, x+width - marginRight, x+width, x+width,
+			      x+width, x+width, x+width - marginRight, x+marginLeft, x, x
+		};
 		
-		if ( this.dimensions[2] != null ) {
-			int arcSize = dimensions[2].getValue();
-			int bottomY = y + height-arcSize*2;
-			if ( height % 2 == 1 ) {
-				bottomY--;
-			}
-			graphics.fillArc(x + width-arcSize*2, bottomY, arcSize*2, arcSize*2, 0, -90);
-			graphics.fillRect(x + width/2, y + height/2, width/2, height/2-arcSize);
-			graphics.fillRect(x + width/2, y + height/2, width/2-arcSize, height/2);
-		} else {
-			graphics.fillRect(x + width/2, y + height/2,  width/2,height/2);
-		}
+		int yPts [] = new int[] { y+marginTop, y, y, y, y, y+marginTop,
+			      y + height - marginBottom, y+height, y+height, y+height, y+height, y+height-marginBottom
+		};
 		
-		if ( this.dimensions[3] != null ) {
-			int arcSize = dimensions[3].getValue();
-			int bottomY = y + height-arcSize*2;
-			if ( height % 2 == 1 ) {
-				bottomY--;
-			}
-			graphics.fillArc(x, bottomY, arcSize*2, arcSize*2, 180, 90);
-			graphics.fillRect(x, y + height/2, width/2, height/2-arcSize);
-			graphics.fillRect(x + arcSize, y + height/2, width/2-arcSize, height/2);
-		} else {
-			graphics.fillRect(x, y + height/2,  width/2,height/2);
-		}
-		
-		// restore original color
-		graphics.setColor(originalColor);
+		graphics.drawFilledPath(xPts, yPts, PATH_POINT_TYPES, null);
+		graphics.setColor(oldColor);
+		graphics.setDrawingStyle(Graphics.DRAWSTYLE_AAPOLYGONS, false);
 	}
 
 	/* (non-Javadoc)
