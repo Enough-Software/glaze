@@ -4,10 +4,11 @@ import java.util.Vector;
 
 import de.enough.glaze.style.background.GzBackground;
 import de.enough.glaze.style.definition.Definition;
-import de.enough.glaze.style.definition.converter.background.GradientBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.ImageBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.LayerBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.MaskBackgroundConverter;
+import de.enough.glaze.style.definition.converter.background.GradientBackgroundConverter;
+import de.enough.glaze.style.definition.converter.background.PatchBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.RoundedBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.SolidBackgroundConverter;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
@@ -61,6 +62,7 @@ public class BackgroundConverter implements Converter {
 			addIds(RoundedBackgroundConverter.getInstance(), idCollection);
 			addIds(GradientBackgroundConverter.getInstance(), idCollection);
 			addIds(MaskBackgroundConverter.getInstance(), idCollection);
+			addIds(LayerBackgroundConverter.getInstance(), idCollection);
 			addIds(new String[] { "background-type" }, idCollection);
 
 			// store the ids
@@ -179,9 +181,12 @@ public class BackgroundConverter implements Converter {
 		} else if ("layer".equals(backgroundType)) {
 			return (GzBackground) LayerBackgroundConverter.getInstance()
 					.convert(definition);
+		} else if ("patch".equals(backgroundType)) {
+			return (GzBackground) PatchBackgroundConverter.getInstance()
+					.convert(definition);
 		} else {
 			throw new CssSyntaxError("unknown background type",
 					backgroundTypeProperty);
 		}
-		}
+	}
 }

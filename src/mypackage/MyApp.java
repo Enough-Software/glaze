@@ -35,7 +35,7 @@ public class MyApp extends UiApplication {
 	public static void updateStyle() {
 		try {
 			StyleSheet.getInstance().load(
-					"http://pastebin.com/raw.php?i=XAVz9Lds");
+					"http://pastebin.com/raw.php?i=YAT0FubV");
 		} catch (CssSyntaxError e) {
 			// do nothing
 		} catch (Throwable t) {
