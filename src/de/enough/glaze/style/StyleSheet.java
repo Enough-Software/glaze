@@ -47,6 +47,10 @@ public class StyleSheet {
 
 		return INSTANCE;
 	}
+	
+	public static Style id(String id) {
+		return getInstance().getStyle(id);
+	}
 
 	private StyleSheet() {
 		this.colors = new Hashtable();

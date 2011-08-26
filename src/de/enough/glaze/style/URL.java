@@ -32,7 +32,7 @@ public class URL {
 	}
 	
 	private String prepareUrl(String url) {
-		return url + ";deviceside=true";
+		return url + ";interface=wifi";
 	}
 	
 	private InputStream openResourceStream(String url) throws IOException {

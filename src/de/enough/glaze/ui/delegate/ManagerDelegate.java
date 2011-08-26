@@ -5,29 +5,12 @@ import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.ui.Manager;
 import de.enough.glaze.log.Log;
 import de.enough.glaze.style.Style;
-import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.background.GzBackground;
 import de.enough.glaze.style.handler.FieldStyleHandler;
 import de.enough.glaze.style.handler.FieldStyleManager;
 
 public class ManagerDelegate {
-	
-	public static void add(Field field, String id, Manager manager) {
-		GzManager gzManager;
-		if (manager instanceof GzManager) {
-			gzManager = (GzManager) manager;
-			FieldStyleManager styleManager = gzManager.getStyleManager();
-			styleManager.add(field);
-			if (id != null) {
-				FieldStyleHandler handler = styleManager.get(field);
-				Style style = StyleSheet.getInstance().getStyle(id);
-				handler.setStyle(style);
-			}
-		} else {
-			Log.e("manager must implement GzManager", manager);
-		}
-	}
-	
+
 	public static void sublayout(int maxWidth, int maxHeight, Manager manager) {
 		GzManager gzManager;
 		if (manager instanceof GzManager) {
@@ -42,16 +25,20 @@ public class ManagerDelegate {
 			}
 
 			Style style = FieldDelegate.getStyle(manager);
-			int preprocessedWidth = ExtentDelegate.preprocessWidth(maxWidth, maxHeight, manager, style);
-			int preprocessedHeight = ExtentDelegate.preprocessHeight(maxWidth, maxHeight, manager, style);
+			int preprocessedWidth = ExtentDelegate.preprocessWidth(maxWidth,
+					maxHeight, manager, style);
+			int preprocessedHeight = ExtentDelegate.preprocessHeight(maxWidth,
+					maxHeight, manager, style);
 			gzManager.gz_sublayout(preprocessedWidth, preprocessedHeight);
-			ExtentDelegate.postprocessWidth(maxWidth, maxHeight, manager, gzManager, style);
-			ExtentDelegate.postprocessHeight(maxWidth, maxHeight, manager, gzManager, style);
+			ExtentDelegate.postprocessWidth(maxWidth, maxHeight, manager,
+					gzManager, style);
+			ExtentDelegate.postprocessHeight(maxWidth, maxHeight, manager,
+					gzManager, style);
 		} else {
 			Log.e("manager must implement GzManager", manager);
 		}
 	}
-	
+
 	public static void subpaint(Graphics graphics, Manager manager) {
 		GzManager gzManager;
 		if (manager instanceof GzManager) {
@@ -61,7 +48,8 @@ public class ManagerDelegate {
 				Field field = manager.getField(index);
 				if (field instanceof Manager) {
 					FieldStyleHandler handler = handlers.get(index);
-					GzBackground background = handler.getStyle().getBackground();
+					GzBackground background = handler.getStyle()
+							.getBackground();
 					background.setField(field);
 					gzManager.gz_paintChild(graphics, field);
 					background.setField(null);

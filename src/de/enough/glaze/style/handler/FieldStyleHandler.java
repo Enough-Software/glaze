@@ -26,10 +26,11 @@ public class FieldStyleHandler {
 
 	private int visualState = Integer.MIN_VALUE;
 
-	public FieldStyleHandler(Field field) {
+	public FieldStyleHandler(Field field, Style style) {
 		this.field = field;
 		this.marginXYEdges = new XYEdges(0,0,0,0);
 		this.paddingXYEdges = new XYEdges(0,0,0,0);
+		setStyle(style);
 	}
 
 	public void setStyle(Style style) {

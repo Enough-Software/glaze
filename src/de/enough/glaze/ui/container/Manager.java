@@ -2,12 +2,13 @@ package de.enough.glaze.ui.container;
 
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
+import de.enough.glaze.style.Style;
 import de.enough.glaze.style.handler.FieldStyleManager;
 import de.enough.glaze.ui.delegate.ManagerDelegate;
 
 public abstract class Manager extends net.rim.device.api.ui.Manager {
 	
-	private final FieldStyleManager handlers;
+	private final FieldStyleManager styleManager;
 	
 	public Manager() {
 		this(0);
@@ -15,7 +16,7 @@ public abstract class Manager extends net.rim.device.api.ui.Manager {
 	
 	public Manager(long style) {
 		super(style);
-		this.handlers = new FieldStyleManager(this);
+		this.styleManager = new FieldStyleManager(this);
 	}
 
 	/*
@@ -24,12 +25,13 @@ public abstract class Manager extends net.rim.device.api.ui.Manager {
 	 * @see net.rim.device.api.ui.Manager#add(net.rim.device.api.ui.Field)
 	 */
 	public void add(Field field) {
-		add(field, null);
-	}
-
-	public void add(Field field, String id) {
 		super.add(field);
-		ManagerDelegate.add(field, id, this);
+		this.styleManager.add(field);
+	}
+	
+	public void add(Field field, Style style) {
+		super.add(field);
+		this.styleManager.add(field, style);
 	}
 
 	/*
@@ -39,7 +41,17 @@ public abstract class Manager extends net.rim.device.api.ui.Manager {
 	 */
 	public void addAll(Field[] fields) {
 		super.addAll(fields);
-		this.handlers.addAll(fields);
+		this.styleManager.addAll(fields);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.rim.device.api.ui.Manager#addAll(net.rim.device.api.ui.Field[])
+	 */
+	public void addAll(Field[] fields, Style style) {
+		super.addAll(fields);
+		this.styleManager.addAll(fields, style);
 	}
 
 	/*
@@ -50,7 +62,12 @@ public abstract class Manager extends net.rim.device.api.ui.Manager {
 	 */
 	public void insert(Field field, int index) {
 		super.insert(field, index);
-		this.handlers.insert(field, index);
+		this.styleManager.insert(field, index);
+	}
+
+	public void insert(Field field, int index, Style style) {
+		super.insert(field, index);
+		this.styleManager.insert(field, index, style);
 	}
 
 	/*
@@ -60,7 +77,7 @@ public abstract class Manager extends net.rim.device.api.ui.Manager {
 	 */
 	public void delete(Field field) {
 		super.delete(field);
-		this.handlers.delete(field);
+		this.styleManager.delete(field);
 	}
 
 	/*
@@ -70,7 +87,7 @@ public abstract class Manager extends net.rim.device.api.ui.Manager {
 	 */
 	public void deleteAll() {
 		super.deleteAll();
-		this.handlers.deleteAll();
+		this.styleManager.deleteAll();
 	}
 
 	/*
@@ -80,7 +97,7 @@ public abstract class Manager extends net.rim.device.api.ui.Manager {
 	 */
 	public void deleteRange(int start, int count) {
 		super.deleteRange(start, count);
-		this.handlers.deleteRange(start, count);
+		this.styleManager.deleteRange(start, count);
 	}
 
 	/*
@@ -91,7 +108,12 @@ public abstract class Manager extends net.rim.device.api.ui.Manager {
 	 */
 	public void replace(Field oldField, Field newField) {
 		super.replace(oldField, newField);
-		this.handlers.replace(oldField, newField);
+		this.styleManager.replace(oldField, newField);
+	}
+
+	public void replace(Field oldField, Field newField, Style style) {
+		super.replace(oldField, newField);
+		this.styleManager.replace(oldField, newField, style);
 	}
 
 	/*
@@ -100,7 +122,7 @@ public abstract class Manager extends net.rim.device.api.ui.Manager {
 	 * @see de.enough.glaze.ui.container.GzManager#getHandlers()
 	 */
 	public FieldStyleManager getStyleManager() {
-		return this.handlers;
+		return this.styleManager;
 	}
 
 	/*

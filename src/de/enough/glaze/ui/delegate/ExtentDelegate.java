@@ -1,121 +1,190 @@
 package de.enough.glaze.ui.delegate;
 
 import net.rim.device.api.ui.Field;
-import net.rim.device.api.ui.XYRect;
 import net.rim.device.api.ui.decor.Border;
 import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.Style;
 
 public class ExtentDelegate {
 
-	protected static int preprocessWidth(int width, int height, Field field,
-			Style style) {
-		if (style != null) {
-			int marginWidth = field.getMarginLeft() + field.getMarginRight();
-			
-			int borderWidth = 0;
-			Border border = field.getBorder();
-			if (border != null) {
-				borderWidth = border.getLeft() + border.getRight();
-			}
+	/**
+	 * Returns the full width that is available to a field (including padding,
+	 * borders and margin)
+	 * 
+	 * @param width
+	 *            the available content width
+	 * @param field
+	 *            the field
+	 * @return the full width
+	 */
+	private static int getAvailableWidth(int availableContentWidth, Field field) {
+		// get the horizontal margin extent
+		int marginWidth = field.getMarginLeft() + field.getMarginRight();
 
-			int paddingWidth = field.getPaddingLeft() + field.getPaddingRight();
-			
-			int fullWidth =  marginWidth + borderWidth + paddingWidth + width;
-			
-			Dimension widthDimension = style.getWidth();
-			Dimension maxWidthDimension = style.getMaxWidth();
-
-			if (widthDimension != null) {
-				width = widthDimension.getValue(fullWidth);
-				return width;
-			} else if (maxWidthDimension != null) {
-				width = maxWidthDimension.getValue(fullWidth);
-				return width;
-			}
-		}
-
-		return width;
-	}
-
-	protected static void postprocessWidth(int width, int height, Field field,
-			GzExtent gzExtent, Style style) {
-		if (style != null) {
-			Dimension minWidthDimension = style.getMinWidth();
-			if (minWidthDimension != null) {
-				int contentWidth = minWidthDimension.getValue(width);
-				XYRect fieldExtent = field.getExtent();
-				int extentWidth = getExtentWidth(field, contentWidth);
-				if (fieldExtent.width < extentWidth) {
-					gzExtent.gz_setExtent(extentWidth, fieldExtent.height);
-				}
-			}
-		}
-	}
-
-	private static int getExtentWidth(Field field, int contentWidth) {
+		// get the horizontal border extent
 		int borderWidth = 0;
 		Border border = field.getBorder();
 		if (border != null) {
 			borderWidth = border.getLeft() + border.getRight();
 		}
 
+		// get the horizontal padding extent
 		int paddingWidth = field.getPaddingLeft() + field.getPaddingRight();
 
-		return paddingWidth + borderWidth + contentWidth;
+		// add the extents to the available content width to get the full
+		// available width
+		return marginWidth + borderWidth + paddingWidth + availableContentWidth;
 	}
 
-	protected static int preprocessHeight(int width, int height, Field field,
-			Style style) {
+	/**
+	 * Prepare a fields layout height by using the width and max-width dimension
+	 * and returns it
+	 * 
+	 * @param availableContentWidth
+	 *            the available content width
+	 * @param availableContentHeight
+	 *            the available content height
+	 * @param field
+	 *            the field
+	 * @param style
+	 *            the style
+	 * @return the field layout width
+	 */
+	protected static int preprocessWidth(int availableContentWidth,
+			int availableContentHeight, Field field, Style style) {
 		if (style != null) {
-			int borderHeight = 0;
-			Border border = field.getBorder();
-			if (border != null) {
-				borderHeight = border.getTop() + border.getBottom();
-			}
+			// retrieve the full width available to a field
+			int availableWidth = getAvailableWidth(availableContentWidth, field);
 
-			int paddingHeight = field.getPaddingTop()
-					+ field.getPaddingBottom();
+			// get the width and max-width dimension
+			Dimension widthDimension = style.getWidth();
+			Dimension maxWidthDimension = style.getMaxWidth();
+
+			if (widthDimension != null) {
+				// calculate the available content width based on the full
+				// available width
+				availableContentWidth = widthDimension.getValue(availableWidth);
+				return availableContentWidth;
+			} else if (maxWidthDimension != null) {
+				availableContentWidth = maxWidthDimension
+						.getValue(availableWidth);
+				return availableContentWidth;
+			}
+		}
+
+		return availableContentWidth;
+	}
+
+	/**
+	 * Prepare a fields layout height by using the height and max-height
+	 * dimension and returns it
+	 * 
+	 * @param availableContentWidth
+	 *            the available content width
+	 * @param availableContentHeight
+	 *            the available content height
+	 * @param field
+	 *            the field
+	 * @param style
+	 *            the style
+	 * @return the field layout height
+	 */
+	protected static int preprocessHeight(int availableContentWidth,
+			int availableContentHeight, Field field, Style style) {
+		if (style != null) {
+			// retrieve the full width available to a field
+			int availableWidth = getAvailableWidth(availableContentWidth, field);
 
 			Dimension heightDimension = style.getHeight();
 			Dimension maxHeightDimension = style.getMaxHeight();
 
 			if (heightDimension != null) {
-				height = heightDimension.getValue(width);
-				return width + paddingHeight + borderHeight;
+				// calculate the available content width based on the full
+				// available width
+				availableContentWidth = heightDimension
+						.getValue(availableWidth);
+				return availableContentWidth;
 			} else if (maxHeightDimension != null) {
-				height = maxHeightDimension.getValue(width);
-				return height + paddingHeight + borderHeight;
+				availableContentWidth = maxHeightDimension
+						.getValue(availableWidth);
+				return availableContentWidth;
 			}
 		}
 
-		return height;
+		return availableContentHeight;
 	}
 
-	protected static void postprocessHeight(int width, int height, Field field,
-			GzExtent gzExtent, Style style) {
+	/**
+	 * Adjusts a fields width using the min-width and width dimension
+	 * 
+	 * @param availableContentWidth
+	 *            the available content width
+	 * @param availableContentHeight
+	 *            the available content height
+	 * @param field
+	 *            the field
+	 * @param gzExtent
+	 *            the fields extent interface
+	 * @param style
+	 *            the style
+	 */
+	protected static void postprocessWidth(int availableContentWidth,
+			int availableContentHeight, Field field, GzExtent gzExtent,
+			Style style) {
 		if (style != null) {
-			Dimension minHeightDimension = style.getMinHeight();
-			if (minHeightDimension != null) {
-				int contentHeight = minHeightDimension.getValue(width);
-				XYRect fieldExtent = field.getExtent();
-				int extentHeight = getExtentHeight(field, contentHeight);
-				if (fieldExtent.height < extentHeight) {
-					gzExtent.gz_setExtent(fieldExtent.width, extentHeight);
+			int availableWidth = getAvailableWidth(availableContentWidth, field);
+			Dimension widthDimension = style.getWidth();
+			Dimension minWidthDimension = style.getMinWidth();
+			if (widthDimension != null) {
+				int contentWidth = widthDimension.getValue(availableWidth);
+				if (field.getContentWidth() != contentWidth) {
+					gzExtent.gz_setExtent(contentWidth,
+							field.getContentHeight());
+				}
+			} else if (minWidthDimension != null) {
+				int contentWidth = minWidthDimension.getValue(availableWidth);
+				if (field.getContentWidth() < contentWidth) {
+					gzExtent.gz_setExtent(contentWidth,
+							field.getContentHeight());
 				}
 			}
 		}
 	}
 
-	private static int getExtentHeight(Field field, int contentHeight) {
-		int borderHeight = 0;
-		Border border = field.getBorder();
-		if (border != null) {
-			borderHeight = border.getTop() + border.getBottom();
+	/**
+	 * Adjusts a fields height using the min-height and height dimension
+	 * 
+	 * @param availableContentWidth
+	 *            the available content width
+	 * @param availableContentHeight
+	 *            the available content height
+	 * @param field
+	 *            the field
+	 * @param gzExtent
+	 *            the fields extent interface
+	 * @param style
+	 *            the style
+	 */
+	protected static void postprocessHeight(int availableContentWidth,
+			int availableContentHeight, Field field, GzExtent gzExtent,
+			Style style) {
+		if (style != null) {
+			int availableWidth = getAvailableWidth(availableContentWidth, field);
+			Dimension heightDimension = style.getHeight();
+			Dimension minHeightDimension = style.getMinHeight();
+			if (heightDimension != null) {
+				int contentHeight = heightDimension.getValue(availableWidth);
+				if (field.getContentHeight() != contentHeight) {
+					gzExtent.gz_setExtent(field.getContentWidth(),
+							contentHeight);
+				}
+			} else if (minHeightDimension != null) {
+				int contentHeight = minHeightDimension.getValue(availableWidth);
+				if (field.getContentHeight() < contentHeight) {
+					gzExtent.gz_setExtent(field.getContentWidth(),
+							contentHeight);
+				}
+			}
 		}
-
-		int paddingHeight = field.getPaddingTop() + field.getPaddingBottom();
-
-		return paddingHeight + borderHeight + contentHeight;
 	}
 }

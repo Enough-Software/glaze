@@ -30,17 +30,17 @@ public class Style {
 	private GzFont font;
 
 	private GzBorder border;
-	
+
 	private Dimension minWidth;
 
 	private Dimension width;
-	
+
 	private Dimension maxWidth;
-	
+
 	private Dimension minHeight;
-	
+
 	private Dimension height;
-	
+
 	private Dimension maxHeight;
 
 	private final Hashtable extensions;
@@ -180,9 +180,7 @@ public class Style {
 	public void setBorder(GzBorder border) {
 		this.border = border;
 	}
-	
 
-	
 	public Dimension getMinWidth() {
 		return minWidth;
 	}
