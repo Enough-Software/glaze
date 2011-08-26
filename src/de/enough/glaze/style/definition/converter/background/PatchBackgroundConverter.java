@@ -45,7 +45,7 @@ public class PatchBackgroundConverter implements Converter {
 	 * @see de.enough.glaze.style.definition.converter.Converter#getIds()
 	 */
 	public String[] getIds() {
-		return new String[] { "background-image", "background-width" };
+		return new String[] { "background-image", "background-width", "background-margin" };
 	}
 
 	/*
@@ -62,10 +62,12 @@ public class PatchBackgroundConverter implements Converter {
 
 		Property backgroundImageProp = definition.getProperty("background-image");
 		Property backgroundWidthProp = definition.getProperty("background-width");
-
+		Property backgroundMarginProp = definition.getProperty("background-margin");
+		
 		Bitmap imageBitmap = null;		
 		Dimension[] dimensions = new Dimension[] {Dimension.ZERO, Dimension.ZERO, Dimension.ZERO, Dimension.ZERO};
-
+		Dimension[] margins = new Dimension[] {Dimension.ZERO, Dimension.ZERO, Dimension.ZERO, Dimension.ZERO};
+		
 		if (backgroundImageProp != null) {
 			Object result = UrlPropertyParser.getInstance().parse(
 					backgroundImageProp);
@@ -83,6 +85,17 @@ public class PatchBackgroundConverter implements Converter {
 			}
 		}
 		
+		if (backgroundMarginProp != null) {
+			Object result = DimensionPropertyParser.getInstance().parse(
+					backgroundMarginProp);
+			if (result instanceof Dimension) {
+				Dimension dimension = (Dimension) result;
+				margins = new Dimension [] {dimension, dimension, dimension, dimension};
+			} else if (result instanceof Dimension[]) {
+				margins = (Dimension[]) result;
+			}
+		}
+		
 		if (backgroundWidthProp != null) {
 			Object result = DimensionPropertyParser.getInstance().parse(
 					backgroundWidthProp);
@@ -94,6 +107,6 @@ public class PatchBackgroundConverter implements Converter {
 			}
 		}
 		
-		return GzBackgroundFactory.createPatchBackground(imageBitmap, null, dimensions);
+		return GzBackgroundFactory.createPatchBackground(imageBitmap, margins, dimensions);
 	}
 }
