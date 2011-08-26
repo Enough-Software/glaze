@@ -80,7 +80,7 @@ public class RoundedBackgroundConverter implements Converter {
 			return GzBackgroundFactory.createRoundrectBackground(color, arcs);
 		} else {
 			throw new CssSyntaxError(
-					"uanble to create rounded background, properties are missing",
+					"unable to create rounded background, properties are missing",
 					backgroundTypeProp);
 		}
 	}
