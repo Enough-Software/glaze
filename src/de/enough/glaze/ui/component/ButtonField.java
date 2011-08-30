@@ -14,7 +14,7 @@ public class ButtonField extends net.rim.device.api.ui.component.ButtonField
 	public ButtonField(long style) {
 		super(style);
 	}
-	
+
 	public ButtonField(String label) {
 		super(label);
 	}
@@ -22,7 +22,22 @@ public class ButtonField extends net.rim.device.api.ui.component.ButtonField
 	public ButtonField(String label, long style) {
 		super(label, style);
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see net.rim.device.api.ui.component.ButtonField#getPreferredWidth()
+	 */
+	public int getPreferredWidth() {
+		// if fiels style contains USE_ALL_WIDTH ...
+		if ((getStyle() & Field.USE_ALL_WIDTH) == Field.USE_ALL_WIDTH) {
+			// return the maximum width
+			return Integer.MAX_VALUE;
+			// otherwise ...
+		} else {
+			// return the preferred width
+			return super.getPreferredWidth();
+		}
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
