@@ -5,6 +5,7 @@ import java.util.Vector;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Manager;
 import net.rim.device.api.ui.UiApplication;
+import de.enough.glaze.log.Log;
 import de.enough.glaze.style.Style;
 import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.StyleSheetListener;
@@ -19,7 +20,6 @@ public class FieldStyleManager implements StyleSheetListener {
 	public FieldStyleManager(Manager manager) {
 		this.manager = manager;
 		this.list = new Vector();
-		StyleSheet.getInstance().addListener(this);
 	}
 
 	public void add(Field field) {
@@ -115,18 +115,28 @@ public class FieldStyleManager implements StyleSheetListener {
 		return null;
 	}
 
+	public void onDisplay() {
+		Log.d("display", this);
+		StyleSheet.getInstance().addListener(this);
+	}
+
+	public void onUndisplay() {
+		Log.d("undisplay", this);
+		StyleSheet.getInstance().removeListener(this);
+		release();
+	}
+
 	public void onLoaded(String url) {
 		synchronized (UiApplication.getEventLock()) {
 			for (int index = 0; index < this.list.size(); index++) {
 				FieldStyleHandler fieldStyleHandler = (FieldStyleHandler) this.list
 						.elementAt(index);
 				Style style = fieldStyleHandler.getStyle();
-				if (style == null) {
-					System.out.println(style);
+				if (style != null) {
+					Style newStyle = StyleSheet.getInstance().getStyle(
+							style.getId());
+					fieldStyleHandler.setStyle(newStyle);
 				}
-				Style newStyle = StyleSheet.getInstance().getStyle(
-						style.getId());
-				fieldStyleHandler.setStyle(newStyle);
 			}
 		}
 
@@ -135,12 +145,17 @@ public class FieldStyleManager implements StyleSheetListener {
 	}
 
 	public void onSyntaxError(CssSyntaxError syntaxError) {
-		// TODO Auto-generated method stub
-
+		// do nothing
 	}
 
 	public void onError(Exception e) {
-		// TODO Auto-generated method stub
+		// do nothing
+	}
 
+	private void release() {
+		for (int index = 0; index < this.list.size(); index++) {
+			FieldStyleHandler handler = get(index);
+			handler.release();
+		}
 	}
 }

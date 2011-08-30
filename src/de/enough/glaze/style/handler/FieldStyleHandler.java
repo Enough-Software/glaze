@@ -9,9 +9,7 @@ import de.enough.glaze.style.Margin;
 import de.enough.glaze.style.Padding;
 import de.enough.glaze.style.Style;
 import de.enough.glaze.style.background.GzBackground;
-import de.enough.glaze.style.background.NoBackground;
 import de.enough.glaze.style.border.GzBorder;
-import de.enough.glaze.style.border.NoBorder;
 import de.enough.glaze.style.extension.Extension;
 import de.enough.glaze.style.extension.Processor;
 import de.enough.glaze.style.font.GzFont;
@@ -75,49 +73,25 @@ public class FieldStyleHandler {
 
 		style = this.style.getStyle(Field.VISUAL_STATE_NORMAL);
 		background = style.getBackground();
-		if (background != null) {
-			this.field.setBackground(Field.VISUAL_STATE_NORMAL, background);
-		} else {
-			this.field.setBackground(Field.VISUAL_STATE_NORMAL,
-					NoBackground.getInstance());
-		}
+		this.field.setBackground(Field.VISUAL_STATE_NORMAL,
+				background);
 
 		style = this.style.getStyle(Field.VISUAL_STATE_FOCUS);
 		background = style.getBackground();
-		if (background != null) {
-			this.field.setBackground(Field.VISUAL_STATE_FOCUS, background);
-		} else {
-			this.field.setBackground(Field.VISUAL_STATE_FOCUS,
-					NoBackground.getInstance());
-		}
+		this.field.setBackground(Field.VISUAL_STATE_FOCUS,
+				background);
 
 		style = this.style.getStyle(Field.VISUAL_STATE_ACTIVE);
 		background = style.getBackground();
-		if (background != null) {
-			this.field.setBackground(Field.VISUAL_STATE_ACTIVE, background);
-		} else {
-			this.field.setBackground(Field.VISUAL_STATE_ACTIVE,
-					NoBackground.getInstance());
-		}
+		this.field.setBackground(Field.VISUAL_STATE_ACTIVE, background);
 
 		style = this.style.getStyle(Field.VISUAL_STATE_DISABLED);
 		background = style.getBackground();
-		if (background != null) {
-			this.field.setBackground(Field.VISUAL_STATE_DISABLED, background);
-		} else {
-			this.field.setBackground(Field.VISUAL_STATE_DISABLED,
-					NoBackground.getInstance());
-		}
+		this.field.setBackground(Field.VISUAL_STATE_DISABLED, background);
 
 		style = this.style.getStyle(Field.VISUAL_STATE_DISABLED_FOCUS);
 		background = style.getBackground();
-		if (background != null) {
-			this.field.setBackground(Field.VISUAL_STATE_DISABLED_FOCUS,
-					background);
-		} else {
-			this.field.setBackground(Field.VISUAL_STATE_DISABLED_FOCUS,
-					NoBackground.getInstance());
-		}
+		this.field.setBackground(Field.VISUAL_STATE_DISABLED_FOCUS, background);
 	}
 
 	public void applyBorders() {
@@ -126,48 +100,23 @@ public class FieldStyleHandler {
 
 		style = this.style.getStyle(Field.VISUAL_STATE_NORMAL);
 		border = style.getBorder();
-		if (border != null) {
-			this.field.setBorder(Field.VISUAL_STATE_NORMAL, border);
-		} else {
-			this.field.setBorder(Field.VISUAL_STATE_NORMAL,
-					NoBorder.getInstance());
-		}
+		this.field.setBorder(Field.VISUAL_STATE_NORMAL, border);
 
 		style = this.style.getStyle(Field.VISUAL_STATE_FOCUS);
 		border = style.getBorder();
-		if (border != null) {
-			this.field.setBorder(Field.VISUAL_STATE_FOCUS, border);
-		} else {
-			this.field.setBorder(Field.VISUAL_STATE_FOCUS,
-					NoBorder.getInstance());
-		}
+		this.field.setBorder(Field.VISUAL_STATE_FOCUS, border);
 
 		style = this.style.getStyle(Field.VISUAL_STATE_ACTIVE);
 		border = style.getBorder();
-		if (border != null) {
-			this.field.setBorder(Field.VISUAL_STATE_ACTIVE, border);
-		} else {
-			this.field.setBorder(Field.VISUAL_STATE_ACTIVE,
-					NoBorder.getInstance());
-		}
+		this.field.setBorder(Field.VISUAL_STATE_ACTIVE, border);
 
 		style = this.style.getStyle(Field.VISUAL_STATE_DISABLED);
 		border = style.getBorder();
-		if (border != null) {
-			this.field.setBorder(Field.VISUAL_STATE_DISABLED, border);
-		} else {
-			this.field.setBorder(Field.VISUAL_STATE_DISABLED,
-					NoBorder.getInstance());
-		}
+		this.field.setBorder(Field.VISUAL_STATE_DISABLED, border);
 
 		style = this.style.getStyle(Field.VISUAL_STATE_DISABLED_FOCUS);
 		border = style.getBorder();
-		if (border != null) {
-			this.field.setBorder(Field.VISUAL_STATE_DISABLED_FOCUS, border);
-		} else {
-			this.field.setBorder(Field.VISUAL_STATE_DISABLED_FOCUS,
-					NoBorder.getInstance());
-		}
+		this.field.setBorder(Field.VISUAL_STATE_DISABLED_FOCUS, border);
 	}
 
 	public void applyFont() {
@@ -203,5 +152,12 @@ public class FieldStyleHandler {
 
 	public Style getStyle() {
 		return this.style;
+	}
+	
+	public void release() {
+		Style style = getStyle();
+		if (style != null) {
+			style.release();
+		}
 	}
 }

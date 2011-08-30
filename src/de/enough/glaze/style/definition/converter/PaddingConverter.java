@@ -52,11 +52,11 @@ public class PaddingConverter implements Converter {
 	 * .glaze.style.definition.Definition)
 	 */
 	public Object convert(Definition definition) throws CssSyntaxError {
-		Padding padding = new Padding();
-		
 		if (!definition.hasProperties(this)) {
-			return padding;
+			return Padding.ZERO;
 		}
+		
+		Padding padding = new Padding();
 
 		Property paddingProp = definition.getProperty("padding");
 		Property paddingLeftProp = definition.getProperty("padding-left");

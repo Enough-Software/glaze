@@ -240,4 +240,26 @@ public class Style {
 	public Object getExtensionData(Extension extension) {
 		return this.extensions.get(extension);
 	}
+
+	public void release() {
+		release(Field.VISUAL_STATE_NORMAL);
+		release(Field.VISUAL_STATE_FOCUS);
+		release(Field.VISUAL_STATE_ACTIVE);
+		release(Field.VISUAL_STATE_DISABLED);
+		release(Field.VISUAL_STATE_DISABLED_FOCUS);
+	}
+
+	public void release(int visualState) {
+		// if a style is given for the visual state ...
+		Style style = getStyle(visualState);
+		if (style != null) {
+			// release its border
+			GzBorder border = style.getBorder();
+			border.release();
+
+			// release its background
+			GzBackground background = style.getBackground();
+			background.release();
+		}
+	}
 }

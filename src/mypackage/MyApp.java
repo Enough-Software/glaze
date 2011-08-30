@@ -28,7 +28,7 @@ public class MyApp extends UiApplication {
 		Log.setLevel(Log.DEBUG);
 
 		updateStyle();
-		pushScreen(new MyScreen());
+		pushScreen(new MyFirstScreen());
 
 	}
 

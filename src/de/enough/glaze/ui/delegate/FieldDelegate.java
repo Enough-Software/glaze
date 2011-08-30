@@ -63,9 +63,7 @@ public class FieldDelegate {
 			FieldStyleManager styleManager = gzManager.getStyleManager();
 			FieldStyleHandler styleHandler = styleManager.get(field);
 			return styleHandler.getStyle();
-		} else {
-			Log.e("field must be added to a glaze manager", field);
-		}
+		} 
 		return null;
 	}
 }

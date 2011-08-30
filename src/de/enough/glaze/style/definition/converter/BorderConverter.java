@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import de.enough.glaze.style.border.BitmapBorder;
 import de.enough.glaze.style.border.GzBorder;
+import de.enough.glaze.style.border.NoBorder;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.converter.border.BitmapBorderConverter;
 import de.enough.glaze.style.definition.converter.border.RoundedBorderConverter;
@@ -107,7 +108,7 @@ public class BorderConverter implements Converter {
 		// if the definition has no properties handled by this converter ...
 		if (!definition.hasProperties(this)) {
 			// return null
-			return null;
+			return NoBorder.getInstance();
 		}
 
 		Property borderTypeProp = definition.getProperty("border-type");

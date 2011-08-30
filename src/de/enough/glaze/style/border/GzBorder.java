@@ -16,4 +16,11 @@ public abstract class GzBorder extends Border {
 	public GzBorder(XYEdges borderWidths, int style) {
 		super(borderWidths, style);
 	}
+
+	/**
+	 * Releases this border
+	 */
+	public void release() {
+		// do nothing
+	}
 }

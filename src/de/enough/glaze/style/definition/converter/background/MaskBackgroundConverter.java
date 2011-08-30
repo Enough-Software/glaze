@@ -40,8 +40,7 @@ public class MaskBackgroundConverter implements Converter {
 	 * @see de.enough.glaze.style.definition.converter.Converter#getIds()
 	 */
 	public String[] getIds() {
-		return new String[] { "background-mask", "background-mask-color",
-				"background-background" };
+		return new String[] { "background-mask", "background-background" };
 	}
 
 	/*
@@ -58,13 +57,10 @@ public class MaskBackgroundConverter implements Converter {
 
 		Property backgroundTypeProp = definition.getProperty("background-type");
 		Property backgroundMaskProp = definition.getProperty("background-mask");
-		Property backgroundMaskColorProp = definition
-				.getProperty("background-mask-color");
 		Property backgroundProp = definition
 				.getProperty("background-background");
 
 		GzBackground maskBackground = null;
-		Color maskColor = null;
 		GzBackground background = null;
 
 		if (backgroundMaskProp != null) {
@@ -79,17 +75,6 @@ public class MaskBackgroundConverter implements Converter {
 				}
 			} else {
 				throw new CssSyntaxError("must be a single background id",
-						backgroundMaskProp);
-			}
-		}
-
-		if (backgroundMaskColorProp != null) {
-			Object result = ColorPropertyParser.getInstance().parse(
-					backgroundMaskColorProp);
-			if (result instanceof Color) {
-				maskColor = (Color) result;
-			} else {
-				throw new CssSyntaxError("must be a single color",
 						backgroundMaskProp);
 			}
 		}
@@ -110,9 +95,8 @@ public class MaskBackgroundConverter implements Converter {
 			}
 		}
 
-		if (maskBackground != null && maskColor != null && background != null) {
-			return GzBackgroundFactory.createMaskBackground(maskColor,
-					maskBackground, background);
+		if (maskBackground != null && background != null) {
+			return GzBackgroundFactory.createMaskBackground(maskBackground, background);
 		} else {
 			throw new CssSyntaxError("unable to create mask background, properties are missing", backgroundTypeProp);
 		}

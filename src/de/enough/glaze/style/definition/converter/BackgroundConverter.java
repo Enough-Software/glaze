@@ -3,6 +3,7 @@ package de.enough.glaze.style.definition.converter;
 import java.util.Vector;
 
 import de.enough.glaze.style.background.GzBackground;
+import de.enough.glaze.style.background.NoBackground;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.converter.background.ImageBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.LayerBackgroundConverter;
@@ -61,6 +62,7 @@ public class BackgroundConverter implements Converter {
 			addIds(ImageBackgroundConverter.getInstance(), idCollection);
 			addIds(RoundedBackgroundConverter.getInstance(), idCollection);
 			addIds(GradientBackgroundConverter.getInstance(), idCollection);
+			addIds(PatchBackgroundConverter.getInstance(), idCollection);
 			addIds(MaskBackgroundConverter.getInstance(), idCollection);
 			addIds(LayerBackgroundConverter.getInstance(), idCollection);
 			addIds(new String[] { "background-type" }, idCollection);
@@ -111,7 +113,7 @@ public class BackgroundConverter implements Converter {
 		// if the definition has no properties handled by this converter ...
 		if (!definition.hasProperties(this)) {
 			// return null
-			return null;
+			return NoBackground.getInstance();
 		}
 
 		Property backgroundTypeProp = definition.getProperty("background-type");
@@ -143,7 +145,7 @@ public class BackgroundConverter implements Converter {
 			// convert to a solid background
 			return SolidBackgroundConverter.getInstance().convert(definition);
 		} else {
-			return null;
+			return NoBackground.getInstance();
 		}
 	}
 

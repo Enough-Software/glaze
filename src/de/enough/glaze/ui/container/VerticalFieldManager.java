@@ -2,6 +2,7 @@ package de.enough.glaze.ui.container;
 
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
+import de.enough.glaze.log.Log;
 import de.enough.glaze.style.Style;
 import de.enough.glaze.style.handler.FieldStyleManager;
 import de.enough.glaze.ui.delegate.GzManager;
@@ -186,5 +187,20 @@ public class VerticalFieldManager extends
 	public void gz_updateLayout() {
 		super.updateLayout();
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.rim.device.api.ui.ScrollView#onDisplay()
+	 */
+	protected void onDisplay() {
+		super.onDisplay();
+		this.styleManager.onDisplay();
+	}
 
+	/* (non-Javadoc)
+	 * @see net.rim.device.api.ui.ScrollView#onUndisplay()
+	 */
+	protected void onUndisplay() {
+		super.onUndisplay();
+		this.styleManager.onUndisplay();
+	}
 }

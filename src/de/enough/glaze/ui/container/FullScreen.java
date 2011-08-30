@@ -1,25 +1,34 @@
 package de.enough.glaze.ui.container;
 
+import net.rim.device.api.system.Display;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
 import de.enough.glaze.style.Style;
+import de.enough.glaze.style.handler.FieldStyleHandler;
 import de.enough.glaze.style.handler.FieldStyleManager;
 import de.enough.glaze.ui.delegate.GzManager;
-import de.enough.glaze.ui.delegate.ManagerDelegate;
 
-public class MainScreen extends net.rim.device.api.ui.container.MainScreen
+public class FullScreen extends net.rim.device.api.ui.container.FullScreen
 		implements GzManager {
 
 	private final FieldStyleManager styleManager;
 
-	public MainScreen() {
+	private final FieldStyleHandler handler;
+
+	public FullScreen() {
 		this(null);
 	}
 
-	public MainScreen(Style style) {
-		super();
+	public FullScreen(Style style) {
 		this.styleManager = new FieldStyleManager(this);
-		this.styleManager.add(getMainManager(), style);
+		if (style != null) {
+			this.handler = new FieldStyleHandler(getManager(), style);
+			this.handler.applyPadding(Display.getWidth());
+			this.handler.applyBorders();
+			this.handler.applyBackgrounds();
+		} else {
+			this.handler = null;
+		}
 	}
 
 	/*
@@ -128,59 +137,20 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 		return this.styleManager;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.rim.device.api.ui.container.VerticalFieldManager#sublayout(int,
-	 * int)
-	 */
-	protected void sublayout(int maxWidth, int maxHeight) {
-		ManagerDelegate.sublayout(maxWidth, maxHeight, this);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.rim.device.api.ui.container.VerticalFieldManager#subpaint(net.rim
-	 * .device.api.ui.Graphics)
-	 */
-	protected void subpaint(Graphics graphics) {
-		ManagerDelegate.subpaint(graphics, this);
-	}
-
 	public void gz_setExtent(int width, int height) {
 		setExtent(width, height);
 	}
 
 	public void gz_sublayout(int maxWidth, int maxHeight) {
-		super.sublayout(maxWidth, maxHeight);
+		sublayout(maxWidth, maxHeight);
 	}
 
 	public void gz_paintChild(Graphics graphics, Field field) {
-		super.paintChild(graphics, field);
+		paintChild(graphics, field);
 	}
 
-	/* (non-Javadoc)
-	 * @see de.enough.glaze.ui.delegate.GzManager#gz_updateLayout()
-	 */
 	public void gz_updateLayout() {
 		updateLayout();
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.rim.device.api.ui.ScrollView#onDisplay()
-	 */
-	protected void onDisplay() {
-		super.onDisplay();
-		this.styleManager.onDisplay();
-	}
 
-	/* (non-Javadoc)
-	 * @see net.rim.device.api.ui.ScrollView#onUndisplay()
-	 */
-	protected void onUndisplay() {
-		super.onUndisplay();
-		this.styleManager.onUndisplay();
-	}
 }

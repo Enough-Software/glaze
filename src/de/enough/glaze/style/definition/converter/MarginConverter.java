@@ -51,11 +51,11 @@ public class MarginConverter implements Converter {
 	 * .glaze.style.definition.Definition)
 	 */
 	public Object convert(Definition definition) throws CssSyntaxError {
-		Margin margin = new Margin();
-		
 		if (!definition.hasProperties(this)) {
-			return margin;
+			return Margin.ZERO;
 		}
+		
+		Margin margin = new Margin();
 
 		Property marginProp = definition.getProperty("margin");
 		Property marginLeftProp = definition.getProperty("margin-left");
