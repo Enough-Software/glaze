@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import de.enough.glaze.style.parser.CssParser;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
+import de.enough.glaze.style.parser.property.Property;
 
 public class ParserUtils {
 
@@ -213,6 +214,29 @@ public class ParserUtils {
 	}
 
 	/**
+	 * Converts the given value in an array to build a property
+	 * 
+	 * @param value
+	 *            the value
+	 * @param delimiter
+	 *            the delimiter
+	 * @return the resulting array
+	 * @throws CssSyntaxError
+	 */
+	public static String[] toPropertyArray(String value, char delimiter) {
+		value = ParserUtils.normalize(value);
+		int delimiterIndex = value.indexOf(delimiter);
+		if (delimiterIndex != -1) {
+			String[] resultArray = new String[2];
+			resultArray[0] = value.substring(0, delimiterIndex);
+			resultArray[1] = value.substring(delimiterIndex + 1);
+			return resultArray;
+		} else {
+			return null;
+		}
+	}
+
+	/**
 	 * Normalizes the given value
 	 * 
 	 * @param value
@@ -222,7 +246,7 @@ public class ParserUtils {
 	public static String normalize(String value) {
 		return value.trim().toLowerCase();
 	}
-	
+
 	/**
 	 * Returns true if the given id is valid
 	 * 

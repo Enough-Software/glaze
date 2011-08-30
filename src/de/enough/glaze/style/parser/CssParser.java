@@ -6,6 +6,7 @@ import java.io.Reader;
 
 import de.enough.glaze.log.Log;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
+import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.parser.utils.ParserUtils;
 
 /**
@@ -16,9 +17,9 @@ import de.enough.glaze.style.parser.utils.ParserUtils;
  */
 public class CssParser {
 
-	private static final char ATTRIBUTE_DELIMITER = ':';
+	private static final char PROPERTY_DELIMITER = ':';
 
-	private static final char ATTRIBUTE_END = ';';
+	private static final char PROPERTY_END = ';';
 
 	private static final char BLOCK_START = '{';
 
@@ -156,16 +157,16 @@ public class CssParser {
 				buffer.deleteCharAt(buffer.length() - 1);
 			} else {
 				checkNextCharForStartComment = false;
-				if (c == ATTRIBUTE_END || c == BLOCK_START || c == BLOCK_END) {
+				if (c == PROPERTY_END || c == BLOCK_START || c == BLOCK_END) {
 					String value = buffer.toString().trim();
-					if (c == ATTRIBUTE_END) {
-						handleAttribute(value);
+					if (c == PROPERTY_END) {
+						handleProperty(value);
 					} else if (c == BLOCK_START) {
 						startBlock();
 						handleBlockStart(value);
 					} else if (c == BLOCK_END) {
 						if (value.length() > 0) {
-							handleAttribute(value);
+							handleProperty(value);
 						}
 						handleBlockEnd();
 						endBlock();
@@ -186,28 +187,18 @@ public class CssParser {
 		return;
 	}
 
-	public void handleAttribute(String value) throws CssSyntaxError {
-		value = ParserUtils.normalize(value);
-		if (value.length() > 0) {
-			if (ParserUtils.hasDelimiter(value, ATTRIBUTE_DELIMITER)) {
-				String[] attributeArray = ParserUtils.toArray(value,
-						ATTRIBUTE_DELIMITER);
-				if (attributeArray.length == 2) {
-					String attributeId = ParserUtils
-							.normalize(attributeArray[0]);
-					ParserUtils.validate(this, attributeId);
-					String attributeValue = ParserUtils
-							.normalize(attributeArray[1]);
-					if (this.handler != null) {
-						this.handler.onProperty(this, attributeId,
-								attributeValue);
-					}
-					return;
-				}
+	public void handleProperty(String value) throws CssSyntaxError {
+		String[] propertyArray = ParserUtils.toPropertyArray(value,
+				PROPERTY_DELIMITER);
+		if (propertyArray != null) {
+			String propertyId = ParserUtils.normalize(propertyArray[0]);
+			ParserUtils.validate(this, propertyId);
+			String propertyValue = ParserUtils.normalize(propertyArray[1]);
+			if (this.handler != null) {
+				this.handler.onProperty(this, propertyId, propertyValue);
 			}
-
-			throw new CssSyntaxError("invalid attribute declaration", value,
-					this.lineNumber);
+		} else {
+			throw new CssSyntaxError("invalid property", value, this.lineNumber);
 		}
 	}
 
