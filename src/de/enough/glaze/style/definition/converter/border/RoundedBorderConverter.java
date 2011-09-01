@@ -6,10 +6,8 @@ import de.enough.glaze.style.Color;
 import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.border.GzBorderFactory;
 import de.enough.glaze.style.definition.Definition;
-import de.enough.glaze.style.definition.converter.BorderConverter;
 import de.enough.glaze.style.definition.converter.Converter;
 import de.enough.glaze.style.definition.converter.utils.BorderConverterUtils;
-import de.enough.glaze.style.definition.converter.utils.ColorConverterUtils;
 import de.enough.glaze.style.definition.converter.utils.DimensionConverterUtils;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.style.parser.property.ColorPropertyParser;
@@ -72,8 +70,8 @@ public class RoundedBorderConverter implements Converter {
 				Color color = (Color) result;
 				borderColor = color.getColor();
 			} else {
-				throw new CssSyntaxError("unable to resolve to a single color",
-						result.toString());
+				throw new CssSyntaxError("must be a single color",
+						borderColorProp);
 			}
 		}
 
@@ -95,14 +93,16 @@ public class RoundedBorderConverter implements Converter {
 					borderStyleProp);
 			if (result instanceof String) {
 				String borderStyleString = (String) result;
-				borderStyle = BorderConverterUtils.getBorderStyle(borderStyleString, borderStyleProp);
+				borderStyle = BorderConverterUtils.getBorderStyle(
+						borderStyleString, borderStyleProp);
 			} else {
-				throw new CssSyntaxError("unable to resolve to a single border style",
-						result.toString());
+				throw new CssSyntaxError("must be a single border type",
+						borderStyleProp);
 			}
 		}
 
-		return GzBorderFactory.createRoundedBorder(borderWidths, borderColor, borderStyle);
+		return GzBorderFactory.createRoundedBorder(borderWidths, borderColor,
+				borderStyle);
 	}
 
 }

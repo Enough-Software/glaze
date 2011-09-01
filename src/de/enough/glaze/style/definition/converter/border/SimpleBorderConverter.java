@@ -6,7 +6,6 @@ import de.enough.glaze.style.Color;
 import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.border.GzBorderFactory;
 import de.enough.glaze.style.definition.Definition;
-import de.enough.glaze.style.definition.converter.BorderConverter;
 import de.enough.glaze.style.definition.converter.Converter;
 import de.enough.glaze.style.definition.converter.utils.BorderConverterUtils;
 import de.enough.glaze.style.definition.converter.utils.ColorConverterUtils;

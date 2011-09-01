@@ -2,25 +2,18 @@ package de.enough.glaze.style.definition.converter.border;
 
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.XYEdges;
-import net.rim.device.api.ui.decor.Border;
 import de.enough.glaze.content.ContentException;
-import de.enough.glaze.style.Color;
 import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.StyleResources;
 import de.enough.glaze.style.URL;
 import de.enough.glaze.style.border.GzBorderFactory;
 import de.enough.glaze.style.definition.Definition;
-import de.enough.glaze.style.definition.converter.BorderConverter;
 import de.enough.glaze.style.definition.converter.Converter;
-import de.enough.glaze.style.definition.converter.utils.BorderConverterUtils;
-import de.enough.glaze.style.definition.converter.utils.ColorConverterUtils;
 import de.enough.glaze.style.definition.converter.utils.DimensionConverterUtils;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
-import de.enough.glaze.style.parser.property.ColorPropertyParser;
 import de.enough.glaze.style.parser.property.DimensionPropertyParser;
 import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.parser.property.UrlPropertyParser;
-import de.enough.glaze.style.parser.property.ValuePropertyParser;
 
 public class BitmapBorderConverter implements Converter {
 	/**

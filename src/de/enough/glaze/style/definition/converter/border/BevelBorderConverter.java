@@ -1,23 +1,20 @@
 package de.enough.glaze.style.definition.converter.border;
 
 import net.rim.device.api.ui.XYEdges;
-import net.rim.device.api.ui.decor.Border;
 import de.enough.glaze.style.Color;
 import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.border.GzBorderFactory;
 import de.enough.glaze.style.definition.Definition;
-import de.enough.glaze.style.definition.converter.BorderConverter;
 import de.enough.glaze.style.definition.converter.Converter;
-import de.enough.glaze.style.definition.converter.utils.BorderConverterUtils;
 import de.enough.glaze.style.definition.converter.utils.ColorConverterUtils;
 import de.enough.glaze.style.definition.converter.utils.DimensionConverterUtils;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.style.parser.property.ColorPropertyParser;
 import de.enough.glaze.style.parser.property.DimensionPropertyParser;
 import de.enough.glaze.style.parser.property.Property;
-import de.enough.glaze.style.parser.property.ValuePropertyParser;
 
 public class BevelBorderConverter implements Converter {
+
 	/**
 	 * the instance
 	 */
@@ -42,7 +39,8 @@ public class BevelBorderConverter implements Converter {
 	 * @see de.enough.glaze.style.definition.converter.Converter#getIds()
 	 */
 	public String[] getIds() {
-		return new String[] { "border-inner-color", "border-outer-color", "border-width" };
+		return new String[] { "border-inner-color", "border-outer-color",
+				"border-width" };
 	}
 
 	/*
@@ -57,12 +55,16 @@ public class BevelBorderConverter implements Converter {
 			return null;
 		}
 
-		Property borderInnerColorProp = definition.getProperty("border-inner-color");
-		Property borderOuterColorProp = definition.getProperty("border-outer-color");
+		Property borderInnerColorProp = definition
+				.getProperty("border-inner-color");
+		Property borderOuterColorProp = definition
+				.getProperty("border-outer-color");
 		Property borderWidthProp = definition.getProperty("border-width");
 
-		XYEdges borderInnerColors = ColorConverterUtils.toXYEdges(net.rim.device.api.ui.Color.LIGHTGRAY);
-		XYEdges borderOuterColors = ColorConverterUtils.toXYEdges(net.rim.device.api.ui.Color.DARKGRAY);
+		XYEdges borderInnerColors = ColorConverterUtils
+				.toXYEdges(net.rim.device.api.ui.Color.LIGHTGRAY);
+		XYEdges borderOuterColors = ColorConverterUtils
+				.toXYEdges(net.rim.device.api.ui.Color.DARKGRAY);
 		XYEdges borderWidths = DimensionConverterUtils.toXYEdges(1);
 
 		if (borderInnerColorProp != null) {
@@ -77,7 +79,7 @@ public class BevelBorderConverter implements Converter {
 						borderInnerColorProp);
 			}
 		}
-		
+
 		if (borderOuterColorProp != null) {
 			Object result = ColorPropertyParser.getInstance().parse(
 					borderOuterColorProp);
@@ -97,7 +99,6 @@ public class BevelBorderConverter implements Converter {
 			if (result instanceof Dimension) {
 				Dimension dimension = (Dimension) result;
 				borderWidths = DimensionConverterUtils.toXYEdges(dimension);
-
 			} else if (result instanceof Dimension[]) {
 				Dimension[] dimensions = (Dimension[]) result;
 				borderWidths = DimensionConverterUtils.toXYEdges(dimensions,
@@ -105,8 +106,8 @@ public class BevelBorderConverter implements Converter {
 			}
 		}
 
-		return GzBorderFactory.createBevelBorder(borderWidths, borderOuterColors,
-				borderInnerColors);
+		return GzBorderFactory.createBevelBorder(borderWidths,
+				borderOuterColors, borderInnerColors);
 	}
 
 }
