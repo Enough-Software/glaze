@@ -73,7 +73,7 @@ public class LayerBackgroundConverter implements Converter {
 					backgrounds = new GzBackground[] { background };
 				} else {
 					throw new CssSyntaxError("unable to resolve background",
-							backgroundId);
+							backgroundId, backgroundsProp.getLine());
 				}
 			} else if (result instanceof String[]) {
 				String[] backgroundIds = (String[]) result;
@@ -85,7 +85,8 @@ public class LayerBackgroundConverter implements Converter {
 						backgrounds[index] = background;
 					} else {
 						throw new CssSyntaxError(
-								"unable to resolve background", backgroundId);
+								"unable to resolve background", backgroundId,
+								backgroundsProp.getLine());
 					}
 				}
 			}
