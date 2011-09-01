@@ -11,27 +11,29 @@ import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.StyleSheetListener;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 
-public class FieldStyleManager implements StyleSheetListener {
+public class StyleManager implements StyleSheetListener {
 
 	private final Vector list;
 
 	private final Manager manager;
+	
+	private int availableWidth;
 
-	public FieldStyleManager(Manager manager) {
+	public StyleManager(Manager manager) {
 		this.manager = manager;
 		this.list = new Vector();
 	}
 
 	public void add(Field field) {
-		add(new FieldStyleHandler(field, null));
+		add(new StyleHandler(field, null));
 	}
 
-	private void add(FieldStyleHandler fieldStyleHandler) {
+	private void add(StyleHandler fieldStyleHandler) {
 		this.list.addElement(fieldStyleHandler);
 	}
 
 	public void add(Field field, Style style) {
-		add(new FieldStyleHandler(field, style));
+		add(new StyleHandler(field, style));
 	}
 
 	public void addAll(Field[] fields) {
@@ -49,14 +51,14 @@ public class FieldStyleManager implements StyleSheetListener {
 	}
 
 	public void insert(Field field, int index) {
-		insert(new FieldStyleHandler(field, null), index);
+		insert(new StyleHandler(field, null), index);
 	}
 
 	public void insert(Field field, int index, Style style) {
-		insert(new FieldStyleHandler(field, style), index);
+		insert(new StyleHandler(field, style), index);
 	}
 
-	private void insert(FieldStyleHandler fieldStyleHandler, int index) {
+	private void insert(StyleHandler fieldStyleHandler, int index) {
 		this.list.insertElementAt(fieldStyleHandler, index);
 	}
 
@@ -66,7 +68,7 @@ public class FieldStyleManager implements StyleSheetListener {
 
 	public void delete(Field field) {
 		for (int index = 0; index < this.list.size(); index++) {
-			FieldStyleHandler fieldStyleHandler = (FieldStyleHandler) this.list
+			StyleHandler fieldStyleHandler = (StyleHandler) this.list
 					.elementAt(index);
 			if (fieldStyleHandler.getField().equals(field)) {
 				delete(index);
@@ -99,13 +101,13 @@ public class FieldStyleManager implements StyleSheetListener {
 		insert(newField, index, style);
 	}
 
-	public FieldStyleHandler get(int index) {
-		return (FieldStyleHandler) this.list.elementAt(index);
+	public StyleHandler get(int index) {
+		return (StyleHandler) this.list.elementAt(index);
 	}
 
-	public FieldStyleHandler get(Field field) {
+	public StyleHandler get(Field field) {
 		for (int index = 0; index < this.list.size(); index++) {
-			FieldStyleHandler fieldStyleHandler = (FieldStyleHandler) this.list
+			StyleHandler fieldStyleHandler = (StyleHandler) this.list
 					.elementAt(index);
 			if (fieldStyleHandler.getField().equals(field)) {
 				return fieldStyleHandler;
@@ -114,14 +116,26 @@ public class FieldStyleManager implements StyleSheetListener {
 
 		return null;
 	}
+	
+	public int size() {
+		return this.list.size();
+	}
+
+	public int getMaxWidth() {
+		return availableWidth;
+	}
+
+	public void setMaxWidth(int availableWidth) {
+		this.availableWidth = availableWidth;
+	}
 
 	public void onDisplay() {
-		Log.d("display", this);
+		Log.debug("display", this);
 		StyleSheet.getInstance().addListener(this);
 	}
 
 	public void onUndisplay() {
-		Log.d("undisplay", this);
+		Log.debug("undisplay", this);
 		StyleSheet.getInstance().removeListener(this);
 		release();
 	}
@@ -129,7 +143,7 @@ public class FieldStyleManager implements StyleSheetListener {
 	public void onLoaded(String url) {
 		synchronized (UiApplication.getEventLock()) {
 			for (int index = 0; index < this.list.size(); index++) {
-				FieldStyleHandler fieldStyleHandler = (FieldStyleHandler) this.list
+				StyleHandler fieldStyleHandler = (StyleHandler) this.list
 						.elementAt(index);
 				Style style = fieldStyleHandler.getStyle();
 				if (style != null) {
@@ -154,7 +168,7 @@ public class FieldStyleManager implements StyleSheetListener {
 
 	private void release() {
 		for (int index = 0; index < this.list.size(); index++) {
-			FieldStyleHandler handler = get(index);
+			StyleHandler handler = get(index);
 			handler.release();
 		}
 	}

@@ -37,14 +37,14 @@ public abstract class PropertyParser {
 				valueCollection.removeAllElements();
 				for (int index = 0; index < arrayValues.length; index++) {
 					String arrayValue = arrayValues[index];
-					valueCollection.addElement(parse(arrayValue));
+					valueCollection.addElement(parse(arrayValue, property));
 				}
 				// and return the array
 				return toArray(valueCollection);
 				// otherwise ...
 			} else {
 				// parse and return the single value
-				return parse(value);
+				return parse(value, property);
 			}
 		}
 	}
@@ -64,6 +64,6 @@ public abstract class PropertyParser {
 	 * @throws CssSyntaxError
 	 *             if the syntax is wrong
 	 */
-	protected abstract Object parse(String value) throws CssSyntaxError;
+	protected abstract Object parse(String value, Property property) throws CssSyntaxError;
 
 }

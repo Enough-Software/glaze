@@ -1,40 +1,11 @@
 package de.enough.glaze.ui.delegate;
 
 import net.rim.device.api.ui.Field;
-import net.rim.device.api.ui.decor.Border;
 import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.Style;
+import de.enough.glaze.style.handler.StyleManager;
 
 public class ExtentDelegate {
-
-	/**
-	 * Returns the full width that is available to a field (including padding,
-	 * borders and margin)
-	 * 
-	 * @param width
-	 *            the available content width
-	 * @param field
-	 *            the field
-	 * @return the full width
-	 */
-	private static int getAvailableWidth(int availableContentWidth, Field field) {
-		// get the horizontal margin extent
-		int marginWidth = field.getMarginLeft() + field.getMarginRight();
-
-		// get the horizontal border extent
-		int borderWidth = 0;
-		Border border = field.getBorder();
-		if (border != null) {
-			borderWidth = border.getLeft() + border.getRight();
-		}
-
-		// get the horizontal padding extent
-		int paddingWidth = field.getPaddingLeft() + field.getPaddingRight();
-
-		// add the extents to the available content width to get the full
-		// available width
-		return marginWidth + borderWidth + paddingWidth + availableContentWidth;
-	}
 
 	/**
 	 * Prepare a fields layout height by using the width and max-width dimension
@@ -53,22 +24,20 @@ public class ExtentDelegate {
 	protected static int preprocessWidth(int availableContentWidth,
 			int availableContentHeight, Field field, Style style) {
 		if (style != null) {
-			// retrieve the full width available to a field
-			int availableWidth = getAvailableWidth(availableContentWidth, field);
-
 			// get the width and max-width dimension
 			Dimension widthDimension = style.getWidth();
 			Dimension maxWidthDimension = style.getMaxWidth();
-
-			if (widthDimension != null) {
-				// calculate the available content width based on the full
-				// available width
-				availableContentWidth = widthDimension.getValue(availableWidth);
-				return availableContentWidth;
-			} else if (maxWidthDimension != null) {
-				availableContentWidth = maxWidthDimension
-						.getValue(availableWidth);
-				return availableContentWidth;
+			if (widthDimension != null || maxWidthDimension != null) {
+				// get the style manager for the field
+				StyleManager styleManager = FieldDelegate
+						.getStyleManager(field);
+				// get the maximum width given to the manager of the field
+				int maxWidth = styleManager.getMaxWidth();
+				if (widthDimension != null) {
+					return widthDimension.getValue(maxWidth);
+				} else if (maxWidthDimension != null) {
+					return maxWidthDimension.getValue(maxWidth);
+				}
 			}
 		}
 
@@ -92,22 +61,20 @@ public class ExtentDelegate {
 	protected static int preprocessHeight(int availableContentWidth,
 			int availableContentHeight, Field field, Style style) {
 		if (style != null) {
-			// retrieve the full width available to a field
-			int availableWidth = getAvailableWidth(availableContentWidth, field);
-
+			// get the height and max-height dimension
 			Dimension heightDimension = style.getHeight();
 			Dimension maxHeightDimension = style.getMaxHeight();
-
-			if (heightDimension != null) {
-				// calculate the available content width based on the full
-				// available width
-				availableContentWidth = heightDimension
-						.getValue(availableWidth);
-				return availableContentWidth;
-			} else if (maxHeightDimension != null) {
-				availableContentWidth = maxHeightDimension
-						.getValue(availableWidth);
-				return availableContentWidth;
+			if (heightDimension != null || maxHeightDimension != null) {
+				// get the style manager for the field
+				StyleManager styleManager = FieldDelegate
+						.getStyleManager(field);
+				// get the maximum width given to the manager of the field
+				int maxWidth = styleManager.getMaxWidth();
+				if (heightDimension != null) {
+					return heightDimension.getValue(maxWidth);
+				} else if (maxHeightDimension != null) {
+					return maxHeightDimension.getValue(maxWidth);
+				}
 			}
 		}
 
@@ -132,21 +99,35 @@ public class ExtentDelegate {
 			int availableContentHeight, Field field, GzExtent gzExtent,
 			Style style) {
 		if (style != null) {
-			int availableWidth = getAvailableWidth(availableContentWidth, field);
+			// get the width and min-width dimension
 			Dimension widthDimension = style.getWidth();
 			Dimension minWidthDimension = style.getMinWidth();
-			if (widthDimension != null) {
-				int contentWidth = widthDimension.getValue(availableWidth);
-				if (field.getContentWidth() != contentWidth) {
-					gzExtent.gz_setExtent(contentWidth,
-							field.getContentHeight());
+			if (widthDimension != null || minWidthDimension != null) {
+				// get the style manager for the field
+				StyleManager styleManager = FieldDelegate
+						.getStyleManager(field);
+				// get the maximum width given to the manager of the field
+				int maxWidth = styleManager.getMaxWidth();
+				if (widthDimension != null) {
+					int contentWidth = widthDimension.getValue(maxWidth);
+					// if the content width of the field is not equal to the
+					// given width ...
+					if (field.getContentWidth() != contentWidth) {
+						// adjust the content width
+						gzExtent.gz_setExtent(contentWidth,
+								field.getContentHeight());
+					}
+				} else if (minWidthDimension != null) {
+					// if the content width of the field is smaller than the
+					// given minimum width ...
+					int contentWidth = minWidthDimension.getValue(maxWidth);
+					if (field.getContentWidth() < contentWidth) {
+						// adjust the content width
+						gzExtent.gz_setExtent(contentWidth,
+								field.getContentHeight());
+					}
 				}
-			} else if (minWidthDimension != null) {
-				int contentWidth = minWidthDimension.getValue(availableWidth);
-				if (field.getContentWidth() < contentWidth) {
-					gzExtent.gz_setExtent(contentWidth,
-							field.getContentHeight());
-				}
+
 			}
 		}
 	}
@@ -169,20 +150,33 @@ public class ExtentDelegate {
 			int availableContentHeight, Field field, GzExtent gzExtent,
 			Style style) {
 		if (style != null) {
-			int availableWidth = getAvailableWidth(availableContentWidth, field);
+			// get the height and min-height dimension
 			Dimension heightDimension = style.getHeight();
 			Dimension minHeightDimension = style.getMinHeight();
-			if (heightDimension != null) {
-				int contentHeight = heightDimension.getValue(availableWidth);
-				if (field.getContentHeight() != contentHeight) {
-					gzExtent.gz_setExtent(field.getContentWidth(),
-							contentHeight);
-				}
-			} else if (minHeightDimension != null) {
-				int contentHeight = minHeightDimension.getValue(availableWidth);
-				if (field.getContentHeight() < contentHeight) {
-					gzExtent.gz_setExtent(field.getContentWidth(),
-							contentHeight);
+			if (heightDimension != null || minHeightDimension != null) {
+				// get the style manager for the field
+				StyleManager styleManager = FieldDelegate
+						.getStyleManager(field);
+				// get the maximum width given to the manager of the field
+				int maxWidth = styleManager.getMaxWidth();
+				if (heightDimension != null) {
+					int contentHeight = heightDimension.getValue(maxWidth);
+					// if the content height of the field is not equal to the
+					// given height ...
+					if (field.getContentHeight() != contentHeight) {
+						// adjust the content height
+						gzExtent.gz_setExtent(field.getContentWidth(),
+								contentHeight);
+					}
+				} else if (minHeightDimension != null) {
+					// if the content height of the field is smaller than the
+					// given minimum height ...
+					int contentHeight = minHeightDimension.getValue(maxWidth);
+					if (field.getContentHeight() < contentHeight) {
+						// adjust the content height
+						gzExtent.gz_setExtent(field.getContentWidth(),
+								contentHeight);
+					}
 				}
 			}
 		}

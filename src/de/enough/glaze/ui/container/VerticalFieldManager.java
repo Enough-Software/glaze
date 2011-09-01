@@ -2,9 +2,10 @@ package de.enough.glaze.ui.container;
 
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
-import de.enough.glaze.log.Log;
+import net.rim.device.api.ui.decor.Background;
 import de.enough.glaze.style.Style;
-import de.enough.glaze.style.handler.FieldStyleManager;
+import de.enough.glaze.style.background.GzBackground;
+import de.enough.glaze.style.handler.StyleManager;
 import de.enough.glaze.ui.delegate.GzManager;
 import de.enough.glaze.ui.delegate.ManagerDelegate;
 
@@ -12,7 +13,7 @@ public class VerticalFieldManager extends
 		net.rim.device.api.ui.container.VerticalFieldManager implements
 		GzManager {
 
-	private final FieldStyleManager styleManager;
+	private final StyleManager styleManager;
 
 	public VerticalFieldManager() {
 		this(0);
@@ -20,7 +21,7 @@ public class VerticalFieldManager extends
 
 	public VerticalFieldManager(long style) {
 		super(style);
-		this.styleManager = new FieldStyleManager(this);
+		this.styleManager = new StyleManager(this);
 	}
 
 	/*
@@ -125,7 +126,7 @@ public class VerticalFieldManager extends
 	 * 
 	 * @see de.enough.glaze.ui.container.GzManager#getHandlers()
 	 */
-	public FieldStyleManager getStyleManager() {
+	public StyleManager getStyleManager() {
 		return this.styleManager;
 	}
 
@@ -143,11 +144,22 @@ public class VerticalFieldManager extends
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * net.rim.device.api.ui.Field#paintBackground(net.rim.device.api.ui.Graphics
+	 * )
+	 */
+	protected void paintBackground(Graphics graphics) {
+		ManagerDelegate.paintBackground(graphics, this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * net.rim.device.api.ui.container.VerticalFieldManager#subpaint(net.rim
 	 * .device.api.ui.Graphics)
 	 */
-	protected void subpaint(Graphics graphics) {
-		ManagerDelegate.subpaint(graphics, this);
+	protected void paint(Graphics graphics) {
+		ManagerDelegate.paint(graphics, this);
 	}
 
 	/*
@@ -172,11 +184,22 @@ public class VerticalFieldManager extends
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * de.enough.glaze.ui.delegate.GzManager#gz_paintBackground(net.rim.device
+	 * .api.ui.Graphics)
+	 */
+	public void gz_paintBackground(Graphics graphics) {
+		super.paintBackground(graphics);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * de.enough.glaze.ui.container.GzManager#gz_paintChild(net.rim.device.api
 	 * .ui.Graphics, net.rim.device.api.ui.Field)
 	 */
-	public void gz_paintChild(Graphics graphics, Field field) {
-		super.paintChild(graphics, field);
+	public void gz_paint(Graphics graphics) {
+		super.paint(graphics);
 	}
 
 	/*
@@ -187,8 +210,10 @@ public class VerticalFieldManager extends
 	public void gz_updateLayout() {
 		super.updateLayout();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.rim.device.api.ui.ScrollView#onDisplay()
 	 */
 	protected void onDisplay() {
@@ -196,7 +221,9 @@ public class VerticalFieldManager extends
 		this.styleManager.onDisplay();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.rim.device.api.ui.ScrollView#onUndisplay()
 	 */
 	protected void onUndisplay() {

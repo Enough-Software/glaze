@@ -18,7 +18,7 @@ public abstract class GzBackground extends Background {
 	}
 
 	protected void adjustRect(XYRect rect) {
-		if (field != null) {
+		if (this.field != null) {
 			rect.width = this.field.getPaddingLeft()
 					+ this.field.getContentWidth()
 					+ this.field.getPaddingRight();
@@ -39,7 +39,7 @@ public abstract class GzBackground extends Background {
 	public boolean isTransparent() {
 		return true;
 	}
-	
+
 	/**
 	 * Releases this background
 	 */

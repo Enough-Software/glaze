@@ -13,11 +13,11 @@ import de.enough.glaze.style.border.GzBorder;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.DefinitionCollection;
 import de.enough.glaze.style.definition.StyleSheetDefinition;
+import de.enough.glaze.style.definition.converter.utils.ConverterUtils;
 import de.enough.glaze.style.definition.converter.utils.DimensionConverterUtils;
 import de.enough.glaze.style.extension.Extension;
 import de.enough.glaze.style.font.GzFont;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
-import de.enough.glaze.style.parser.property.DimensionPropertyParser;
 import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.parser.property.ValuePropertyParser;
 
@@ -124,7 +124,7 @@ public class StyleConverter implements Converter {
 	 */
 	public Object convert(Definition definition) throws CssSyntaxError {
 		// validate the definition
-		validate(definition);
+		ConverterUtils.validate(definition, getIds());
 
 		// create a new style
 		Style style = new Style(definition.getId());
@@ -342,44 +342,6 @@ public class StyleConverter implements Converter {
 			Dimension maxHeightDimension = DimensionConverterUtils.toDimension(maxHeightProp);
 			style.setMaxHeight(maxHeightDimension);
 		}
-	}
-
-	/**
-	 * Checks the definition for unknown property ids
-	 * 
-	 * @param definition
-	 *            the definition
-	 * @throws CssSyntaxError
-	 *             if an unknown property id was found
-	 */
-	public void validate(Definition definition) throws CssSyntaxError {
-		Enumeration properties = definition.getProperties();
-		while (properties.hasMoreElements()) {
-			Property property = (Property) properties.nextElement();
-			validate(property);
-		}
-	}
-
-	/**
-	 * Checks the given property if it is an unknown property id
-	 * 
-	 * @param property
-	 *            the property
-	 * @throws CssSyntaxError
-	 *             if the property id is unknown
-	 */
-	private void validate(Property property) throws CssSyntaxError {
-		String[] ids = getIds();
-		String propertyId = property.getId();
-		for (int index = 0; index < ids.length; index++) {
-			String id = ids[index];
-			if (id.equals(propertyId)) {
-				return;
-			}
-		}
-
-		throw new CssSyntaxError("unknown property id", property.getId(),
-				property.getLine());
 	}
 
 }

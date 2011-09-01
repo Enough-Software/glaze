@@ -82,7 +82,7 @@ public class CssParser {
 			}
 			this.handler.onDocumentEnd(this);
 		} catch (CssSyntaxError e) {
-			Log.s(e);
+			Log.syntaxError(e);
 			throw e;
 		}
 	}
@@ -127,7 +127,7 @@ public class CssParser {
 			int read = this.reader.read(this.readBuffer);
 			if (read == -1) {
 				if (getBlockDepth() > 0) {
-					Log.s(new CssSyntaxError("block not closed",
+					Log.syntaxError(new CssSyntaxError("block not closed",
 							this.lineNumber));
 				}
 				return;
@@ -175,11 +175,13 @@ public class CssParser {
 					this.bufferStartIndex = index + 1;
 					buffer.setLength(0);
 					return;
-				} else if (c == LINEBREAK) {
-					this.lineNumber++;
-				} else {
+				} else if(c != LINEBREAK) {
 					buffer.append(c);
 				}
+			}
+			
+			if (c == LINEBREAK) {
+				this.lineNumber++;
 			}
 		}
 		this.bufferStartIndex = this.bufferEndIndex;

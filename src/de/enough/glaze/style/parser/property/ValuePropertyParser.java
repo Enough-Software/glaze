@@ -27,7 +27,7 @@ public class ValuePropertyParser extends PropertyParser {
 	/* (non-Javadoc)
 	 * @see de.enough.glaze.style.parser.property.PropertyParser#parseValue(java.lang.String)
 	 */
-	public Object parse(String value) throws CssSyntaxError {
+	public Object parse(String value, Property property) throws CssSyntaxError {
 		return value;
 	}
 	

@@ -30,7 +30,7 @@ public class DimensionPropertyParser extends PropertyParser {
 	 * 
 	 * @see de.enough.glaze.style.parser.ValueParser#parse(java.lang.String)
 	 */
-	public Object parse(String value) throws CssSyntaxError {
+	public Object parse(String value, Property property) throws CssSyntaxError {
 		StringBuffer valueBuffer = new StringBuffer();
 		int index = 0;
 		// parse the value
@@ -50,7 +50,7 @@ public class DimensionPropertyParser extends PropertyParser {
 			// parse the value buffer for the dimensional value
 			dimensionValue = Float.parseFloat(valueBuffer.toString());
 		} catch (NumberFormatException e) {
-			throw new CssSyntaxError("invalid dimension", value);
+			throw new CssSyntaxError("invalid dimension", property);
 		}
 
 		String dimensionUnit = value.substring(index);
@@ -67,11 +67,12 @@ public class DimensionPropertyParser extends PropertyParser {
 				|| Dimension.UNIT_PERCENT.equals(dimensionUnit)
 				|| Dimension.UNIT_PT.equals(dimensionUnit)
 				|| Dimension.UNIT_PX.equals(dimensionUnit)
-				|| Dimension.UNIT_SP.equals(dimensionUnit)) {
+				|| Dimension.UNIT_WP.equals(dimensionUnit)
+				|| Dimension.UNIT_HP.equals(dimensionUnit)) {
 			// return the dimension
 			return new Dimension(dimensionValue, dimensionUnit);
 		} else {
-			throw new CssSyntaxError("invalid dimension", value);
+			throw new CssSyntaxError("invalid dimension", property);
 		}
 	}
 

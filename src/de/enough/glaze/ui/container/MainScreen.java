@@ -3,14 +3,14 @@ package de.enough.glaze.ui.container;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
 import de.enough.glaze.style.Style;
-import de.enough.glaze.style.handler.FieldStyleManager;
-import de.enough.glaze.ui.delegate.GzManager;
+import de.enough.glaze.style.handler.StyleManager;
+import de.enough.glaze.ui.delegate.GzScreen;
 import de.enough.glaze.ui.delegate.ManagerDelegate;
 
 public class MainScreen extends net.rim.device.api.ui.container.MainScreen
-		implements GzManager {
+		implements GzScreen {
 
-	private final FieldStyleManager styleManager;
+	private final StyleManager styleManager;
 
 	public MainScreen() {
 		this(null);
@@ -18,7 +18,7 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 
 	public MainScreen(Style style) {
 		super();
-		this.styleManager = new FieldStyleManager(this);
+		this.styleManager = new StyleManager(getMainManager());
 		this.styleManager.add(getMainManager(), style);
 	}
 
@@ -124,7 +124,7 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 	 * 
 	 * @see de.enough.glaze.ui.container.GzManager#getHandlers()
 	 */
-	public FieldStyleManager getStyleManager() {
+	public StyleManager getStyleManager() {
 		return this.styleManager;
 	}
 
@@ -137,38 +137,56 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 	protected void sublayout(int maxWidth, int maxHeight) {
 		ManagerDelegate.sublayout(maxWidth, maxHeight, this);
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.rim.device.api.ui.container.VerticalFieldManager#subpaint(net.rim
-	 * .device.api.ui.Graphics)
+	 * @see net.rim.device.api.ui.Screen#paint(net.rim.device.api.ui.Graphics)
 	 */
-	protected void subpaint(Graphics graphics) {
-		ManagerDelegate.subpaint(graphics, this);
+	protected void paint(Graphics graphics) {
+		ManagerDelegate.paint(graphics, this);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.enough.glaze.ui.delegate.GzExtent#gz_setExtent(int, int)
+	 */
 	public void gz_setExtent(int width, int height) {
-		setExtent(width, height);
+		super.setExtent(width, height);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.enough.glaze.ui.delegate.GzManager#gz_sublayout(int, int)
+	 */
 	public void gz_sublayout(int maxWidth, int maxHeight) {
 		super.sublayout(maxWidth, maxHeight);
 	}
 
-	public void gz_paintChild(Graphics graphics, Field field) {
-		super.paintChild(graphics, field);
+	/* (non-Javadoc)
+	 * @see de.enough.glaze.ui.delegate.GzManager#gz_paintBackground(net.rim.device.api.ui.Graphics)
+	 */
+	public void gz_paintBackground(Graphics graphics) {
+		super.paintBackground(graphics);
 	}
 
 	/* (non-Javadoc)
+	 * @see de.enough.glaze.ui.delegate.GzManager#gz_paint(net.rim.device.api.ui.Graphics)
+	 */
+	public void gz_paint(Graphics graphics) {
+		super.paint(graphics);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.enough.glaze.ui.delegate.GzManager#gz_updateLayout()
 	 */
 	public void gz_updateLayout() {
-		updateLayout();
+		super.updateLayout();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.rim.device.api.ui.ScrollView#onDisplay()
 	 */
 	protected void onDisplay() {
@@ -176,7 +194,9 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 		this.styleManager.onDisplay();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.rim.device.api.ui.ScrollView#onUndisplay()
 	 */
 	protected void onUndisplay() {

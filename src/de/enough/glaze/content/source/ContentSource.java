@@ -110,7 +110,7 @@ public abstract class ContentSource {
 
 		this.sources.addElement(source);
 
-		Log.d("attached source", source);
+		Log.debug("attached source", source);
 	}
 
 	/**
@@ -137,13 +137,13 @@ public abstract class ContentSource {
 	public void detachSource(ContentSource source) {
 		this.sources.removeElement(source);
 
-		Log.d("detached source", source);
+		Log.debug("detached source", source);
 	}
 
 	public void setContentFilter(ContentFilter filter) {
 		this.filter = filter;
 
-		Log.d("set filter", filter);
+		Log.debug("set filter", filter);
 	}
 
 	public ContentFilter getFilter() {
@@ -154,19 +154,19 @@ public abstract class ContentSource {
 		String id = transformer.getTransformId();
 		if (!id.equals(ContentDescriptor.TRANSFORM_NONE)
 				&& this.transformers.containsKey(id)) {
-			Log.i("overwriting transformer with id", id);
+			Log.info("overwriting transformer with id", id);
 		}
 
 		this.transformers.put(id, transformer);
 
-		Log.d("added transform", transformer);
+		Log.debug("added transform", transformer);
 	}
 
 	public void removeContentTransform(ContentTransform transformer) {
 		String id = transformer.getTransformId();
 		this.transformers.remove(id);
 
-		Log.d("removed transform", transformers);
+		Log.debug("removed transform", transformers);
 	}
 
 	public Object loadContent(ContentDescriptor descriptor)
@@ -181,22 +181,22 @@ public abstract class ContentSource {
 
 					ContentFilter filter = source.getFilter();
 					if (filter != null && !filter.filter(descriptor)) {
-						Log.d("filtered source", source);
+						Log.debug("filtered source", source);
 						continue;
 					}
 
-					Log.d("load content", descriptor);
-					Log.d("from source", source);
+					Log.debug("load content", descriptor);
+					Log.debug("from source", source);
 
 					data = source.loadContent(descriptor);
 					if (data != null) {
 						data = transformContent(descriptor, data);
-						Log.d("transformed content", data);
+						Log.debug("transformed content", data);
 
 						if (descriptor.getCachingPolicy() == ContentDescriptor.CACHING_READ_WRITE) {
 							storeContent(descriptor, data);
 						} else {
-							Log.d("no storage due to caching policy");
+							Log.debug("no storage due to caching policy");
 						}
 						return data;
 					}
@@ -223,11 +223,11 @@ public abstract class ContentSource {
 					.get(descriptor.getTransformID());
 			if (transformer != null) {
 				try {
-					Log.d("using transform", transformer);
-					Log.d("on descriptor", descriptor);
+					Log.debug("using transform", transformer);
+					Log.debug("on descriptor", descriptor);
 					data = transformer.transformContent(data);
 				} catch (IOException e) {
-					Log.e("error transforming", e);
+					Log.error("error transforming", e);
 				}
 
 				return data;
@@ -241,13 +241,13 @@ public abstract class ContentSource {
 			throws ContentException {
 		// if this source has a storage ...
 		if (hasStorage()) {
-			Log.d("has storage");
+			Log.debug("has storage");
 
 			// prepare the storage if it isn't
 			if (!this.storageIndex.isPrepared()) {
 				this.storageIndex.prepare();
 
-				Log.d("storage index prepared");
+				Log.debug("storage index prepared");
 			}
 
 			// get the StorageReference to a potentially stored content
@@ -256,7 +256,7 @@ public abstract class ContentSource {
 
 			// if the content is stored ...
 			if (reference != null) {
-				Log.d("found reference : " + reference);
+				Log.debug("found reference : " + reference);
 
 				// update its activity
 				reference.updateActivity();
@@ -307,11 +307,11 @@ public abstract class ContentSource {
 
 		try {
 			if (reference != null) {
-				Log.d("loading content from storage", reference);
+				Log.debug("loading content from storage", reference);
 
 				return load(reference);
 			} else {
-				Log.d("loading content from source", descriptor);
+				Log.debug("loading content from source", descriptor);
 				return load(descriptor);
 			}
 		} catch (IOException e) {
@@ -326,13 +326,13 @@ public abstract class ContentSource {
 		try {
 			// if this ContentSource has a storage ...
 			if (hasStorage()) {
-				Log.d("storing content" + data);
-				Log.d("for", descriptor);
+				Log.debug("storing content" + data);
+				Log.debug("for", descriptor);
 
 				// get the size of the content
 				int size = getSize(descriptor, data);
 
-				Log.d("data size", Integer.toString(size));
+				Log.debug("data size", Integer.toString(size));
 
 				// store the content
 				Object reference = store(descriptor, data);
@@ -341,7 +341,7 @@ public abstract class ContentSource {
 				this.storageIndex.addReference(new StorageReference(descriptor,
 						size, reference));
 
-				Log.d("content stored with reference", reference);
+				Log.debug("content stored with reference", reference);
 			}
 		} catch (IOException e) {
 			String message = "error storing content : " + e;
@@ -363,7 +363,7 @@ public abstract class ContentSource {
 			throws ContentException {
 		// if this ContentSource has a storage ...
 		if (hasStorage()) {
-			Log.d("destroying content", descriptor);
+			Log.debug("destroying content", descriptor);
 
 			// get the reference to the content
 			StorageReference reference = this.storageIndex
@@ -382,7 +382,7 @@ public abstract class ContentSource {
 				}
 			}
 
-			Log.d("content destroyed", descriptor);
+			Log.debug("content destroyed", descriptor);
 		}
 	}
 
@@ -397,7 +397,7 @@ public abstract class ContentSource {
 				return;
 			}
 
-			Log.d("clean", this.storageIndex);
+			Log.debug("clean", this.storageIndex);
 
 			// apply the clean order
 			this.storageIndex.applyOrder();
@@ -562,6 +562,6 @@ public abstract class ContentSource {
 	}
 
 	public void error(String error, Exception e) {
-		Log.e(error, e);
+		Log.error(error, e);
 	}
 }

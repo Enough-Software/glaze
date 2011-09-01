@@ -8,6 +8,16 @@ public class Log {
 	 * the tag
 	 */
 	private static final String TAG = "GLAZE";
+	
+	private static final String SYNTAX_ERROR_HEADER = "\n//" + TAG + "/////////////////////////////////";
+	
+	private static final String SYNTAX_ERROR_INTRO_LINE_HEADER = "\nA CSS syntax error was found in line ";
+	
+	private static final String SYNTAX_ERROR_INTRO_LINE_FOOTER = " : \n\n";
+	
+	private static final String SYNTAX_ERROR_INTRO = "\nA CSS syntax error was found : \n\n";
+	
+	private static final String SYNTAX_ERROR_FOOTER = "\n////////////////////////////////////////\n";
 
 	/**
 	 * the debug log level
@@ -61,7 +71,7 @@ public class Log {
 	 * @param message
 	 *            the message
 	 */
-	public static void d(String message) {
+	public static void debug(String message) {
 		if (isLevelAllowed(DEBUG)) {
 			message = toLog(message);
 			System.out.println(message);
@@ -78,7 +88,7 @@ public class Log {
 	 * @param object
 	 *            the object
 	 */
-	public static void d(String message, Object object) {
+	public static void debug(String message, Object object) {
 		if (isLevelAllowed(DEBUG)) {
 			message = toLog(message + " : " + object);
 			System.out.println(message);
@@ -91,7 +101,7 @@ public class Log {
 	 * @param message
 	 *            the message
 	 */
-	public static void i(String message) {
+	public static void info(String message) {
 		if (isLevelAllowed(INFO)) {
 			message = toLog(message);
 			System.out.println(message);
@@ -108,7 +118,7 @@ public class Log {
 	 * @param object
 	 *            the object
 	 */
-	public static void i(String message, Object object) {
+	public static void info(String message, Object object) {
 		if (isLevelAllowed(INFO)) {
 			message = toLog(message + " : " + object);
 			System.out.println(message);
@@ -121,7 +131,7 @@ public class Log {
 	 * @param message
 	 *            the message
 	 */
-	public static void w(String message) {
+	public static void warn(String message) {
 		if (isLevelAllowed(WARN)) {
 			message = toLog(message);
 			System.err.println(message);
@@ -138,7 +148,7 @@ public class Log {
 	 * @param object
 	 *            the object
 	 */
-	public static void w(String message, Object object) {
+	public static void warn(String message, Object object) {
 		if (isLevelAllowed(WARN)) {
 			message = toLog(message + " : " + object);
 			System.out.println(message);
@@ -151,7 +161,7 @@ public class Log {
 	 * @param message
 	 *            the message
 	 */
-	public static void e(String message) {
+	public static void error(String message) {
 		message = toLog(message);
 		System.err.println(message);
 	}
@@ -166,8 +176,8 @@ public class Log {
 	 * @param object
 	 *            the object
 	 */
-	public static void e(String message, Object object) {
-		e(message + " : " + object);
+	public static void error(String message, Object object) {
+		error(message + " : " + object);
 	}
 
 	/**
@@ -178,7 +188,7 @@ public class Log {
 	 * @param t
 	 *            the {@link Throwable}
 	 */
-	public static void e(String message, Throwable t) {
+	public static void error(String message, Throwable t) {
 		message = toLog(t.getMessage());
 		System.err.println(message);
 		t.printStackTrace();
@@ -190,10 +200,24 @@ public class Log {
 	 * @param error
 	 *            the {@link CssSyntaxError}
 	 */
-	public static void s(CssSyntaxError error) {
-		String message = toLog(error);
-		message = toLog(message);
-		System.err.println(message);
+	public static void syntaxError(CssSyntaxError syntaxError) {
+		int line = syntaxError.getLine();
+		String value = syntaxError.getValue();
+		String error = syntaxError.getError();
+		
+		System.err.println(SYNTAX_ERROR_HEADER);
+		
+		if(line != Integer.MIN_VALUE) {
+			System.err.print(SYNTAX_ERROR_INTRO_LINE_HEADER);
+			System.err.print(line);
+			System.err.print(SYNTAX_ERROR_INTRO_LINE_FOOTER);
+		} else {
+			System.err.print(SYNTAX_ERROR_INTRO);
+		}
+		
+		System.err.println(error + " : " + value);
+		
+		System.err.println(SYNTAX_ERROR_FOOTER);
 	}
 
 	/**
@@ -205,33 +229,5 @@ public class Log {
 	 */
 	private static String toLog(String message) {
 		return TAG + ": " + message;
-	}
-
-	/**
-	 * Creates a syntax error from the given {@link CssSyntaxError} instance
-	 * 
-	 * @param exception
-	 *            the {@link CssSyntaxError}
-	 * @return the created syntax error
-	 */
-	private static String toLog(CssSyntaxError exception) {
-		StringBuffer messageBuffer = new StringBuffer();
-		messageBuffer.append("syntax error");
-		int line = exception.getLine();
-		String value = exception.getValue();
-		String error = exception.getError();
-		if (line != Integer.MIN_VALUE) {
-			messageBuffer.append(" in line ");
-			messageBuffer.append(line);
-		}
-
-		messageBuffer.append(" : ");
-		messageBuffer.append(error);
-		if (value != null) {
-			messageBuffer.append(" : ");
-			messageBuffer.append("'" + value + "'");
-		}
-
-		return messageBuffer.toString();
 	}
 }

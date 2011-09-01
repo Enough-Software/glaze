@@ -27,7 +27,7 @@ public abstract class GzCachedBackground extends GzBackground {
 		int[] buffer = (int[]) this.rectBufferMap.get(rect);
 
 		if (buffer == null) {
-			Log.d("create mask");
+			Log.debug("create mask");
 			buffer = create(rect.width, rect.height);
 			this.rectBufferMap.put(rect, buffer);
 		}

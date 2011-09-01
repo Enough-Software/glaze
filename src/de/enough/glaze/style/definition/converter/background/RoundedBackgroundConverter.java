@@ -64,7 +64,7 @@ public class RoundedBackgroundConverter implements Converter {
 					backgroundArcsProp);
 			if (result instanceof Dimension) {
 				Dimension dimension = (Dimension) result;
-				arcs = DimensionConverterUtils.toArray(dimension, 1);
+				arcs = DimensionConverterUtils.toArray(dimension, 4);
 			} else if (result instanceof Dimension[]) {
 				Dimension[] dimensions = (Dimension[]) result;
 				if (dimensions.length == 4) {

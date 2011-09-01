@@ -11,6 +11,10 @@ import de.enough.glaze.style.font.GzFont;
 
 public class Style {
 
+	public static Style id(String id) {
+		return StyleSheet.getInstance().getStyle(id);
+	}
+
 	private static final String FOCUS = "focus";
 
 	private static final String ACTIVE = "active";

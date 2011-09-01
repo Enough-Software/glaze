@@ -3,12 +3,12 @@ package de.enough.glaze.ui.container;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
 import de.enough.glaze.style.Style;
-import de.enough.glaze.style.handler.FieldStyleManager;
+import de.enough.glaze.style.handler.StyleManager;
 import de.enough.glaze.ui.delegate.ManagerDelegate;
 
 public abstract class Manager extends net.rim.device.api.ui.Manager {
 	
-	private final FieldStyleManager styleManager;
+	private final StyleManager styleManager;
 	
 	public Manager() {
 		this(0);
@@ -16,7 +16,7 @@ public abstract class Manager extends net.rim.device.api.ui.Manager {
 	
 	public Manager(long style) {
 		super(style);
-		this.styleManager = new FieldStyleManager(this);
+		this.styleManager = new StyleManager(this);
 	}
 
 	/*
@@ -121,7 +121,7 @@ public abstract class Manager extends net.rim.device.api.ui.Manager {
 	 * 
 	 * @see de.enough.glaze.ui.container.GzManager#getHandlers()
 	 */
-	public FieldStyleManager getStyleManager() {
+	public StyleManager getStyleManager() {
 		return this.styleManager;
 	}
 
@@ -142,8 +142,8 @@ public abstract class Manager extends net.rim.device.api.ui.Manager {
 	 * net.rim.device.api.ui.container.VerticalFieldManager#subpaint(net.rim
 	 * .device.api.ui.Graphics)
 	 */
-	protected void subpaint(Graphics graphics) {
-		ManagerDelegate.subpaint(graphics, this);
+	protected void paint(Graphics graphics) {
+		ManagerDelegate.paint(graphics, this);
 	}
 	
 	/*
@@ -153,8 +153,8 @@ public abstract class Manager extends net.rim.device.api.ui.Manager {
 	 * de.enough.glaze.ui.container.GzManager#gz_paintChild(net.rim.device.api
 	 * .ui.Graphics, net.rim.device.api.ui.Field)
 	 */
-	public void gz_paintChild(Graphics graphics, Field field) {
-		super.paintChild(graphics, field);
+	public void gz_paint(Graphics graphics) {
+		super.paint(graphics);
 	}
 
 	/*
@@ -164,5 +164,21 @@ public abstract class Manager extends net.rim.device.api.ui.Manager {
 	 */
 	public void gz_updateLayout() {
 		super.updateLayout();
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.rim.device.api.ui.ScrollView#onDisplay()
+	 */
+	protected void onDisplay() {
+		super.onDisplay();
+		this.styleManager.onDisplay();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.rim.device.api.ui.ScrollView#onUndisplay()
+	 */
+	protected void onUndisplay() {
+		super.onUndisplay();
+		this.styleManager.onUndisplay();
 	}
 }

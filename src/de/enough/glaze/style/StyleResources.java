@@ -104,7 +104,7 @@ public class StyleResources {
 	/**
 	 * Clears the resource cache
 	 */
-	public void clearCache() throws ContentException {
+	public void clear() throws ContentException {
 		this.contentLoader.sweep();
 	}
 }

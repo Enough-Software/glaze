@@ -56,7 +56,6 @@ public class PatchBackgroundConverter implements Converter {
 
 		Property backgroundImageProp = definition.getProperty("background-image");
 		Property backgroundWidthProp = definition.getProperty("background-width");
-		Property backgroundMarginProp = definition.getProperty("background-margin");
 		
 		Bitmap imageBitmap = null;		
 		Dimension[] dimensions = new Dimension[] {Dimension.ZERO, Dimension.ZERO, Dimension.ZERO, Dimension.ZERO};
@@ -76,17 +75,6 @@ public class PatchBackgroundConverter implements Converter {
 			} else {
 				throw new CssSyntaxError("must be a single url",
 						backgroundImageProp);
-			}
-		}
-		
-		if (backgroundMarginProp != null) {
-			Object result = DimensionPropertyParser.getInstance().parse(
-					backgroundMarginProp);
-			if (result instanceof Dimension) {
-				Dimension dimension = (Dimension) result;
-				margins = new Dimension [] {dimension, dimension, dimension, dimension};
-			} else if (result instanceof Dimension[]) {
-				margins = (Dimension[]) result;
 			}
 		}
 		

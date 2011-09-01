@@ -25,7 +25,7 @@ public class MyApp extends UiApplication {
 	 * Creates a new MyApp object
 	 */
 	public MyApp() {
-		Log.setLevel(Log.DEBUG);
+		Log.setLevel(Log.INFO);
 
 		updateStyle();
 		pushScreen(new MyFirstScreen());
@@ -35,11 +35,11 @@ public class MyApp extends UiApplication {
 	public static void updateStyle() {
 		try {
 			StyleSheet.getInstance().load(
-					"http://pastebin.com/raw.php?i=XAVz9Lds");
+					"http://pastebin.com/raw.php?i=Xmr8We8q");
 		} catch (CssSyntaxError e) {
 			// do nothing
 		} catch (Throwable t) {
-			Log.e("error", t);
+			Log.error("error", t);
 			t.printStackTrace();
 		}
 	}

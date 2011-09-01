@@ -59,7 +59,7 @@ public class FontConverter implements Converter {
 	public Object convert(Definition definition) throws CssSyntaxError {
 		if (!definition.hasProperties(this)) {
 			return null;
-		}
+		} 
 
 		Property fontfamilyAttr = definition.getProperty("font-family");
 		Property fontSizeAttr = definition.getProperty("font-size");
@@ -120,7 +120,7 @@ public class FontConverter implements Converter {
 		}
 
 		// get the font size in pixels
-		int fontHeightPixels = fontSize.getValue();
+		int fontHeightPixels = fontSize.getValue(defaultFont.getHeight());
 
 		// create the result font
 		Font resultFont = fontFamily.getFont(fontStyle, fontHeightPixels,

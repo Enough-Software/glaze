@@ -42,10 +42,14 @@ public class Dimension {
 	public final static String UNIT_PERCENT = "%";
 
 	/**
-	 * the screen percent unit
+	 * the screen width percent unit
 	 */
-	public final static String UNIT_SP = "sp";
-
+	public final static String UNIT_WP = "wp";
+	
+	/**
+	 * the screen width percent unit
+	 */
+	public final static String UNIT_HP = "hp";
 	/**
 	 * a zero dimension
 	 */
@@ -81,7 +85,8 @@ public class Dimension {
 	 */
 	public int getValue() {
 		int deviceWidth = Display.getWidth();
-		return getValue(deviceWidth, deviceWidth);
+		int deviceHeight = Display.getHeight();
+		return getValue(deviceWidth, deviceWidth, deviceHeight);
 	}
 
 	/**
@@ -93,7 +98,8 @@ public class Dimension {
 	 */
 	public int getValue(int availableWidth) {
 		int deviceWidth = Display.getWidth();
-		return getValue(availableWidth, deviceWidth);
+		int deviceHeight = Display.getHeight();
+		return getValue(availableWidth, deviceWidth, deviceHeight);
 	}
 
 	/**
@@ -105,7 +111,7 @@ public class Dimension {
 	 *            the device width (for percentual calculations)
 	 * @return the calculated pixels
 	 */
-	private int getValue(int availableWidth, int deviceWidth) {
+	private int getValue(int availableWidth, int deviceWidth, int deviceHeight) {
 		int pixels = 0;
 		if (UNIT_PX.equals(this.unit)) {
 			pixels = MathUtilities.round(this.value);
@@ -127,8 +133,11 @@ public class Dimension {
 		} else if (UNIT_PERCENT.equals(this.unit)) {
 			float pxValue = ((float) availableWidth / 100) * this.value;
 			pixels = MathUtilities.round(pxValue);
-		} else if (UNIT_SP.equals(this.unit)) {
+		} else if (UNIT_WP.equals(this.unit)) {
 			float pxValue = ((float) deviceWidth / 100) * this.value;
+			pixels = MathUtilities.round(pxValue);
+		} else if (UNIT_HP.equals(this.unit)) {
+			float pxValue = ((float) deviceHeight / 100) * this.value;
 			pixels = MathUtilities.round(pxValue);
 		} else {
 			throw new IllegalArgumentException("unknown dimension unit : "

@@ -15,6 +15,7 @@ import de.enough.glaze.style.definition.converter.BackgroundConverter;
 import de.enough.glaze.style.definition.converter.BorderConverter;
 import de.enough.glaze.style.definition.converter.FontConverter;
 import de.enough.glaze.style.definition.converter.StyleConverter;
+import de.enough.glaze.style.definition.converter.utils.ConverterUtils;
 import de.enough.glaze.style.font.GzFont;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.style.parser.property.ColorPropertyParser;
@@ -87,8 +88,7 @@ public class CssContentHandlerImpl implements CssContentHandler {
 	 * .glaze.style.parser.CssParser)
 	 */
 	public void onDocumentStart(CssParser parser) {
-		// TODO Auto-generated method stub
-
+		// do nothing
 	}
 
 	/*
@@ -102,23 +102,28 @@ public class CssContentHandlerImpl implements CssContentHandler {
 			String blockClass, String blockExtends) throws CssSyntaxError {
 		int lineNumber = parser.getLineNumber();
 		String blockType = getBlockType();
+		// if the block starts in the root level ...
 		if (blockType == null) {
+			// if the block is the colors section ...
 			if (BLOCK_SECTION_COLORS.equals(blockId)) {
+				// set the current block type to the colors section
 				pushBlockType(BLOCK_SECTION_COLORS);
-				Log.d("starting block : colors");
+				Log.debug("starting block : colors");
+				// if the block is the backgrounds section ...
 			} else if (BLOCK_SECTION_BACKGROUNDS.equals(blockId)) {
+				// set the
 				pushBlockType(BLOCK_SECTION_BACKGROUNDS);
-				Log.d("starting block : backgrounds");
+				Log.debug("starting block : backgrounds");
 			} else if (BLOCK_SECTION_BORDERS.equals(blockId)) {
 				pushBlockType(BLOCK_SECTION_BORDERS);
-				Log.d("starting block : borders");
+				Log.debug("starting block : borders");
 			} else if (BLOCK_SECTION_FONTS.equals(blockId)) {
 				pushBlockType(BLOCK_SECTION_FONTS);
-				Log.d("starting block : fonts");
+				Log.debug("starting block : fonts");
 			} else {
 				pushBlockType(BLOCK_STYLE);
 
-				Log.d("starting style : " + blockId);
+				Log.debug("starting style : " + blockId);
 
 				DefinitionCollection styleDefinitions = this.styleSheetDefinition
 						.getStyleDefinitions();
@@ -158,41 +163,41 @@ public class CssContentHandlerImpl implements CssContentHandler {
 				|| BLOCK_SECTION_FONTS.equals(blockType)) {
 			Definition parentDefinition = null;
 			if (BLOCK_SECTION_BACKGROUNDS.equals(blockType)) {
-				Log.d("starting background : " + blockId);
+				Log.debug("starting background : " + blockId);
 				pushBlockType(BLOCK_BACKGROUND);
 				if (blockExtends != null) {
 					DefinitionCollection backgroundDefinitions = this.styleSheetDefinition
 							.getBackgroundDefinitions();
 					parentDefinition = backgroundDefinitions
 							.getDefinition(blockExtends);
-					if (parentDefinition != null) {
+					if (parentDefinition == null) {
 						throw new CssSyntaxError(
 								"could not resolve background", blockId,
 								lineNumber);
 					}
 				}
 			} else if (BLOCK_SECTION_BORDERS.equals(blockType)) {
-				Log.d("starting border : " + blockId);
+				Log.debug("starting border : " + blockId);
 				pushBlockType(BLOCK_BORDER);
 				if (blockExtends != null) {
 					DefinitionCollection borderDefinitions = this.styleSheetDefinition
 							.getBorderDefinitions();
 					parentDefinition = borderDefinitions
 							.getDefinition(blockExtends);
-					if (parentDefinition != null) {
+					if (parentDefinition == null) {
 						throw new CssSyntaxError("could not resolve border",
 								blockId, lineNumber);
 					}
 				}
 			} else if (BLOCK_SECTION_FONTS.equals(blockType)) {
-				Log.d("starting font : " + blockId);
+				Log.debug("starting font : " + blockId);
 				pushBlockType(BLOCK_FONT);
 				if (blockExtends != null) {
 					DefinitionCollection fontDefinitions = this.styleSheetDefinition
 							.getFontDefinitions();
 					parentDefinition = fontDefinitions
 							.getDefinition(blockExtends);
-					if (parentDefinition != null) {
+					if (parentDefinition == null) {
 						throw new CssSyntaxError("could not resolve font",
 								blockId, lineNumber);
 					}
@@ -205,7 +210,7 @@ public class CssContentHandlerImpl implements CssContentHandler {
 					"block declarations are not allowed in the colors section",
 					blockId, lineNumber);
 		} else if (BLOCK_STYLE.equals(blockType)) {
-			Log.d("starting local block");
+			Log.debug("starting local block");
 			pushBlockType(BLOCK_LOCAL);
 			this.blockId = blockId;
 		}
@@ -226,25 +231,26 @@ public class CssContentHandlerImpl implements CssContentHandler {
 			this.styleDefinition.addProperty(propertyId, propertyValue,
 					lineNumber);
 
-			Log.d("added style property : " + propertyId + ":" + propertyValue);
+			Log.debug("added style property : " + propertyId + ":"
+					+ propertyValue);
 		} else if (BLOCK_LOCAL.equals(block)) {
 			this.styleDefinition.addProperty(this.blockId, propertyId,
 					propertyValue, lineNumber);
-			Log.d("added style property : " + this.blockId + "-" + propertyId
-					+ ":" + propertyValue);
+			Log.debug("added style property : " + this.blockId + "-"
+					+ propertyId + ":" + propertyValue);
 		} else if (BLOCK_BACKGROUND.equals(block) || BLOCK_BORDER.equals(block)
 				|| BLOCK_FONT.equals(block)) {
 			this.blockDefinition.addProperty(block, propertyId, propertyValue,
 					lineNumber);
-			Log.d("added block property : " + block + "-" + propertyId + ":"
-					+ propertyValue);
+			Log.debug("added block property : " + block + "-" + propertyId
+					+ ":" + propertyValue);
 		} else if (BLOCK_SECTION_COLORS.equals(block)) {
 			Property colorAttr = new Property(propertyId, propertyValue,
 					lineNumber);
 			Color color = (Color) ColorPropertyParser.getInstance().parse(
 					colorAttr);
 			this.stylesheet.addColor(propertyId, color);
-			Log.d("added color property : " + propertyId + ":" + color);
+			Log.debug("added color property : " + propertyId + ":" + color);
 		} else if (block == null || BLOCK_SECTION_BACKGROUNDS.equals(block)
 				|| BLOCK_SECTION_BORDERS.equals(block)
 				|| BLOCK_SECTION_FONTS.equals(block)) {
@@ -266,19 +272,19 @@ public class CssContentHandlerImpl implements CssContentHandler {
 				DefinitionCollection backgroundDefinitions = this.styleSheetDefinition
 						.getBackgroundDefinitions();
 				backgroundDefinitions.addDefinition(this.blockDefinition);
-				Log.d("added background definition : "
+				Log.debug("added background definition : "
 						+ this.blockDefinition.getId());
 			} else if (BLOCK_BORDER.equals(blockType)) {
 				DefinitionCollection borderDefinitions = this.styleSheetDefinition
 						.getBorderDefinitions();
 				borderDefinitions.addDefinition(this.blockDefinition);
-				Log.d("added border definition : "
+				Log.debug("added border definition : "
 						+ this.blockDefinition.getId());
 			} else if (BLOCK_FONT.equals(blockType)) {
 				DefinitionCollection fontDefinitions = this.styleSheetDefinition
 						.getFontDefinitions();
 				fontDefinitions.addDefinition(this.blockDefinition);
-				Log.d("added font definition : " + this.blockId);
+				Log.debug("added font definition : " + this.blockId);
 			}
 		} else {
 			throw new CssSyntaxError("invalid block", lineNumber);
@@ -293,7 +299,7 @@ public class CssContentHandlerImpl implements CssContentHandler {
 	 * .glaze.style.parser.CssParser)
 	 */
 	public void onDocumentEnd(CssParser parser) throws CssSyntaxError {
-		// clear the whole stylesheet 
+		// clear the whole stylesheet
 		this.stylesheet.clear();
 
 		DefinitionCollection backgroundDefinitions = this.styleSheetDefinition
@@ -301,6 +307,8 @@ public class CssContentHandlerImpl implements CssContentHandler {
 		for (int index = 0; index < backgroundDefinitions.size(); index++) {
 			Definition definition = backgroundDefinitions.getDefinition(index);
 			if (this.stylesheet.getBackground(definition.getId()) == null) {
+				ConverterUtils.validate(definition, BackgroundConverter
+						.getInstance().getIds());
 				GzBackground background = (GzBackground) BackgroundConverter
 						.getInstance().convert(definition);
 				this.stylesheet.addBackground(definition.getId(), background);
@@ -312,6 +320,8 @@ public class CssContentHandlerImpl implements CssContentHandler {
 		for (int index = 0; index < borderDefinitions.size(); index++) {
 			Definition definition = borderDefinitions.getDefinition(index);
 			if (this.stylesheet.getBorder(definition.getId()) == null) {
+				ConverterUtils.validate(definition, BorderConverter
+						.getInstance().getIds());
 				GzBorder border = (GzBorder) BorderConverter.getInstance()
 						.convert(definition);
 				this.stylesheet.addBorder(definition.getId(), border);
@@ -323,6 +333,8 @@ public class CssContentHandlerImpl implements CssContentHandler {
 		for (int index = 0; index < fontDefinitions.size(); index++) {
 			Definition definition = fontDefinitions.getDefinition(index);
 			if (this.stylesheet.getFont(definition.getId()) == null) {
+				ConverterUtils.validate(definition, FontConverter.getInstance()
+						.getIds());
 				GzFont font = (GzFont) FontConverter.getInstance().convert(
 						definition);
 				this.stylesheet.addFont(definition.getId(), font);
