@@ -131,16 +131,4 @@ public class MaskBackground extends GzCachedBackground {
 
 		return backgroundData;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.rim.device.api.ui.decor.Background#draw(net.rim.device.api.ui.Graphics
-	 * , net.rim.device.api.ui.XYRect)
-	 */
-	public void draw(Graphics graphics, int x, int y, int width, int height,
-			int[] buffer) {
-		graphics.drawARGB(buffer, 0, width, x, y, width, height);
-	}
 }

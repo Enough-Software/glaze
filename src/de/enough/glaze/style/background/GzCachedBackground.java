@@ -46,23 +46,36 @@ public abstract class GzCachedBackground extends GzBackground {
 		// do nothing
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.enough.glaze.style.background.GzBackground#release()
 	 */
 	public void release() {
 		this.rectBufferMap.clear();
 	}
-	
+
 	/**
 	 * Creates the buffer for the background to draw
-	 * @param width the width
-	 * @param height the height
+	 * 
+	 * @param width
+	 *            the width
+	 * @param height
+	 *            the height
 	 * @return the created buffer
 	 */
 	public abstract int[] create(int width, int height);
 
-	public abstract void draw(Graphics graphics, int x, int y, int width,
-			int height, int[] buffer);
-	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.enough.glaze.style.background.GzCachedBackground#draw(net.rim.device
+	 * .api.ui.Graphics, int, int, int, int, int[])
+	 */
+	public void draw(Graphics graphics, int x, int y, int width, int height,
+			int[] buffer) {
+		graphics.drawARGB(buffer, 0, width, x, y, width, height);
+	}
 
 }
