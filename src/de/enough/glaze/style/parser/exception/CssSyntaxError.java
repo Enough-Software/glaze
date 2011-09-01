@@ -2,6 +2,12 @@ package de.enough.glaze.style.parser.exception;
 
 import de.enough.glaze.style.parser.property.Property;
 
+/**
+ * An exception implementation for css syntax errors
+ * 
+ * @author Andre
+ * 
+ */
 public class CssSyntaxError extends Exception {
 
 	/**
@@ -18,18 +24,6 @@ public class CssSyntaxError extends Exception {
 	 * the error
 	 */
 	private String error;
-
-	/**
-	 * Constructs a new {@link CssSyntaxError} instance
-	 * 
-	 * @param value
-	 *            the value
-	 * @param error
-	 *            the error
-	 */
-	public CssSyntaxError(String error, String value) {
-		this(error, value, Integer.MIN_VALUE);
-	}
 
 	/**
 	 * Constructs a new {@link CssSyntaxError} instance
@@ -58,12 +52,12 @@ public class CssSyntaxError extends Exception {
 	/**
 	 * Constructs a new {@link CssSyntaxError} instance
 	 * 
-	 * @param line
-	 *            the line
-	 * @param value
-	 *            the value
 	 * @param error
 	 *            the error
+	 * @param value
+	 *            the value
+	 * @param line
+	 *            the line
 	 */
 	public CssSyntaxError(String error, String value, int line) {
 		super();

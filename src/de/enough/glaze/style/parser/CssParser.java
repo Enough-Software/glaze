@@ -6,7 +6,6 @@ import java.io.Reader;
 
 import de.enough.glaze.log.Log;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
-import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.parser.utils.ParserUtils;
 
 /**
@@ -17,38 +16,89 @@ import de.enough.glaze.style.parser.utils.ParserUtils;
  */
 public class CssParser {
 
+	/**
+	 * the property delimiter character
+	 */
 	private static final char PROPERTY_DELIMITER = ':';
 
+	/**
+	 * the property end character
+	 */
 	private static final char PROPERTY_END = ';';
 
+	/**
+	 * the block start character
+	 */
 	private static final char BLOCK_START = '{';
 
+	/**
+	 * the block end character
+	 */
 	private static final char BLOCK_END = '}';
 
+	/**
+	 * the block class delimiter character
+	 */
 	private static final char BLOCK_CLASS_DELIMITER = ':';
 
+	/**
+	 * the block extension delimiter string
+	 */
 	private static final String BLOCK_EXTENDS_DELIMITER = "extends";
 
+	/**
+	 * the linebreak character
+	 */
 	private static final char LINEBREAK = '\n';
 
+	/**
+	 * the buffer size
+	 */
 	private static final int BUFFER_SIZE = 1024;
 
+	/**
+	 * the reader
+	 */
 	private final Reader reader;
 
+	/**
+	 * the reader buffer
+	 */
 	private final char[] readBuffer;
 
+	/**
+	 * the buffer start index
+	 */
 	private int bufferStartIndex;
 
+	/**
+	 * the buffer end index
+	 */
 	private int bufferEndIndex;
 
+	/**
+	 * flag indicating that the parser is inside a comment
+	 */
 	private boolean isInComment;
 
+	/**
+	 * flaf indicating that the parser has more tokens
+	 */
 	private boolean hasNextToken;
 
+	/**
+	 * the css content handler
+	 */
 	private CssContentHandler handler;
 
+	/**
+	 * the block depth
+	 */
 	private int blockDepth;
 
+	/**
+	 * the line number
+	 */
 	private int lineNumber;
 
 	/**
@@ -65,14 +115,33 @@ public class CssParser {
 		this.lineNumber = 1;
 	}
 
+	/**
+	 * Sets the content handler to use
+	 * 
+	 * @param handler
+	 *            the content handler
+	 */
 	public void setContentHandler(CssContentHandler handler) {
 		this.handler = handler;
 	}
 
+	/**
+	 * Returns the content handler
+	 * 
+	 * @return the content handler
+	 */
 	public CssContentHandler getContentHandler() {
 		return this.handler;
 	}
 
+	/**
+	 * Parses the document
+	 * 
+	 * @throws IOException
+	 *             if a reader error occurs
+	 * @throws CssSyntaxError
+	 *             if the syntax is wrong
+	 */
 	public void parse() throws IOException, CssSyntaxError {
 		StringBuffer parseBuffer = new StringBuffer();
 		try {
@@ -90,24 +159,40 @@ public class CssParser {
 	/**
 	 * Checks if there are more tokens available
 	 * 
-	 * @return true when there are more tokens
+	 * @return true when there are more tokens otherwise false
 	 */
 	private boolean hasNextToken() {
 		return this.hasNextToken || this.bufferStartIndex < this.bufferEndIndex;
 	}
 
+	/**
+	 * Increases the block depth on a block start
+	 */
 	private void startBlock() {
 		this.blockDepth++;
 	}
 
+	/**
+	 * Decreases the block depth on a block end
+	 */
 	private void endBlock() {
 		this.blockDepth--;
 	}
 
+	/**
+	 * Returns the block depth
+	 * 
+	 * @return the block depth
+	 */
 	private int getBlockDepth() {
 		return this.blockDepth;
 	}
 
+	/**
+	 * Returns the current line number
+	 * 
+	 * @return the current line number
+	 */
 	public int getLineNumber() {
 		return this.lineNumber;
 	}
@@ -175,11 +260,11 @@ public class CssParser {
 					this.bufferStartIndex = index + 1;
 					buffer.setLength(0);
 					return;
-				} else if(c != LINEBREAK) {
+				} else if (c != LINEBREAK) {
 					buffer.append(c);
 				}
 			}
-			
+
 			if (c == LINEBREAK) {
 				this.lineNumber++;
 			}
@@ -189,6 +274,14 @@ public class CssParser {
 		return;
 	}
 
+	/**
+	 * Handles the given value as a property
+	 * 
+	 * @param value
+	 *            the value
+	 * @throws CssSyntaxError
+	 *             if the syntax is wrong
+	 */
 	public void handleProperty(String value) throws CssSyntaxError {
 		String[] propertyArray = ParserUtils.toPropertyArray(value,
 				PROPERTY_DELIMITER);
@@ -204,6 +297,14 @@ public class CssParser {
 		}
 	}
 
+	/**
+	 * Handles the given value as a block start
+	 * 
+	 * @param value
+	 *            the value
+	 * @throws CssSyntaxError
+	 *             if the syntax is wrong
+	 */
 	public void handleBlockStart(String value) throws CssSyntaxError {
 		if (ParserUtils.hasDelimiter(value, BLOCK_EXTENDS_DELIMITER)) {
 			String[] attributeArray = ParserUtils.toArray(value,
@@ -225,6 +326,14 @@ public class CssParser {
 				this.lineNumber);
 	}
 
+	/**
+	 * Handles the given value as a block start
+	 * 
+	 * @param value
+	 *            the value
+	 * @throws CssSyntaxError
+	 *             if the syntax is wrong
+	 */
 	public void handleBlockStart(String value, String blockIdValue,
 			String blockExtends) throws CssSyntaxError {
 		if (ParserUtils.hasDelimiter(blockIdValue, BLOCK_CLASS_DELIMITER)) {
@@ -262,6 +371,12 @@ public class CssParser {
 				this.lineNumber);
 	}
 
+	/**
+	 * Handles a block end
+	 * 
+	 * @throws CssSyntaxError
+	 *             if the syntax is wrong
+	 */
 	public void handleBlockEnd() throws CssSyntaxError {
 		if (this.handler != null) {
 			this.handler.onBlockEnd(this);

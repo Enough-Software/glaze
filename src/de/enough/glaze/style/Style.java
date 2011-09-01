@@ -95,7 +95,7 @@ public class Style {
 		}
 	}
 
-	public static boolean isClass(String id) {
+	public static boolean isValidClass(String id) {
 		return (FOCUS.equals(id) || ACTIVE.equals(id) || DISABLED.equals(id) || DISABLED_FOCUSED
 				.equals(id));
 	}

@@ -23,46 +23,108 @@ import de.enough.glaze.style.parser.property.Property;
 
 public class CssContentHandlerImpl implements CssContentHandler {
 
-	private final static String BLOCK_SECTION_COLORS = "colors";
+	/**
+	 * the block id for the colors section
+	 */
+	private final static String BLOCK_TYPE_SECTION_COLORS = "colors";
 
-	private final static String BLOCK_SECTION_BACKGROUNDS = "backgrounds";
+	/**
+	 * the block id for the backgrounds section
+	 */
+	private final static String BLOCK_TYPE_SECTION_BACKGROUNDS = "backgrounds";
 
-	private final static String BLOCK_SECTION_BORDERS = "borders";
+	/**
+	 * the block type for the border section
+	 */
+	private final static String BLOCK_TYPE_SECTION_BORDERS = "borders";
 
-	private final static String BLOCK_SECTION_FONTS = "fonts";
+	/**
+	 * the block type for the fonts section
+	 */
+	private final static String BLOCK_TYPE_SECTION_FONTS = "fonts";
 
-	private final static String BLOCK_STYLE = "style";
+	/**
+	 * the block type for a style
+	 */
+	private final static String BLOCK_TYPE_STYLE = "style";
 
-	private final static String BLOCK_LOCAL = "local";
+	/**
+	 * the block type for the local block inside a style
+	 */
+	private final static String BLOCK_TYPE_LOCAL = "local";
 
-	private final static String BLOCK_BACKGROUND = "background";
+	/**
+	 * the key for a background block
+	 */
+	private final static String BLOCK_ID_BACKGROUND = "background";
 
-	private final static String BLOCK_BORDER = "border";
+	/**
+	 * the key for a border block
+	 */
+	private final static String BLOCK_ID_BORDER = "border";
 
-	private final static String BLOCK_FONT = "font";
+	/**
+	 * the key for a font block
+	 */
+	private final static String BLOCK_ID_FONT = "font";
 
+	/**
+	 * the block id stack
+	 */
 	private Stack blockStack;
 
+	/**
+	 * the current block id
+	 */
 	private String blockId;
 
+	/**
+	 * the current style definition
+	 */
 	private Definition styleDefinition;
 
+	/**
+	 * the current block definition
+	 */
 	private Definition blockDefinition;
 
+	/**
+	 * the stylesheet
+	 */
 	private final StyleSheet stylesheet;
 
+	/**
+	 * the stylesheet definition
+	 */
 	private final StyleSheetDefinition styleSheetDefinition;
 
+	/**
+	 * Creates a new {@link CssContentHandlerImpl} instance
+	 * 
+	 * @param stylesheet
+	 *            the stylesheet
+	 */
 	public CssContentHandlerImpl(StyleSheet stylesheet) {
 		this.blockStack = new Stack();
 		this.stylesheet = stylesheet;
 		this.styleSheetDefinition = stylesheet.getDefinition();
 	}
 
-	private void pushBlockType(String id) {
-		this.blockStack.push(id);
+	/**
+	 * Pushes the given block type onto the block stack
+	 * 
+	 * @param type
+	 *            the block type
+	 */
+	private void pushBlockType(String type) {
+		this.blockStack.push(type);
 	}
 
+	/**
+	 * Removes the current block type from the block stack and returns it
+	 * 
+	 * @return the current block type
+	 */
 	private String popBlockType() {
 		if (!this.blockStack.isEmpty()) {
 			String block = (String) this.blockStack.pop();
@@ -72,6 +134,11 @@ public class CssContentHandlerImpl implements CssContentHandler {
 		}
 	}
 
+	/**
+	 * Returns the current block type
+	 * 
+	 * @return the current block type
+	 */
 	private String getBlockType() {
 		if (!this.blockStack.isEmpty()) {
 			return (String) this.blockStack.peek();
@@ -105,36 +172,49 @@ public class CssContentHandlerImpl implements CssContentHandler {
 		// if the block starts in the root level ...
 		if (blockType == null) {
 			// if the block is the colors section ...
-			if (BLOCK_SECTION_COLORS.equals(blockId)) {
+			if (BLOCK_TYPE_SECTION_COLORS.equals(blockId)) {
 				// set the current block type to the colors section
-				pushBlockType(BLOCK_SECTION_COLORS);
+				pushBlockType(BLOCK_TYPE_SECTION_COLORS);
 				Log.debug("starting block : colors");
 				// if the block is the backgrounds section ...
-			} else if (BLOCK_SECTION_BACKGROUNDS.equals(blockId)) {
-				// set the
-				pushBlockType(BLOCK_SECTION_BACKGROUNDS);
+			} else if (BLOCK_TYPE_SECTION_BACKGROUNDS.equals(blockId)) {
+				// set the current block type to the backgrounds section
+				pushBlockType(BLOCK_TYPE_SECTION_BACKGROUNDS);
 				Log.debug("starting block : backgrounds");
-			} else if (BLOCK_SECTION_BORDERS.equals(blockId)) {
-				pushBlockType(BLOCK_SECTION_BORDERS);
+				// if the block is the borders section ...
+			} else if (BLOCK_TYPE_SECTION_BORDERS.equals(blockId)) {
+				// set the current block type to the borders section
+				pushBlockType(BLOCK_TYPE_SECTION_BORDERS);
 				Log.debug("starting block : borders");
-			} else if (BLOCK_SECTION_FONTS.equals(blockId)) {
-				pushBlockType(BLOCK_SECTION_FONTS);
+				// if the block is the fonts section ...
+			} else if (BLOCK_TYPE_SECTION_FONTS.equals(blockId)) {
+				// set the current block type to the fonts section
+				pushBlockType(BLOCK_TYPE_SECTION_FONTS);
 				Log.debug("starting block : fonts");
+				// otherwise ...
 			} else {
-				pushBlockType(BLOCK_STYLE);
+				// set the current block type to style
+				pushBlockType(BLOCK_TYPE_STYLE);
 
 				Log.debug("starting style : " + blockId);
 
+				// get the style definitions
 				DefinitionCollection styleDefinitions = this.styleSheetDefinition
 						.getStyleDefinitions();
 				Definition parentDefinition;
+				// if a class is given ...
 				if (blockClass != null) {
-					if (Style.isClass(blockClass)) {
+					// if the block class is valid ...
+					if (Style.isValidClass(blockClass)) {
+						// get the parent definition for the style id
 						parentDefinition = styleDefinitions
 								.getDefinition(blockId);
 						if (parentDefinition != null) {
+							// create a new style definition with the id and
+							// class
 							this.styleDefinition = new Definition(blockId,
 									blockClass);
+							// set the parent of the style definition
 							this.styleDefinition.setParent(parentDefinition);
 						} else {
 							throw new CssSyntaxError("unable to resolve style",
@@ -144,30 +224,39 @@ public class CssContentHandlerImpl implements CssContentHandler {
 						throw new CssSyntaxError("invalid style class",
 								blockClass, lineNumber);
 					}
+					// if the style extends another style ...
 				} else if (blockExtends != null) {
+					// get the parent definition for the style to extend
 					parentDefinition = styleDefinitions
 							.getDefinition(blockExtends);
 					if (parentDefinition != null) {
+						// create a new style definition with the id
 						this.styleDefinition = new Definition(blockId);
+						// set the parent of the style definition
 						this.styleDefinition.setParent(parentDefinition);
 					} else {
 						throw new CssSyntaxError("unable to resolve style",
 								blockExtends, lineNumber);
 					}
+					// otherwise ...
 				} else {
+					// create a new style definition with the id
 					this.styleDefinition = new Definition(blockId);
 				}
 			}
-		} else if (BLOCK_SECTION_BACKGROUNDS.equals(blockType)
-				|| BLOCK_SECTION_BORDERS.equals(blockType)
-				|| BLOCK_SECTION_FONTS.equals(blockType)) {
+		} else if (BLOCK_TYPE_SECTION_BACKGROUNDS.equals(blockType)
+				|| BLOCK_TYPE_SECTION_BORDERS.equals(blockType)
+				|| BLOCK_TYPE_SECTION_FONTS.equals(blockType)) {
 			Definition parentDefinition = null;
-			if (BLOCK_SECTION_BACKGROUNDS.equals(blockType)) {
+			// if the current block is the backgrounds section ...
+			if (BLOCK_TYPE_SECTION_BACKGROUNDS.equals(blockType)) {
 				Log.debug("starting background : " + blockId);
-				pushBlockType(BLOCK_BACKGROUND);
+				pushBlockType(BLOCK_ID_BACKGROUND);
+				// if the background extends another background ...
 				if (blockExtends != null) {
 					DefinitionCollection backgroundDefinitions = this.styleSheetDefinition
 							.getBackgroundDefinitions();
+					// get the definition for the background to extend
 					parentDefinition = backgroundDefinitions
 							.getDefinition(blockExtends);
 					if (parentDefinition == null) {
@@ -176,12 +265,15 @@ public class CssContentHandlerImpl implements CssContentHandler {
 								lineNumber);
 					}
 				}
-			} else if (BLOCK_SECTION_BORDERS.equals(blockType)) {
+				// if the current block is the borders section ...
+			} else if (BLOCK_TYPE_SECTION_BORDERS.equals(blockType)) {
 				Log.debug("starting border : " + blockId);
-				pushBlockType(BLOCK_BORDER);
+				pushBlockType(BLOCK_ID_BORDER);
+				// if the border extends another border ...
 				if (blockExtends != null) {
 					DefinitionCollection borderDefinitions = this.styleSheetDefinition
 							.getBorderDefinitions();
+					// get the definition for the border to extend
 					parentDefinition = borderDefinitions
 							.getDefinition(blockExtends);
 					if (parentDefinition == null) {
@@ -189,12 +281,15 @@ public class CssContentHandlerImpl implements CssContentHandler {
 								blockId, lineNumber);
 					}
 				}
-			} else if (BLOCK_SECTION_FONTS.equals(blockType)) {
+				// if the current block is the fonts section ...
+			} else if (BLOCK_TYPE_SECTION_FONTS.equals(blockType)) {
 				Log.debug("starting font : " + blockId);
-				pushBlockType(BLOCK_FONT);
+				pushBlockType(BLOCK_ID_FONT);
+				// if the font extends another font ...
 				if (blockExtends != null) {
 					DefinitionCollection fontDefinitions = this.styleSheetDefinition
 							.getFontDefinitions();
+					// get the definition for the font to extend
 					parentDefinition = fontDefinitions
 							.getDefinition(blockExtends);
 					if (parentDefinition == null) {
@@ -203,15 +298,19 @@ public class CssContentHandlerImpl implements CssContentHandler {
 					}
 				}
 			}
+			// create a new definition with the block id
 			this.blockDefinition = new Definition(blockId);
+			// set the parent of the definition
 			this.blockDefinition.setParent(parentDefinition);
-		} else if (BLOCK_SECTION_COLORS.equals(blockType)) {
+			// if the current block type is the colors section ...
+		} else if (BLOCK_TYPE_SECTION_COLORS.equals(blockType)) {
 			throw new CssSyntaxError(
 					"block declarations are not allowed in the colors section",
 					blockId, lineNumber);
-		} else if (BLOCK_STYLE.equals(blockType)) {
+			// if the current block is a style ...
+		} else if (BLOCK_TYPE_STYLE.equals(blockType)) {
 			Log.debug("starting local block");
-			pushBlockType(BLOCK_LOCAL);
+			pushBlockType(BLOCK_TYPE_LOCAL);
 			this.blockId = blockId;
 		}
 	}
@@ -226,61 +325,79 @@ public class CssContentHandlerImpl implements CssContentHandler {
 	public void onProperty(CssParser parser, String propertyId,
 			String propertyValue) throws CssSyntaxError {
 		int lineNumber = parser.getLineNumber();
-		String block = getBlockType();
-		if (BLOCK_STYLE.equals(block)) {
+		String blockType = getBlockType();
+		// if the current block is a style ...
+		if (BLOCK_TYPE_STYLE.equals(blockType)) {
+			// add the property to the style definition
 			this.styleDefinition.addProperty(propertyId, propertyValue,
 					lineNumber);
 
 			Log.debug("added style property : " + propertyId + ":"
 					+ propertyValue);
-		} else if (BLOCK_LOCAL.equals(block)) {
+			// if the current block id a local block definition ...
+		} else if (BLOCK_TYPE_LOCAL.equals(blockType)) {
+			// add the property to the style definition
 			this.styleDefinition.addProperty(this.blockId, propertyId,
 					propertyValue, lineNumber);
 			Log.debug("added style property : " + this.blockId + "-"
 					+ propertyId + ":" + propertyValue);
-		} else if (BLOCK_BACKGROUND.equals(block) || BLOCK_BORDER.equals(block)
-				|| BLOCK_FONT.equals(block)) {
-			this.blockDefinition.addProperty(block, propertyId, propertyValue,
-					lineNumber);
-			Log.debug("added block property : " + block + "-" + propertyId
+			// if the block is a background, border or font ...
+		} else if (BLOCK_ID_BACKGROUND.equals(blockType)
+				|| BLOCK_ID_BORDER.equals(blockType)
+				|| BLOCK_ID_FONT.equals(blockType)) {
+			// add the property to the block definition ...
+			this.blockDefinition.addProperty(blockType, propertyId,
+					propertyValue, lineNumber);
+			Log.debug("added block property : " + blockType + "-" + propertyId
 					+ ":" + propertyValue);
-		} else if (BLOCK_SECTION_COLORS.equals(block)) {
+			// if the block is the colors section ...
+		} else if (BLOCK_TYPE_SECTION_COLORS.equals(blockType)) {
+			// parse and add the color to the stylesheet
 			Property colorAttr = new Property(propertyId, propertyValue,
 					lineNumber);
 			Color color = (Color) ColorPropertyParser.getInstance().parse(
 					colorAttr);
 			this.stylesheet.addColor(propertyId, color);
 			Log.debug("added color property : " + propertyId + ":" + color);
-		} else if (block == null || BLOCK_SECTION_BACKGROUNDS.equals(block)
-				|| BLOCK_SECTION_BORDERS.equals(block)
-				|| BLOCK_SECTION_FONTS.equals(block)) {
+			// if the block is the backgrounds, borders or fonts section ...
+		} else if (blockType == null
+				|| BLOCK_TYPE_SECTION_BACKGROUNDS.equals(blockType)
+				|| BLOCK_TYPE_SECTION_BORDERS.equals(blockType)
+				|| BLOCK_TYPE_SECTION_FONTS.equals(blockType)) {
 			throw new CssSyntaxError(
 					"property declarations are not allowed here", propertyId,
 					lineNumber);
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.enough.glaze.style.parser.CssContentHandler#onBlockEnd(de.enough.glaze
+	 * .style.parser.CssParser)
+	 */
 	public void onBlockEnd(CssParser parser) throws CssSyntaxError {
 		int lineNumber = parser.getLineNumber();
 		String blockType = popBlockType();
 		if (blockType != null) {
-			if (BLOCK_STYLE.equals(blockType)) {
+			if (BLOCK_TYPE_STYLE.equals(blockType)) {
 				DefinitionCollection styleDefinitions = this.styleSheetDefinition
 						.getStyleDefinitions();
 				styleDefinitions.addDefinition(this.styleDefinition);
-			} else if (BLOCK_BACKGROUND.equals(blockType)) {
+			} else if (BLOCK_ID_BACKGROUND.equals(blockType)) {
 				DefinitionCollection backgroundDefinitions = this.styleSheetDefinition
 						.getBackgroundDefinitions();
 				backgroundDefinitions.addDefinition(this.blockDefinition);
 				Log.debug("added background definition : "
 						+ this.blockDefinition.getId());
-			} else if (BLOCK_BORDER.equals(blockType)) {
+			} else if (BLOCK_ID_BORDER.equals(blockType)) {
 				DefinitionCollection borderDefinitions = this.styleSheetDefinition
 						.getBorderDefinitions();
 				borderDefinitions.addDefinition(this.blockDefinition);
 				Log.debug("added border definition : "
 						+ this.blockDefinition.getId());
-			} else if (BLOCK_FONT.equals(blockType)) {
+			} else if (BLOCK_ID_FONT.equals(blockType)) {
 				DefinitionCollection fontDefinitions = this.styleSheetDefinition
 						.getFontDefinitions();
 				fontDefinitions.addDefinition(this.blockDefinition);
@@ -302,6 +419,7 @@ public class CssContentHandlerImpl implements CssContentHandler {
 		// clear the whole stylesheet
 		this.stylesheet.clear();
 
+		// convert and add all backgrounds to the stylesheet
 		DefinitionCollection backgroundDefinitions = this.styleSheetDefinition
 				.getBackgroundDefinitions();
 		for (int index = 0; index < backgroundDefinitions.size(); index++) {
@@ -315,6 +433,7 @@ public class CssContentHandlerImpl implements CssContentHandler {
 			}
 		}
 
+		// convert and add all borders to the stylesheet
 		DefinitionCollection borderDefinitions = this.styleSheetDefinition
 				.getBorderDefinitions();
 		for (int index = 0; index < borderDefinitions.size(); index++) {
@@ -328,6 +447,7 @@ public class CssContentHandlerImpl implements CssContentHandler {
 			}
 		}
 
+		// convert and add all fonts to the stylesheet
 		DefinitionCollection fontDefinitions = this.styleSheetDefinition
 				.getFontDefinitions();
 		for (int index = 0; index < fontDefinitions.size(); index++) {
@@ -341,6 +461,7 @@ public class CssContentHandlerImpl implements CssContentHandler {
 			}
 		}
 
+		// convert and add all styles to the stylesheet
 		DefinitionCollection styleDefinitions = this.styleSheetDefinition
 				.getStyleDefinitions();
 		for (int index = 0; index < styleDefinitions.size(); index++) {
@@ -349,13 +470,17 @@ public class CssContentHandlerImpl implements CssContentHandler {
 					definition);
 
 			String classId = definition.getClassId();
+			// if the style is a style class ...
 			if (classId != null) {
 				Definition parentDefinition = definition.getParent();
 				String parentId = parentDefinition.getId();
+				// get the parent style and set the style as a class of it
 				Style parentStyle = this.stylesheet.getStyle(parentId);
 				parentStyle.setClass(classId, style);
 				style.setParentStyle(parentStyle);
+				// otherwise ...
 			} else {
+				// simply add the style
 				this.stylesheet.addStyle(definition.getId(), style);
 			}
 		}
