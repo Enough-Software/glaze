@@ -1,4 +1,4 @@
-package de.enough.glaze.style.background;
+package de.enough.glaze.style.property.background;
 
 import java.util.Hashtable;
 

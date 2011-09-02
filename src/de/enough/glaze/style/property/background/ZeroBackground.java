@@ -1,20 +1,20 @@
-package de.enough.glaze.style.background;
+package de.enough.glaze.style.property.background;
 
 import net.rim.device.api.ui.Graphics;
 
-public class NoBackground extends GzBackground {
+public class ZeroBackground extends GzBackground {
 
-	private static NoBackground INSTANCE;
+	private static ZeroBackground INSTANCE;
 
-	public static final NoBackground getInstance() {
+	public static final ZeroBackground getInstance() {
 		if (INSTANCE == null) {
-			INSTANCE = new NoBackground();
+			INSTANCE = new ZeroBackground();
 		}
 
 		return INSTANCE;
 	}
 	
-	private NoBackground() {
+	private ZeroBackground() {
 		// no instantiation allowed
 	}
 

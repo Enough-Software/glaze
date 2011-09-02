@@ -1,4 +1,4 @@
-package de.enough.glaze.style.font;
+package de.enough.glaze.style.property.font;
 
 import net.rim.device.api.ui.Font;
 import de.enough.glaze.style.Color;

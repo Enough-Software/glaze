@@ -1,11 +1,11 @@
-package de.enough.glaze.style.background;
+package de.enough.glaze.style.property.background;
 
 import net.rim.device.api.ui.Graphics;
 import de.enough.glaze.drawing.DrawUtils;
 import de.enough.glaze.style.Color;
 import de.enough.glaze.style.Dimension;
 
-public class VerticalGradientBackground extends GzBackground {
+public class HorizontalGradientBackground extends GzBackground {
 
 	/**
 	 * Start and end colors for the gradient
@@ -27,7 +27,7 @@ public class VerticalGradientBackground extends GzBackground {
 	 */
 	private final Dimension endPosition;
 
-	public VerticalGradientBackground(Color[] colors, Dimension[] offsets) {
+	public HorizontalGradientBackground(Color[] colors, Dimension[] offsets) {
 		this.startColor = colors[0];
 		this.endColor = colors[1];
 		this.startPosition = offsets[0];
@@ -42,15 +42,15 @@ public class VerticalGradientBackground extends GzBackground {
 	 * , net.rim.device.api.ui.XYRect)
 	 */
 	public void draw(Graphics graphics, int x, int y, int width, int height) {
-		int startGradientPixels = this.startPosition.getValue(height);
-		int endGradientPixels = this.endPosition.getValue(height);
+		int startGradientPixels = this.startPosition.getValue(width);
+		int endGradientPixels = this.endPosition.getValue(width);
 
 		// remember original color
 		int originalColor = graphics.getColor();
 
 		// Draw the pre-gradient area
 		graphics.setColor(this.startColor.getColor());
-		graphics.fillRect(x, y, width, startGradientPixels);
+		graphics.fillRect(x, y, startGradientPixels, height);
 
 		// Draw the gradient
 		int[] gradientColors = DrawUtils.getGradient(startColor.getColor(),
@@ -60,27 +60,15 @@ public class VerticalGradientBackground extends GzBackground {
 		int i = 0;
 		while (pos < endGradientPixels) {
 			graphics.setColor(gradientColors[i]);
-			graphics.drawLine(x, y + pos, x + width - 1, y + pos);
+			graphics.drawLine(x+pos, y, x+pos, y+height);
 			i++;
 			pos++;
 		}
 
 		// Draw the post-gradient area
 		graphics.setColor(this.endColor.getColor());
-		graphics.fillRect(x, y + endGradientPixels, width, height
-				- endGradientPixels);
-
+		graphics.fillRect(x + endGradientPixels, y, width - endGradientPixels, height);
 		// restore original color
 		graphics.setColor(originalColor);
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.rim.device.api.ui.decor.Background#isTransparent()
-	 */
-	public boolean isTransparent() {
-		return false;
 	}
 }

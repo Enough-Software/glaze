@@ -1,20 +1,21 @@
-package de.enough.glaze.style.border;
+package de.enough.glaze.style.property.border;
 
+import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.ui.XYEdges;
 import net.rim.device.api.ui.XYRect;
 import net.rim.device.api.ui.decor.Border;
 import net.rim.device.api.ui.decor.BorderFactory;
 
-public class SimpleBorder extends GzBorder {
+public class BitmapBorder extends GzBorder {
 
 	private final Border border;
 
-	public SimpleBorder(XYEdges borderWidths, XYEdges borderColors,
-			XYEdges borderStyles) {
-		super(borderWidths, 0);
-		this.border = BorderFactory.createSimpleBorder(borderWidths,
-				borderColors, borderStyles);
+	public BitmapBorder(XYEdges padding,
+            XYEdges corners,
+            Bitmap bitmap) {
+		super(padding, Border.STYLE_SOLID);
+		this.border = BorderFactory.createBitmapBorder(padding, corners, bitmap);
 	}
 
 	/*

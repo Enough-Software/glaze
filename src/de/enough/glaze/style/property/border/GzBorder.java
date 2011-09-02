@@ -1,4 +1,4 @@
-package de.enough.glaze.style.border;
+package de.enough.glaze.style.property.border;
 
 import net.rim.device.api.ui.XYEdges;
 import net.rim.device.api.ui.decor.Border;

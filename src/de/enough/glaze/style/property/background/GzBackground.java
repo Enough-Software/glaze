@@ -1,4 +1,4 @@
-package de.enough.glaze.style.background;
+package de.enough.glaze.style.property.background;
 
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;

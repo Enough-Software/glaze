@@ -1,7 +1,8 @@
-package de.enough.glaze.style.background;
+package de.enough.glaze.style.property.background;
+
+import javax.microedition.m2g.SVGImage;
 
 import net.rim.device.api.system.Bitmap;
-import net.rim.device.api.ui.decor.Background;
 import de.enough.glaze.style.Color;
 import de.enough.glaze.style.Dimension;
 
@@ -170,5 +171,9 @@ public class GzBackgroundFactory {
 		// the count
 		// of backgrounds
 		return new LayerBackground(backgrounds, margins);
+	}
+	
+	public static GzBackground createSvgBackground(SVGImage svgImage) {
+		return new SvgBackground(svgImage);
 	}
 }

@@ -1,23 +1,23 @@
-package de.enough.glaze.style.border;
+package de.enough.glaze.style.property.border;
 
 import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.ui.XYEdges;
 import net.rim.device.api.ui.XYRect;
 import net.rim.device.api.ui.decor.Border;
 
-public class NoBorder extends GzBorder {
+public class ZeroBorder extends GzBorder {
 	
-	private static NoBorder INSTANCE;
+	private static ZeroBorder INSTANCE;
 	
-	public static final NoBorder getInstance() {
+	public static final ZeroBorder getInstance() {
 		if(INSTANCE == null) {
-			INSTANCE = new NoBorder();
+			INSTANCE = new ZeroBorder();
 		}
 		
 		return INSTANCE;
 	}
 
-	private NoBorder() {
+	private ZeroBorder() {
 		// no instantiation allowed
 		super(new XYEdges(0, 0, 0, 0),Border.STYLE_TRANSPARENT);
 	}
