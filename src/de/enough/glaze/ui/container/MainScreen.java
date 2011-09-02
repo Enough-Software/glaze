@@ -137,7 +137,7 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 	protected void sublayout(int maxWidth, int maxHeight) {
 		ManagerDelegate.sublayout(maxWidth, maxHeight, this);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -147,29 +147,41 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 		ManagerDelegate.paint(graphics, this);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.enough.glaze.ui.delegate.GzExtent#gz_setExtent(int, int)
 	 */
 	public void gz_setExtent(int width, int height) {
 		super.setExtent(width, height);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.enough.glaze.ui.delegate.GzManager#gz_sublayout(int, int)
 	 */
 	public void gz_sublayout(int maxWidth, int maxHeight) {
 		super.sublayout(maxWidth, maxHeight);
 	}
 
-	/* (non-Javadoc)
-	 * @see de.enough.glaze.ui.delegate.GzManager#gz_paintBackground(net.rim.device.api.ui.Graphics)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.enough.glaze.ui.delegate.GzManager#gz_paintBackground(net.rim.device
+	 * .api.ui.Graphics)
 	 */
 	public void gz_paintBackground(Graphics graphics) {
 		super.paintBackground(graphics);
 	}
 
-	/* (non-Javadoc)
-	 * @see de.enough.glaze.ui.delegate.GzManager#gz_paint(net.rim.device.api.ui.Graphics)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.enough.glaze.ui.delegate.GzManager#gz_paint(net.rim.device.api.ui.
+	 * Graphics)
 	 */
 	public void gz_paint(Graphics graphics) {
 		super.paint(graphics);

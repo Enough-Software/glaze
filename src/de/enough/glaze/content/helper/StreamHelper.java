@@ -67,6 +67,9 @@ public class StreamHelper {
 		while ((read = in.read(buffer, 0, bufferLength)) != -1) {
 			out.write(buffer, 0, read);
 		}
+		out.flush();
+		in.close();
+		out.close();
 		return out.toByteArray();
 	}
 }

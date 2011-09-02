@@ -6,12 +6,12 @@ import net.rim.device.api.ui.Ui;
 import de.enough.glaze.style.Color;
 import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.definition.Definition;
-import de.enough.glaze.style.font.GzFont;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.style.parser.property.ColorPropertyParser;
 import de.enough.glaze.style.parser.property.DimensionPropertyParser;
 import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.parser.property.ValuePropertyParser;
+import de.enough.glaze.style.property.font.GzFont;
 
 /**
  * Converts a given definition to a font

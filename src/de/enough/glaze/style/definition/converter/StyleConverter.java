@@ -8,18 +8,19 @@ import de.enough.glaze.style.Margin;
 import de.enough.glaze.style.Padding;
 import de.enough.glaze.style.Style;
 import de.enough.glaze.style.StyleSheet;
-import de.enough.glaze.style.background.GzBackground;
-import de.enough.glaze.style.border.GzBorder;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.DefinitionCollection;
 import de.enough.glaze.style.definition.StyleSheetDefinition;
 import de.enough.glaze.style.definition.converter.utils.ConverterUtils;
 import de.enough.glaze.style.definition.converter.utils.DimensionConverterUtils;
 import de.enough.glaze.style.extension.Extension;
-import de.enough.glaze.style.font.GzFont;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.parser.property.ValuePropertyParser;
+import de.enough.glaze.style.property.Visibility;
+import de.enough.glaze.style.property.background.GzBackground;
+import de.enough.glaze.style.property.border.GzBorder;
+import de.enough.glaze.style.property.font.GzFont;
 
 public class StyleConverter implements Converter {
 
@@ -73,12 +74,14 @@ public class StyleConverter implements Converter {
 
 			addIds(new String[] { "background", "border", "font" },
 					idCollection);
-			
+
 			addIds(new String[] { "min-width", "width", "max-width" },
 					idCollection);
-			
+
 			addIds(new String[] { "min-height", "height", "max-height" },
 					idCollection);
+
+			addIds(new String[] { "visibility" }, idCollection);
 
 			// store the ids
 			this.ids = new String[idCollection.size()];
@@ -150,10 +153,13 @@ public class StyleConverter implements Converter {
 		// convert the font
 		GzFont font = convertFont(definition);
 		style.setFont(font);
-		
+
 		// convert dimensional properties
 		convertWidthDimensions(definition, style);
 		convertHeightDimensions(definition, style);
+
+		// convert visibility
+		convertVisibility(definition, style);
 
 		// convert all extensions
 		Enumeration extensions = StyleSheet.getInstance().getExtensions();
@@ -301,47 +307,79 @@ public class StyleConverter implements Converter {
 		// create a font from the definition
 		return (GzFont) FontConverter.getInstance().convert(definition);
 	}
-	
-	public void convertWidthDimensions(Definition definition, Style style) throws CssSyntaxError {
+
+	public void convertWidthDimensions(Definition definition, Style style)
+			throws CssSyntaxError {
 		Property minWidthProp = definition.getProperty("min-width");
 		Property widthProp = definition.getProperty("width");
 		Property maxWidthProp = definition.getProperty("max-width");
-		
-		if(minWidthProp != null) {
-			Dimension minWidthDimension = DimensionConverterUtils.toDimension(minWidthProp);
+
+		if (minWidthProp != null) {
+			Dimension minWidthDimension = DimensionConverterUtils
+					.toDimension(minWidthProp);
 			style.setMinWidth(minWidthDimension);
+		} else {
+			style.setMinWidth(null);
 		}
-		
-		if(widthProp != null) {
-			Dimension widthDimension = DimensionConverterUtils.toDimension(widthProp);
+
+		if (widthProp != null) {
+			Dimension widthDimension = DimensionConverterUtils
+					.toDimension(widthProp);
 			style.setWidth(widthDimension);
+		} else {
+			style.setWidth(null);
 		}
-		
-		if(maxWidthProp != null) {
-			Dimension maxWidthDimension = DimensionConverterUtils.toDimension(maxWidthProp);
+
+		if (maxWidthProp != null) {
+			Dimension maxWidthDimension = DimensionConverterUtils
+					.toDimension(maxWidthProp);
 			style.setMaxWidth(maxWidthDimension);
-		}
-	}
-	
-	public void convertHeightDimensions(Definition definition, Style style) throws CssSyntaxError {
-		Property minHeightProp = definition.getProperty("min-height");
-		Property heightProp = definition.getProperty("height");
-		Property maxHeightProp = definition.getProperty("max-height");
-		
-		if(minHeightProp != null) {
-			Dimension minHeightDimension = DimensionConverterUtils.toDimension(minHeightProp);
-			style.setMinHeight(minHeightDimension);
-		}
-		
-		if(heightProp != null) {
-			Dimension heightDimension = DimensionConverterUtils.toDimension(heightProp);
-			style.setHeight(heightDimension);
-		}
-		
-		if(maxHeightProp != null) {
-			Dimension maxHeightDimension = DimensionConverterUtils.toDimension(maxHeightProp);
-			style.setMaxHeight(maxHeightDimension);
+		} else {
+			style.setMaxWidth(null);
 		}
 	}
 
+	public void convertHeightDimensions(Definition definition, Style style)
+			throws CssSyntaxError {
+		Property minHeightProp = definition.getProperty("min-height");
+		Property heightProp = definition.getProperty("height");
+		Property maxHeightProp = definition.getProperty("max-height");
+
+		if (minHeightProp != null) {
+			Dimension minHeightDimension = DimensionConverterUtils
+					.toDimension(minHeightProp);
+			style.setMinHeight(minHeightDimension);
+		} else {
+			style.setMinHeight(null);
+		}
+
+		if (heightProp != null) {
+			Dimension heightDimension = DimensionConverterUtils
+					.toDimension(heightProp);
+			style.setHeight(heightDimension);
+		} else {
+			style.setHeight(null);
+		}
+
+		if (maxHeightProp != null) {
+			Dimension maxHeightDimension = DimensionConverterUtils
+					.toDimension(maxHeightProp);
+			style.setMaxHeight(maxHeightDimension);
+		} else {
+			style.setMaxHeight(null);
+		}
+	}
+
+	public void convertVisibility(Definition definition, Style style)
+			throws CssSyntaxError {
+		Property visibilityProp = definition.getProperty("visibility");
+		if (visibilityProp != null) {
+			String visibilityValue = visibilityProp.getValue();
+			int visibility = Visibility.getVisibility(visibilityValue,
+					visibilityProp);
+			style.setVisibility(visibility);
+		} else {
+			style.setVisibility(Visibility.VISIBLE);
+		}
+	}
 }

@@ -12,6 +12,7 @@ import net.rim.device.api.system.CoverageInfo;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.system.WLANInfo;
+import de.enough.glaze.content.io.RedirectHttpConnection;
 
 public class URL {
 	
@@ -33,12 +34,12 @@ public class URL {
 	
 	private InputStream openHttpStream(String url) throws IOException {
 		url = url + getConnectionSuffix();
-		HttpConnection httpConnection = (HttpConnection)Connector.open(url);
-		InputStream stream = httpConnection.openInputStream();
+		RedirectHttpConnection connection = new RedirectHttpConnection(url);
+		InputStream stream = connection.openInputStream();
 		return stream;
 	}
 	
-	private static String getConnectionSuffix()
+	public static String getConnectionSuffix()
 	{
     	// the final fallback, an unidentified direct TCP connection
     	String connSuffixStr = ";ConnectionTimeout=70000;deviceside=true";

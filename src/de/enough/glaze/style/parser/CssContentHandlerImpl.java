@@ -6,8 +6,6 @@ import de.enough.glaze.log.Log;
 import de.enough.glaze.style.Color;
 import de.enough.glaze.style.Style;
 import de.enough.glaze.style.StyleSheet;
-import de.enough.glaze.style.background.GzBackground;
-import de.enough.glaze.style.border.GzBorder;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.DefinitionCollection;
 import de.enough.glaze.style.definition.StyleSheetDefinition;
@@ -16,10 +14,12 @@ import de.enough.glaze.style.definition.converter.BorderConverter;
 import de.enough.glaze.style.definition.converter.FontConverter;
 import de.enough.glaze.style.definition.converter.StyleConverter;
 import de.enough.glaze.style.definition.converter.utils.ConverterUtils;
-import de.enough.glaze.style.font.GzFont;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.style.parser.property.ColorPropertyParser;
 import de.enough.glaze.style.parser.property.Property;
+import de.enough.glaze.style.property.background.GzBackground;
+import de.enough.glaze.style.property.border.GzBorder;
+import de.enough.glaze.style.property.font.GzFont;
 
 public class CssContentHandlerImpl implements CssContentHandler {
 

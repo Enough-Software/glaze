@@ -2,8 +2,6 @@ package de.enough.glaze.style.definition.converter.background;
 
 import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.StyleSheet;
-import de.enough.glaze.style.background.GzBackground;
-import de.enough.glaze.style.background.GzBackgroundFactory;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.StyleSheetDefinition;
 import de.enough.glaze.style.definition.converter.BackgroundConverter;
@@ -12,6 +10,8 @@ import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.style.parser.property.DimensionPropertyParser;
 import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.parser.property.ValuePropertyParser;
+import de.enough.glaze.style.property.background.GzBackground;
+import de.enough.glaze.style.property.background.GzBackgroundFactory;
 
 public class LayerBackgroundConverter implements Converter {
 

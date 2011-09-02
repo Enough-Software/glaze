@@ -2,8 +2,6 @@ package de.enough.glaze.style.definition.converter;
 
 import java.util.Vector;
 
-import de.enough.glaze.style.background.GzBackground;
-import de.enough.glaze.style.background.NoBackground;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.converter.background.ImageBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.LayerBackgroundConverter;
@@ -12,9 +10,12 @@ import de.enough.glaze.style.definition.converter.background.GradientBackgroundC
 import de.enough.glaze.style.definition.converter.background.PatchBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.RoundedBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.SolidBackgroundConverter;
+import de.enough.glaze.style.definition.converter.background.SvgBackgroundConverter;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.parser.property.ValuePropertyParser;
+import de.enough.glaze.style.property.background.GzBackground;
+import de.enough.glaze.style.property.background.ZeroBackground;
 
 /**
  * Converts a given definition to a background
@@ -65,6 +66,7 @@ public class BackgroundConverter implements Converter {
 			addIds(PatchBackgroundConverter.getInstance(), idCollection);
 			addIds(MaskBackgroundConverter.getInstance(), idCollection);
 			addIds(LayerBackgroundConverter.getInstance(), idCollection);
+			addIds(SvgBackgroundConverter.getInstance(), idCollection);
 			addIds(new String[] { "background-type" }, idCollection);
 
 			// store the ids
@@ -113,8 +115,8 @@ public class BackgroundConverter implements Converter {
 		// if the definition has no properties handled by this converter ...
 		if (!definition.hasProperties(this)) {
 			// return null
-			return NoBackground.getInstance();
-		} 
+			return ZeroBackground.getInstance();
+		}
 
 		Property backgroundTypeProp = definition.getProperty("background-type");
 		Property backgroundImageProp = definition
@@ -145,7 +147,7 @@ public class BackgroundConverter implements Converter {
 			// convert to a solid background
 			return SolidBackgroundConverter.getInstance().convert(definition);
 		} else {
-			return NoBackground.getInstance();
+			return ZeroBackground.getInstance();
 		}
 	}
 
@@ -185,6 +187,9 @@ public class BackgroundConverter implements Converter {
 					.convert(definition);
 		} else if ("patch".equals(backgroundType)) {
 			return (GzBackground) PatchBackgroundConverter.getInstance()
+					.convert(definition);
+		} else if ("svg".equals(backgroundType)) {
+			return (GzBackground) SvgBackgroundConverter.getInstance()
 					.convert(definition);
 		} else {
 			throw new CssSyntaxError("unknown background type",

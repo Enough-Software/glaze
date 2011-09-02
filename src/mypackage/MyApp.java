@@ -1,7 +1,9 @@
 package mypackage;
 
 import net.rim.device.api.ui.UiApplication;
+import de.enough.glaze.content.ContentException;
 import de.enough.glaze.log.Log;
+import de.enough.glaze.style.StyleResources;
 import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 
@@ -27,6 +29,11 @@ public class MyApp extends UiApplication {
 	public MyApp() {
 		Log.setLevel(Log.INFO);
 
+		try {
+			StyleResources.getInstance().clear();
+		} catch (ContentException e) {
+			e.printStackTrace();
+		}
 		updateStyle();
 		pushScreen(new MyFirstScreen());
 

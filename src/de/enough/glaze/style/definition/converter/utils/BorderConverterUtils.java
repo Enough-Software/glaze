@@ -2,9 +2,9 @@ package de.enough.glaze.style.definition.converter.utils;
 
 import net.rim.device.api.ui.XYEdges;
 import net.rim.device.api.ui.decor.Border;
-import de.enough.glaze.style.border.GzBorder;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.style.parser.property.Property;
+import de.enough.glaze.style.property.border.GzBorder;
 
 public class BorderConverterUtils {
 	public static XYEdges toXYEdges(String borderStyle, Property borderStyleProp)

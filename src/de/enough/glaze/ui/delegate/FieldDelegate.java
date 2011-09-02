@@ -7,9 +7,10 @@ import net.rim.device.api.ui.Screen;
 import de.enough.glaze.log.Log;
 import de.enough.glaze.style.Color;
 import de.enough.glaze.style.Style;
-import de.enough.glaze.style.font.GzFont;
 import de.enough.glaze.style.handler.StyleHandler;
 import de.enough.glaze.style.handler.StyleManager;
+import de.enough.glaze.style.property.Visibility;
+import de.enough.glaze.style.property.font.GzFont;
 
 /**
  * Used by {@link GzField} implementations to extend/override layout and paint
@@ -65,10 +66,15 @@ public class FieldDelegate {
 		GzField gzField;
 		if (field instanceof GzField) {
 			gzField = (GzField) field;
+			// get the style
+			Style style = getStyle(field);
 			// set the font color
-			int originalColor = setFontColor(graphics, field);
-			// paint the field
-			gzField.gz_paint(graphics);
+			int originalColor = setFontColor(graphics, style);
+			// if the field is visible ...
+			if (isVisible(style)) {
+				// paint it
+				gzField.gz_paint(graphics);
+			}
 			// reset the color to the original color
 			graphics.setColor(originalColor);
 		} else {
@@ -85,10 +91,9 @@ public class FieldDelegate {
 	 *            the field
 	 * @return the original color from the {@link Graphics} instance
 	 */
-	private static int setFontColor(Graphics graphics, Field field) {
+	private static int setFontColor(Graphics graphics, Style style) {
 		// remember the original color
 		int originalColor = graphics.getColor();
-		Style style = getStyle(field);
 		if (style != null) {
 			GzFont font = style.getFont();
 			// if the style has a font ...
@@ -100,6 +105,14 @@ public class FieldDelegate {
 			}
 		}
 		return originalColor;
+	}
+
+	public static boolean isVisible(Style style) {
+		if (style != null) {
+			return style.getVisibility() == Visibility.VISIBLE;
+		} else {
+			return true;
+		}
 	}
 
 	/**

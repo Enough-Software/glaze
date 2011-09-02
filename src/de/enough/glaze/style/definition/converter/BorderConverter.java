@@ -2,9 +2,6 @@ package de.enough.glaze.style.definition.converter;
 
 import java.util.Vector;
 
-import de.enough.glaze.style.border.BitmapBorder;
-import de.enough.glaze.style.border.GzBorder;
-import de.enough.glaze.style.border.NoBorder;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.converter.border.BitmapBorderConverter;
 import de.enough.glaze.style.definition.converter.border.RoundedBorderConverter;
@@ -13,6 +10,9 @@ import de.enough.glaze.style.definition.converter.border.BevelBorderConverter;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.parser.property.ValuePropertyParser;
+import de.enough.glaze.style.property.border.BitmapBorder;
+import de.enough.glaze.style.property.border.GzBorder;
+import de.enough.glaze.style.property.border.ZeroBorder;
 
 /**
  * Converts a given definition to a border
@@ -108,7 +108,7 @@ public class BorderConverter implements Converter {
 		// if the definition has no properties handled by this converter ...
 		if (!definition.hasProperties(this)) {
 			// return null
-			return NoBorder.getInstance();
+			return ZeroBorder.getInstance();
 		}
 
 		Property borderTypeProp = definition.getProperty("border-type");

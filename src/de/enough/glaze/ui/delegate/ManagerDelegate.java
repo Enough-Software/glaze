@@ -1,13 +1,14 @@
 package de.enough.glaze.ui.delegate;
 
+import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.ui.Manager;
 import net.rim.device.api.ui.decor.Background;
 import de.enough.glaze.log.Log;
 import de.enough.glaze.style.Style;
-import de.enough.glaze.style.background.GzBackground;
 import de.enough.glaze.style.handler.StyleHandler;
 import de.enough.glaze.style.handler.StyleManager;
+import de.enough.glaze.style.property.background.GzBackground;
 
 /**
  * Used by {@link GzManager} implementations to extend/override layout and paint
@@ -82,12 +83,17 @@ public class ManagerDelegate {
 		GzManager gzManager;
 		if (manager instanceof GzManager) {
 			gzManager = (GzManager) manager;
-			gzManager.gz_paint(graphics);
+			Style style = FieldDelegate.getStyle(manager);
+			// if the field is visible ...
+			if (FieldDelegate.isVisible(style)) {
+				// paint it
+				gzManager.gz_paint(graphics);
+			}
 
 			// get the handlers
 			StyleManager styleManager = gzManager.getStyleManager();
 			// for each style handler ...
-			for (int index = 0; index < manager.getFieldCount(); index++) {
+			for (int index = 0; index < styleManager.size(); index++) {
 				StyleHandler handler = styleManager.get(index);
 				// if the visual state of a field has changed ...
 				if (handler.isVisualStateChanged()) {

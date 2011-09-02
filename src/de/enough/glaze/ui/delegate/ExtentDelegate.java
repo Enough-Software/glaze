@@ -4,6 +4,7 @@ import net.rim.device.api.ui.Field;
 import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.Style;
 import de.enough.glaze.style.handler.StyleManager;
+import de.enough.glaze.style.property.Visibility;
 
 public class ExtentDelegate {
 
@@ -24,6 +25,12 @@ public class ExtentDelegate {
 	protected static int preprocessWidth(int availableContentWidth,
 			int availableContentHeight, Field field, Style style) {
 		if (style != null) {
+			int visibility = style.getVisibility();
+			// if the visibility is collapse ...
+			if(visibility == Visibility.COLLAPSE) {
+				// layout with no width
+				return 0;
+			}
 			// get the width and max-width dimension
 			Dimension widthDimension = style.getWidth();
 			Dimension maxWidthDimension = style.getMaxWidth();
@@ -61,6 +68,12 @@ public class ExtentDelegate {
 	protected static int preprocessHeight(int availableContentWidth,
 			int availableContentHeight, Field field, Style style) {
 		if (style != null) {
+			int visibility = style.getVisibility();
+			// if the visibility is collapse ...
+			if(visibility == Visibility.COLLAPSE) {
+				// layout with no height
+				return 0;
+			}
 			// get the height and max-height dimension
 			Dimension heightDimension = style.getHeight();
 			Dimension maxHeightDimension = style.getMaxHeight();
@@ -99,6 +112,13 @@ public class ExtentDelegate {
 			int availableContentHeight, Field field, GzExtent gzExtent,
 			Style style) {
 		if (style != null) {
+			int visibility = style.getVisibility();
+			// if the visibility is collapse ...
+			if(visibility == Visibility.COLLAPSE) {
+				// enforce the collapse
+				gzExtent.gz_setExtent(0, 0);
+				return;
+			}
 			// get the width and min-width dimension
 			Dimension widthDimension = style.getWidth();
 			Dimension minWidthDimension = style.getMinWidth();
@@ -150,6 +170,13 @@ public class ExtentDelegate {
 			int availableContentHeight, Field field, GzExtent gzExtent,
 			Style style) {
 		if (style != null) {
+			int visibility = style.getVisibility();
+			// if the visibility is collapse ...
+			if(visibility == Visibility.COLLAPSE) {
+				// enforce the collapse
+				gzExtent.gz_setExtent(0, 0);
+				return;
+			}
 			// get the height and min-height dimension
 			Dimension heightDimension = style.getHeight();
 			Dimension minHeightDimension = style.getMinHeight();

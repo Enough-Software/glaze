@@ -4,10 +4,11 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import net.rim.device.api.ui.Field;
-import de.enough.glaze.style.background.GzBackground;
-import de.enough.glaze.style.border.GzBorder;
 import de.enough.glaze.style.extension.Extension;
-import de.enough.glaze.style.font.GzFont;
+import de.enough.glaze.style.property.Visibility;
+import de.enough.glaze.style.property.background.GzBackground;
+import de.enough.glaze.style.property.border.GzBorder;
+import de.enough.glaze.style.property.font.GzFont;
 
 public class Style {
 
@@ -47,6 +48,8 @@ public class Style {
 
 	private Dimension maxHeight;
 
+	private int visibility;
+
 	private final Hashtable extensions;
 
 	private Style parentStyle;
@@ -61,6 +64,7 @@ public class Style {
 
 	public Style(String id) {
 		this.id = id;
+		this.visibility = Visibility.VISIBLE;
 		this.extensions = new Hashtable();
 	}
 
@@ -231,6 +235,14 @@ public class Style {
 
 	public void setMaxHeight(Dimension maxHeight) {
 		this.maxHeight = maxHeight;
+	}
+
+	public int getVisibility() {
+		return this.visibility;
+	}
+
+	public void setVisibility(int visibility) {
+		this.visibility = visibility;
 	}
 
 	public void addExtension(Extension extension, Object object) {

@@ -7,18 +7,18 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import de.enough.glaze.style.background.GzBackground;
-import de.enough.glaze.style.border.GzBorder;
 import de.enough.glaze.style.definition.DefinitionCollection;
 import de.enough.glaze.style.definition.StyleSheetDefinition;
 import de.enough.glaze.style.definition.converter.BorderConverter;
 import de.enough.glaze.style.definition.converter.Converter;
 import de.enough.glaze.style.extension.Extension;
 import de.enough.glaze.style.extension.Processor;
-import de.enough.glaze.style.font.GzFont;
 import de.enough.glaze.style.parser.CssContentHandlerImpl;
 import de.enough.glaze.style.parser.CssParser;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
+import de.enough.glaze.style.property.background.GzBackground;
+import de.enough.glaze.style.property.border.GzBorder;
+import de.enough.glaze.style.property.font.GzFont;
 
 public class StyleSheet {
 

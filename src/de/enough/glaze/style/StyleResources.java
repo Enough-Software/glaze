@@ -1,5 +1,10 @@
 package de.enough.glaze.style;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
+import javax.microedition.m2g.SVGImage;
+
 import net.rim.device.api.system.Bitmap;
 import de.enough.glaze.content.ContentDescriptor;
 import de.enough.glaze.content.ContentException;
@@ -99,6 +104,23 @@ public class StyleResources {
 	private byte[] loadContent(String url) throws ContentException {
 		ContentDescriptor descriptor = new ContentDescriptor(url);
 		return (byte[]) this.contentLoader.loadContent(descriptor);
+	}
+	
+	public SVGImage loadSVG(URL url) throws ContentException, IOException{
+		return loadSVG(url.toString());
+	}
+	
+	/**
+	 * Loads the SVG image from the given url and returns it
+	 * @param url the url
+	 * @return the SVG image
+	 * @throws ContentException if an error occurs while loading the data
+	 * @throws IOException if an error occurs while loading the data
+	 */
+	public SVGImage loadSVG(String url) throws ContentException, IOException{
+		byte[] data = loadContent(url);
+		ByteArrayInputStream stream = new ByteArrayInputStream(data);
+		return (SVGImage)SVGImage.createImage(stream, null);
 	}
 
 	/**

@@ -509,6 +509,10 @@ public abstract class ContentSource {
 	 */
 	public void sweep() throws ContentException {
 		if (hasStorage()) {
+			if(!this.storageIndex.isPrepared()) {
+				this.storageIndex.prepare();
+			}
+			
 			for (int index = 0; index < this.storageIndex.size(); index++) {
 				StorageReference reference = this.storageIndex
 						.getReference(index);

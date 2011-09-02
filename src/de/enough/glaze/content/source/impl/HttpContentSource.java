@@ -42,6 +42,8 @@ public class HttpContentSource extends ContentSource{
 		// read all bytes into data
 		data = StreamHelper.toBytes(stream);
 		
+		System.out.println(new String(data));
+		
 		return data;
 	}
 

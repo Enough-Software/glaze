@@ -23,7 +23,9 @@ public class ButtonField extends net.rim.device.api.ui.component.ButtonField
 		super(label, style);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.rim.device.api.ui.component.ButtonField#getPreferredWidth()
 	 */
 	public int getPreferredWidth() {

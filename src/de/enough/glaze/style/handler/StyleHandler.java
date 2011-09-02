@@ -8,11 +8,14 @@ import net.rim.device.api.ui.XYEdges;
 import de.enough.glaze.style.Margin;
 import de.enough.glaze.style.Padding;
 import de.enough.glaze.style.Style;
-import de.enough.glaze.style.background.GzBackground;
-import de.enough.glaze.style.border.GzBorder;
 import de.enough.glaze.style.extension.Extension;
 import de.enough.glaze.style.extension.Processor;
-import de.enough.glaze.style.font.GzFont;
+import de.enough.glaze.style.property.Visibility;
+import de.enough.glaze.style.property.background.GzBackground;
+import de.enough.glaze.style.property.background.ZeroBackground;
+import de.enough.glaze.style.property.border.GzBorder;
+import de.enough.glaze.style.property.border.ZeroBorder;
+import de.enough.glaze.style.property.font.GzFont;
 
 public class StyleHandler {
 
@@ -33,6 +36,22 @@ public class StyleHandler {
 		setStyle(style);
 	}
 
+	public boolean isVisualStateChanged() {
+		return field.getVisualState() != this.visualState;
+	}
+
+	public void updateVisualState() {
+		this.visualState = field.getVisualState();
+	}
+
+	public Field getField() {
+		return this.field;
+	}
+
+	public Style getStyle() {
+		return this.style;
+	}
+	
 	public void setStyle(Style style) {
 		this.style = style;
 		if (this.style != null) {
@@ -56,67 +75,74 @@ public class StyleHandler {
 	}
 
 	public void applyMargin(int availableWidth) {
-		Margin margin = this.style.getMargin();
+		Margin margin;
+		int visibility = this.style.getVisibility();
+		if (visibility == Visibility.COLLAPSE) {
+			margin = Margin.ZERO;
+		} else {
+			margin = this.style.getMargin();
+		}
 		margin.setXYEdges(this.marginXYEdges, availableWidth);
 		this.field.setMargin(this.marginXYEdges);
 	}
 
 	public void applyPadding(int availableWidth) {
-		Padding padding = this.style.getPadding();
-		padding.setXYEdges(this.paddingXYEdges, availableWidth);
+		Padding padding;
+		int visibility = this.style.getVisibility();
+		if (visibility == Visibility.COLLAPSE) {
+			padding = Padding.ZERO;
+		} else if (visibility == Visibility.HIDDEN) {
+			padding = this.style.getPadding();
+			padding.setXYEdges(this.paddingXYEdges, availableWidth);
+			GzBorder border = this.style.getBorder();
+			// compensate the zero border in the padding
+			this.paddingXYEdges.set(this.paddingXYEdges.top + border.getTop(),
+					this.paddingXYEdges.right + border.getRight(),
+					this.paddingXYEdges.bottom + border.getBottom(),
+					this.paddingXYEdges.left + border.getLeft());
+		} else {
+			padding = this.style.getPadding();
+			padding.setXYEdges(this.paddingXYEdges, availableWidth);
+		}
 		this.field.setPadding(this.paddingXYEdges);
 	}
 
 	public void applyBackgrounds() {
-		Style style;
+		applyBackground(Field.VISUAL_STATE_NORMAL);
+		applyBackground(Field.VISUAL_STATE_FOCUS);
+		applyBackground(Field.VISUAL_STATE_ACTIVE);
+		applyBackground(Field.VISUAL_STATE_DISABLED);
+		applyBackground(Field.VISUAL_STATE_DISABLED_FOCUS);
+	}
+
+	public void applyBackground(int visualState) {
 		GzBackground background;
-
-		style = this.style.getStyle(Field.VISUAL_STATE_NORMAL);
-		background = style.getBackground();
-		this.field.setBackground(Field.VISUAL_STATE_NORMAL,
-				background);
-
-		style = this.style.getStyle(Field.VISUAL_STATE_FOCUS);
-		background = style.getBackground();
-		this.field.setBackground(Field.VISUAL_STATE_FOCUS,
-				background);
-
-		style = this.style.getStyle(Field.VISUAL_STATE_ACTIVE);
-		background = style.getBackground();
-		this.field.setBackground(Field.VISUAL_STATE_ACTIVE, background);
-
-		style = this.style.getStyle(Field.VISUAL_STATE_DISABLED);
-		background = style.getBackground();
-		this.field.setBackground(Field.VISUAL_STATE_DISABLED, background);
-
-		style = this.style.getStyle(Field.VISUAL_STATE_DISABLED_FOCUS);
-		background = style.getBackground();
-		this.field.setBackground(Field.VISUAL_STATE_DISABLED_FOCUS, background);
+		Style style = this.style.getStyle(visualState);
+		if (style.getVisibility() == Visibility.VISIBLE) {
+			background = style.getBackground();
+		} else {
+			background = ZeroBackground.getInstance();
+		}
+		this.field.setBackground(visualState, background);
 	}
 
 	public void applyBorders() {
-		Style style;
+		applyBorder(Field.VISUAL_STATE_NORMAL);
+		applyBorder(Field.VISUAL_STATE_FOCUS);
+		applyBorder(Field.VISUAL_STATE_ACTIVE);
+		applyBorder(Field.VISUAL_STATE_DISABLED);
+		applyBorder(Field.VISUAL_STATE_DISABLED_FOCUS);
+	}
+
+	public void applyBorder(int visualState) {
 		GzBorder border;
-
-		style = this.style.getStyle(Field.VISUAL_STATE_NORMAL);
-		border = style.getBorder();
-		this.field.setBorder(Field.VISUAL_STATE_NORMAL, border);
-
-		style = this.style.getStyle(Field.VISUAL_STATE_FOCUS);
-		border = style.getBorder();
-		this.field.setBorder(Field.VISUAL_STATE_FOCUS, border);
-
-		style = this.style.getStyle(Field.VISUAL_STATE_ACTIVE);
-		border = style.getBorder();
-		this.field.setBorder(Field.VISUAL_STATE_ACTIVE, border);
-
-		style = this.style.getStyle(Field.VISUAL_STATE_DISABLED);
-		border = style.getBorder();
-		this.field.setBorder(Field.VISUAL_STATE_DISABLED, border);
-
-		style = this.style.getStyle(Field.VISUAL_STATE_DISABLED_FOCUS);
-		border = style.getBorder();
-		this.field.setBorder(Field.VISUAL_STATE_DISABLED_FOCUS, border);
+		Style style = this.style.getStyle(visualState);
+		if (style.getVisibility() == Visibility.VISIBLE) {
+			border = style.getBorder();
+		} else {
+			border = ZeroBorder.getInstance();
+		}
+		this.field.setBorder(visualState, border, true);
 	}
 
 	public void applyFont() {
@@ -138,22 +164,6 @@ public class StyleHandler {
 		}
 	}
 
-	public boolean isVisualStateChanged() {
-		return field.getVisualState() != this.visualState;
-	}
-
-	public void updateVisualState() {
-		this.visualState = field.getVisualState();
-	}
-
-	public Field getField() {
-		return this.field;
-	}
-
-	public Style getStyle() {
-		return this.style;
-	}
-	
 	public void release() {
 		Style style = getStyle();
 		if (style != null) {
