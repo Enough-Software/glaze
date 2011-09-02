@@ -1,6 +1,5 @@
 package de.enough.glaze.ui.delegate;
 
-import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.ui.Manager;
 import net.rim.device.api.ui.decor.Background;

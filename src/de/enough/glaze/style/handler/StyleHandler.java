@@ -23,6 +23,8 @@ public class StyleHandler {
 
 	private Style style;
 
+	private String id;
+
 	private final XYEdges marginXYEdges;
 
 	private final XYEdges paddingXYEdges;
@@ -51,7 +53,7 @@ public class StyleHandler {
 	public Style getStyle() {
 		return this.style;
 	}
-	
+
 	public void setStyle(Style style) {
 		this.style = style;
 		if (this.style != null) {

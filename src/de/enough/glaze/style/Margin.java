@@ -87,6 +87,8 @@ public class Margin {
 		xyEdges.set(topPixels, rightPixels, bottomPixels, leftPixels);
 	}
 	
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 
