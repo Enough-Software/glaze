@@ -15,6 +15,13 @@ import de.enough.glaze.content.source.impl.RMSContentStorage;
 import de.enough.glaze.content.source.impl.RMSStorageIndex;
 import de.enough.glaze.content.source.impl.ResourceContentSource;
 
+/**
+ * Provides loader methods to load resources used in backgrounds etc.. Web-based
+ * resources are cached the resources to provide faster access.
+ * 
+ * @author Andre
+ * 
+ */
 public class StyleResources {
 
 	/**
@@ -64,7 +71,7 @@ public class StyleResources {
 		this.contentLoader.attachSource(rmsStorage);
 		this.contentLoader.attachSource(resourceSource);
 	}
-	
+
 	/**
 	 * Loads the bitmap from the given url and returns it
 	 * 
@@ -105,22 +112,37 @@ public class StyleResources {
 		ContentDescriptor descriptor = new ContentDescriptor(url);
 		return (byte[]) this.contentLoader.loadContent(descriptor);
 	}
-	
-	public SVGImage loadSVG(URL url) throws ContentException, IOException{
+
+	/**
+	 * Loades the SVG from the given url and returns it
+	 * 
+	 * @param url
+	 *            the url
+	 * @return the SVG image
+	 * @throws ContentException
+	 *             if an error occurs while loading the data
+	 * @throws IOException
+	 *             if an error occurs while loading the data
+	 */
+	public SVGImage loadSVG(URL url) throws ContentException, IOException {
 		return loadSVG(url.toString());
 	}
-	
+
 	/**
 	 * Loads the SVG image from the given url and returns it
-	 * @param url the url
+	 * 
+	 * @param url
+	 *            the url
 	 * @return the SVG image
-	 * @throws ContentException if an error occurs while loading the data
-	 * @throws IOException if an error occurs while loading the data
+	 * @throws ContentException
+	 *             if an error occurs while loading the data
+	 * @throws IOException
+	 *             if an error occurs while loading the data
 	 */
-	public SVGImage loadSVG(String url) throws ContentException, IOException{
+	public SVGImage loadSVG(String url) throws ContentException, IOException {
 		byte[] data = loadContent(url);
 		ByteArrayInputStream stream = new ByteArrayInputStream(data);
-		return (SVGImage)SVGImage.createImage(stream, null);
+		return (SVGImage) SVGImage.createImage(stream, null);
 	}
 
 	/**

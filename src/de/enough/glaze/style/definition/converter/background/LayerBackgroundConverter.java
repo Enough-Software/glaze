@@ -13,6 +13,13 @@ import de.enough.glaze.style.parser.property.ValuePropertyParser;
 import de.enough.glaze.style.property.background.GzBackground;
 import de.enough.glaze.style.property.background.GzBackgroundFactory;
 
+/**
+ * A {@link Converter} implementation to convert a definition to a layer
+ * background
+ * 
+ * @author Andre
+ * 
+ */
 public class LayerBackgroundConverter implements Converter {
 
 	/**
@@ -126,7 +133,7 @@ public class LayerBackgroundConverter implements Converter {
 		}
 	}
 
-	public GzBackground getBackground(String id) throws CssSyntaxError {
+	private GzBackground getBackground(String id) throws CssSyntaxError {
 		GzBackground background = StyleSheet.getInstance().getBackground(id);
 
 		if (background == null) {

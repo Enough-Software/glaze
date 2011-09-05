@@ -5,13 +5,16 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 import de.enough.glaze.log.Log;
+import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.style.parser.utils.ParserUtils;
 
 /**
- * Allows to interpret simple CSS constructs.
+ * The CSS parser used in {@link StyleSheet} to parse CSS stylesheet by using a
+ * content handler to handle block starts and ends, properties and the document
+ * start and end.
  * 
- * @author Robert Virkus
+ * @author Andre
  * 
  */
 public class CssParser {

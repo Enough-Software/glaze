@@ -1,5 +1,6 @@
 package de.enough.glaze.style.definition.converter.background;
 
+import net.rim.device.api.ui.XYEdges;
 import de.enough.glaze.style.Color;
 import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.definition.Definition;
@@ -11,6 +12,13 @@ import de.enough.glaze.style.parser.property.DimensionPropertyParser;
 import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.property.background.GzBackgroundFactory;
 
+/**
+ * A {@link Converter} implementation to convert a definition to a rounded
+ * background
+ * 
+ * @author Andre
+ * 
+ */
 public class RoundedBackgroundConverter implements Converter {
 
 	/**
@@ -32,7 +40,7 @@ public class RoundedBackgroundConverter implements Converter {
 	}
 
 	public String[] getIds() {
-		return new String[] { "background-color", "background-arcs" };
+		return new String[] { "background-color", "background-width" };
 	}
 
 	public Object convert(Definition definition) throws CssSyntaxError {
@@ -43,10 +51,11 @@ public class RoundedBackgroundConverter implements Converter {
 		Property backgroundTypeProp = definition.getProperty("background-type");
 		Property backgroundColorProp = definition
 				.getProperty("background-color");
-		Property backgroundArcsProp = definition.getProperty("background-arcs");
+		Property backgroundWidthProp = definition
+				.getProperty("background-width");
 
 		Color color = null;
-		Dimension[] arcs = null;
+		XYEdges widths = null;
 
 		if (backgroundColorProp != null) {
 			Object result = ColorPropertyParser.getInstance().parse(
@@ -59,25 +68,21 @@ public class RoundedBackgroundConverter implements Converter {
 			}
 		}
 
-		if (backgroundArcsProp != null) {
+		if (backgroundWidthProp != null) {
 			Object result = DimensionPropertyParser.getInstance().parse(
-					backgroundArcsProp);
+					backgroundWidthProp);
 			if (result instanceof Dimension) {
 				Dimension dimension = (Dimension) result;
-				arcs = DimensionConverterUtils.toArray(dimension, 4);
+				widths = DimensionConverterUtils.toXYEdges(dimension);
 			} else if (result instanceof Dimension[]) {
 				Dimension[] dimensions = (Dimension[]) result;
-				if (dimensions.length == 4) {
-					arcs = dimensions;
-				} else {
-					throw new CssSyntaxError("must be 1 or 4 dimensions",
-							backgroundArcsProp);
-				}
+				widths = DimensionConverterUtils.toXYEdges(dimensions,
+						backgroundWidthProp);
 			}
 		}
 
-		if (color != null && arcs != null) {
-			return GzBackgroundFactory.createRoundrectBackground(color, arcs);
+		if (color != null && widths != null) {
+			return GzBackgroundFactory.createRoundedBackground(color, widths);
 		} else {
 			throw new CssSyntaxError(
 					"unable to create rounded background, properties are missing",

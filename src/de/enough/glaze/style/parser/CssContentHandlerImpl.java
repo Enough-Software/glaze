@@ -21,6 +21,13 @@ import de.enough.glaze.style.property.background.GzBackground;
 import de.enough.glaze.style.property.border.GzBorder;
 import de.enough.glaze.style.property.font.GzFont;
 
+/**
+ * The {@link CssContentHandler} implementation to be used with
+ * {@link CssParser}
+ * 
+ * @author Andre
+ * 
+ */
 public class CssContentHandlerImpl implements CssContentHandler {
 
 	/**
@@ -477,7 +484,6 @@ public class CssContentHandlerImpl implements CssContentHandler {
 				// get the parent style and set the style as a class of it
 				Style parentStyle = this.stylesheet.getStyle(parentId);
 				parentStyle.setClass(classId, style);
-				style.setParentStyle(parentStyle);
 				// otherwise ...
 			} else {
 				// simply add the style

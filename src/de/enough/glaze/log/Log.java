@@ -2,22 +2,29 @@ package de.enough.glaze.log;
 
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 
+/**
+ * A simple log class to output informations about the CSS parsing process etc.
+ * 
+ * @author Andre
+ * 
+ */
 public class Log {
 
 	/**
 	 * the tag
 	 */
 	private static final String TAG = "GLAZE";
-	
-	private static final String SYNTAX_ERROR_HEADER = "\n//" + TAG + "/////////////////////////////////";
-	
+
+	private static final String HEADER = "\n//" + TAG
+			+ "/////////////////////////////////";
+
 	private static final String SYNTAX_ERROR_INTRO_LINE_HEADER = "\nA CSS syntax error was found in line ";
-	
+
 	private static final String SYNTAX_ERROR_INTRO_LINE_FOOTER = " : \n\n";
-	
+
 	private static final String SYNTAX_ERROR_INTRO = "\nA CSS syntax error was found : \n\n";
-	
-	private static final String SYNTAX_ERROR_FOOTER = "\n////////////////////////////////////////\n";
+
+	private static final String FOOTER = "\n////////////////////////////////////////\n";
 
 	/**
 	 * the debug log level
@@ -107,7 +114,7 @@ public class Log {
 			System.out.println(message);
 		}
 	}
-	
+
 	/**
 	 * Prints an info message with the given message and object. Use this method
 	 * to avoid intensive toString() operations if the given log level is not
@@ -137,7 +144,7 @@ public class Log {
 			System.err.println(message);
 		}
 	}
-	
+
 	/**
 	 * Prints an info message with the given message and object. Use this method
 	 * to avoid intensive toString() operations if the given log level is not
@@ -165,7 +172,7 @@ public class Log {
 		message = toLog(message);
 		System.err.println(message);
 	}
-	
+
 	/**
 	 * Prints an info message with the given message and object. Use this method
 	 * to avoid intensive toString() operations if the given log level is not
@@ -204,20 +211,20 @@ public class Log {
 		int line = syntaxError.getLine();
 		String value = syntaxError.getValue();
 		String error = syntaxError.getError();
-		
-		System.err.println(SYNTAX_ERROR_HEADER);
-		
-		if(line != Integer.MIN_VALUE) {
+
+		System.err.println(HEADER);
+
+		if (line != Integer.MIN_VALUE) {
 			System.err.print(SYNTAX_ERROR_INTRO_LINE_HEADER);
 			System.err.print(line);
 			System.err.print(SYNTAX_ERROR_INTRO_LINE_FOOTER);
 		} else {
 			System.err.print(SYNTAX_ERROR_INTRO);
 		}
-		
+
 		System.err.println(error + " : " + value);
-		
-		System.err.println(SYNTAX_ERROR_FOOTER);
+
+		System.err.println(FOOTER);
 	}
 
 	/**

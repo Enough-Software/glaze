@@ -16,6 +16,12 @@ import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.parser.property.ValuePropertyParser;
 import de.enough.glaze.style.property.border.GzBorderFactory;
 
+/**
+ * A {@link Converter} implementation to convert a definition to a simple border
+ * 
+ * @author Andre
+ * 
+ */
 public class SimpleBorderConverter implements Converter {
 	/**
 	 * the instance

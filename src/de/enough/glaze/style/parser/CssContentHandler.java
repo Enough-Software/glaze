@@ -2,6 +2,13 @@ package de.enough.glaze.style.parser;
 
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 
+/**
+ * An interface for handling css parsing events like block starts and end,
+ * properties and the document start and end
+ * 
+ * @author Andre
+ * 
+ */
 public interface CssContentHandler {
 
 	/**

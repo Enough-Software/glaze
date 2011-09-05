@@ -107,6 +107,13 @@ public class FieldDelegate {
 		return originalColor;
 	}
 
+	/**
+	 * Returns true if the style has a visibility of visible
+	 * 
+	 * @param style
+	 *            the style
+	 * @return true if the style has a visibility of visible otherwise false
+	 */
 	public static boolean isVisible(Style style) {
 		if (style != null) {
 			return style.getVisibility() == Visibility.VISIBLE;

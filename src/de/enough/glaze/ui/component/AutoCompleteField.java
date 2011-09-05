@@ -1,5 +1,6 @@
-package de.enough.glaze.ui.container;
+package de.enough.glaze.ui.component;
 
+import net.rim.device.api.collection.util.BasicFilteredList;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
 import de.enough.glaze.style.Style;
@@ -7,18 +8,26 @@ import de.enough.glaze.style.handler.StyleManager;
 import de.enough.glaze.ui.delegate.GzManager;
 import de.enough.glaze.ui.delegate.ManagerDelegate;
 
-public class VerticalFieldManager extends
-		net.rim.device.api.ui.container.VerticalFieldManager implements
-		GzManager {
+public class AutoCompleteField extends
+		net.rim.device.api.ui.component.AutoCompleteField implements GzManager {
 
 	private final StyleManager styleManager;
 
-	public VerticalFieldManager() {
-		this(0);
+	public AutoCompleteField(BasicFilteredList filteredList) {
+		super(filteredList);
+		this.styleManager = new StyleManager(this);
 	}
 
-	public VerticalFieldManager(long style) {
-		super(style);
+	public AutoCompleteField(BasicFilteredList filteredList, long style) {
+		super(filteredList, style);
+		this.styleManager = new StyleManager(this);
+	}
+
+	public AutoCompleteField(BasicFilteredList filteredList,
+			long styleAutoCompleteField, long styleBasicEditField,
+			long styleListField) {
+		super(filteredList, styleAutoCompleteField, styleBasicEditField,
+				styleListField);
 		this.styleManager = new StyleManager(this);
 	}
 

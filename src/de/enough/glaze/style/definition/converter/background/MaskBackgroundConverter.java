@@ -1,19 +1,23 @@
 package de.enough.glaze.style.definition.converter.background;
 
-import net.rim.device.api.ui.decor.Background;
-import de.enough.glaze.style.Color;
 import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.StyleSheetDefinition;
 import de.enough.glaze.style.definition.converter.BackgroundConverter;
 import de.enough.glaze.style.definition.converter.Converter;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
-import de.enough.glaze.style.parser.property.ColorPropertyParser;
 import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.parser.property.ValuePropertyParser;
 import de.enough.glaze.style.property.background.GzBackground;
 import de.enough.glaze.style.property.background.GzBackgroundFactory;
 
+/**
+ * A {@link Converter} implementation to convert a definition to a mask
+ * background
+ * 
+ * @author Andre
+ * 
+ */
 public class MaskBackgroundConverter implements Converter {
 
 	/**
@@ -96,13 +100,16 @@ public class MaskBackgroundConverter implements Converter {
 		}
 
 		if (maskBackground != null && background != null) {
-			return GzBackgroundFactory.createMaskBackground(maskBackground, background);
+			return GzBackgroundFactory.createMaskBackground(maskBackground,
+					background);
 		} else {
-			throw new CssSyntaxError("unable to create mask background, properties are missing", backgroundTypeProp);
+			throw new CssSyntaxError(
+					"unable to create mask background, properties are missing",
+					backgroundTypeProp);
 		}
 	}
 
-	public GzBackground getBackground(String id) throws CssSyntaxError {
+	private GzBackground getBackground(String id) throws CssSyntaxError {
 		GzBackground background = StyleSheet.getInstance().getBackground(id);
 
 		if (background == null) {

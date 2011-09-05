@@ -3,6 +3,7 @@ package de.enough.glaze.style.property.background;
 import javax.microedition.m2g.SVGImage;
 
 import net.rim.device.api.system.Bitmap;
+import net.rim.device.api.ui.XYEdges;
 import de.enough.glaze.style.Color;
 import de.enough.glaze.style.Dimension;
 
@@ -27,8 +28,8 @@ public class GzBackgroundFactory {
 	 *            the color
 	 * @return the created background
 	 */
-	public static GzBackground createRoundrectBackground(Color color,
-			Dimension[] arcs) {
+	public static GzBackground createRoundedBackground(Color color,
+			XYEdges widths) {
 		// a background with round edges, specified by arcs
 		// - color : the color for the background
 		// - arcs : must be 4 values, corresponding to the arc size for the
@@ -36,7 +37,7 @@ public class GzBackgroundFactory {
 		// and lower-left corners of the background. If an arc is null, no round
 		// edges is drawn
 		// for the given corner.
-		return new RoundedBackground(color, arcs);
+		return new RoundedBackground(color, widths);
 	}
 
 	/**

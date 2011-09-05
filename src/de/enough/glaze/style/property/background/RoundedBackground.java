@@ -1,17 +1,17 @@
 package de.enough.glaze.style.property.background;
 
 import net.rim.device.api.ui.Graphics;
+import net.rim.device.api.ui.XYEdges;
 import de.enough.glaze.style.Color;
-import de.enough.glaze.style.Dimension;
 
 public class RoundedBackground extends GzBackground {
 
 	private final int color;
-	private final Dimension[] dimensions;
+	private final XYEdges widths;
 
-	public RoundedBackground(Color color, Dimension[] dimensions) {
+	public RoundedBackground(Color color, XYEdges widths) {
 		this.color = color.getColor();
-		this.dimensions = dimensions;
+		this.widths = widths;
 	}
 
 	private static final byte[] PATH_POINT_TYPES = {
@@ -33,15 +33,14 @@ public class RoundedBackground extends GzBackground {
 	 * , net.rim.device.api.ui.XYRect)
 	 */
 	public void draw(Graphics graphics, int x, int y, int width, int height) {
-
 		int oldColor = graphics.getColor();
 		graphics.setColor(this.color);
 		graphics.setDrawingStyle(Graphics.DRAWSTYLE_AAPOLYGONS, true);
 
-		int marginTop = this.dimensions[0].getValue();
-		int marginRight = this.dimensions[1].getValue();
-		int marginBottom = this.dimensions[2].getValue();
-		int marginLeft = this.dimensions[3].getValue();
+		int marginTop = this.widths.top;
+		int marginRight = this.widths.right;
+		int marginBottom = this.widths.bottom;
+		int marginLeft = this.widths.left;
 
 		int xPts[] = new int[] { x, x, x + marginLeft, x + width - marginRight,
 				x + width, x + width, x + width, x + width,
@@ -54,14 +53,5 @@ public class RoundedBackground extends GzBackground {
 		graphics.drawFilledPath(xPts, yPts, PATH_POINT_TYPES, null);
 		graphics.setColor(oldColor);
 		graphics.setDrawingStyle(Graphics.DRAWSTYLE_AAPOLYGONS, false);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.rim.device.api.ui.decor.Background#isTransparent()
-	 */
-	public boolean isTransparent() {
-		return true;
 	}
 }

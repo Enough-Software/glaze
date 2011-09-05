@@ -3,11 +3,14 @@ package de.enough.glaze.style.definition;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.definition.converter.Converter;
 import de.enough.glaze.style.parser.property.Property;
 
 /**
- * A collection of properties defining styles, backgrounds etc.
+ * A collection of properties. Definitions are used in the
+ * {@link StyleSheetDefinition} of a {@link StyleSheet} instance to create
+ * styles, backgrounds etc..
  * 
  * @author Andre
  * 
@@ -190,7 +193,9 @@ public class Definition {
 	public Property getProperty(String propertyId) {
 		Property property = (Property) this.properties.get(propertyId);
 
+		// if no property with the given id is stored in this definition ...
 		if (property == null && this.parent != null) {
+			// try with the parent definition
 			return this.parent.getProperty(propertyId);
 		} else {
 			return property;

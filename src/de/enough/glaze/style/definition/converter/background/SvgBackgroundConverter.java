@@ -1,7 +1,6 @@
 package de.enough.glaze.style.definition.converter.background;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.microedition.m2g.SVGImage;
 
@@ -19,6 +18,13 @@ import de.enough.glaze.style.parser.property.UrlPropertyParser;
 import de.enough.glaze.style.property.background.GzBackground;
 import de.enough.glaze.style.property.background.GzBackgroundFactory;
 
+/**
+ * A {@link Converter} implementation to convert a definition to a SVG
+ * background
+ * 
+ * @author Andre
+ * 
+ */
 public class SvgBackgroundConverter implements Converter {
 
 	/**
@@ -92,20 +98,5 @@ public class SvgBackgroundConverter implements Converter {
 					"unable to create mask background, properties are missing",
 					backgroundTypeProp);
 		}
-	}
-
-	public GzBackground getBackground(String id) throws CssSyntaxError {
-		GzBackground background = StyleSheet.getInstance().getBackground(id);
-
-		if (background == null) {
-			StyleSheetDefinition styleSheetDefinition = StyleSheet
-					.getInstance().getDefinition();
-			Definition backgroundDefinition = styleSheetDefinition
-					.getBackgroundDefinition(id);
-			background = (GzBackground) BackgroundConverter.getInstance()
-					.convert(backgroundDefinition);
-		}
-
-		return background;
 	}
 }

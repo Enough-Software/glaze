@@ -2,61 +2,98 @@ package de.enough.glaze.style;
 
 import java.util.Hashtable;
 
-import net.rim.device.api.ui.Graphics;
-
+/**
+ * A class representing a color with its alpha and rgb value.
+ * 
+ * @author Andre
+ * 
+ */
 public class Color {
-	
+
+	/**
+	 * the default colors map
+	 */
 	public static Hashtable DEFAULT_COLORS = new Hashtable();
-	
+
 	static {
-		DEFAULT_COLORS.put("aqua",   new Color(0x00ffff) );
-		DEFAULT_COLORS.put("black",  new Color(0x000000) );
-		DEFAULT_COLORS.put("blue",   new Color(0x0000ff) );
-		DEFAULT_COLORS.put("fuchsia",new Color(0xff00ff) );
-		DEFAULT_COLORS.put("gray",   new Color(0x808080) );
-		DEFAULT_COLORS.put("green",  new Color(0x008000) );
-		DEFAULT_COLORS.put("lime",   new Color(0x00ff00) );
-		DEFAULT_COLORS.put("maroon", new Color(0x800000) );
-		DEFAULT_COLORS.put("navy",   new Color(0x000080) );
-		DEFAULT_COLORS.put("olive",  new Color(0x808000) );
-		DEFAULT_COLORS.put("orange", new Color(0xffa500) );
-		DEFAULT_COLORS.put("purple", new Color(0x800080) );
-		DEFAULT_COLORS.put("red",    new Color(0xff0000) );
-		DEFAULT_COLORS.put("silver", new Color(0xc0c0c0) );
-		DEFAULT_COLORS.put("teal",   new Color(0x008080) );
-		DEFAULT_COLORS.put("white",  new Color(0xffffff) );
-		DEFAULT_COLORS.put("yellow", new Color(0xffff00) );
+		// initialize common colors with their name and value
+		DEFAULT_COLORS.put("aqua", new Color(0x00ffff));
+		DEFAULT_COLORS.put("black", new Color(0x000000));
+		DEFAULT_COLORS.put("blue", new Color(0x0000ff));
+		DEFAULT_COLORS.put("fuchsia", new Color(0xff00ff));
+		DEFAULT_COLORS.put("gray", new Color(0x808080));
+		DEFAULT_COLORS.put("green", new Color(0x008000));
+		DEFAULT_COLORS.put("lime", new Color(0x00ff00));
+		DEFAULT_COLORS.put("maroon", new Color(0x800000));
+		DEFAULT_COLORS.put("navy", new Color(0x000080));
+		DEFAULT_COLORS.put("olive", new Color(0x808000));
+		DEFAULT_COLORS.put("orange", new Color(0xffa500));
+		DEFAULT_COLORS.put("purple", new Color(0x800080));
+		DEFAULT_COLORS.put("red", new Color(0xff0000));
+		DEFAULT_COLORS.put("silver", new Color(0xc0c0c0));
+		DEFAULT_COLORS.put("teal", new Color(0x008080));
+		DEFAULT_COLORS.put("white", new Color(0xffffff));
+		DEFAULT_COLORS.put("yellow", new Color(0xffff00));
 	}
-	
+
+	/**
+	 * the mask to extract the rgb value of a color
+	 */
 	private static final int RGB_MASK = 0x00FFFFFF;
-	
+
+	/**
+	 * the mask to extract the alpha value of a color
+	 */
 	private static final int ALPHA_MASK = 0xFF000000;
-	
-	private final int color;
-	
+
+	private final int argb;
+
+	/**
+	 * the rgb value
+	 */
 	private final int rgb;
-	
+
+	/**
+	 * the alpha value
+	 */
 	private final int alpha;
-	
+
+	/**
+	 * Creates a new {@link Color} instance
+	 * 
+	 * @param argb
+	 *            the argb value of the color
+	 */
 	public Color(int argb) {
-		this.color = argb;
+		this.argb = argb;
 		this.rgb = argb & RGB_MASK;
 		this.alpha = (argb & ALPHA_MASK) >> 32;
 	}
-	
-	public void set(Graphics graphics) {
-		graphics.setGlobalAlpha(this.alpha);
-		graphics.setColor(this.rgb);
+
+	/**
+	 * Returns the alpha value of the argb color
+	 * 
+	 * @return the alpha value of the argb color
+	 */
+	public int getAlpha() {
+		return this.alpha;
 	}
-	
+
+	/**
+	 * Returns the rgb color
+	 * 
+	 * @return the rgb color
+	 */
 	public int getColor() {
-		return this.color;
+		return this.rgb;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return "Color [ #" + Integer.toHexString(this.color) + " ]";
+		return "Color [ #" + Integer.toHexString(this.argb) + " ]";
 	}
 }

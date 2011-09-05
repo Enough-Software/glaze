@@ -4,6 +4,16 @@ import net.rim.device.api.system.Display;
 import net.rim.device.api.ui.Ui;
 import net.rim.device.api.util.MathUtilities;
 
+/**
+ * A class representing a dimension. A dimension consists of a floating point
+ * value and a unit (e.g. pixels, points). The methods {@link #getValue()} and
+ * {@link #getValue(int)} convert and return the dimension to its value in
+ * pixels. Relative dimensions like percent use the given available width for
+ * the conversion.
+ * 
+ * @author Andre
+ * 
+ */
 public class Dimension {
 
 	/**
@@ -45,11 +55,12 @@ public class Dimension {
 	 * the screen width percent unit
 	 */
 	public final static String UNIT_WP = "wp";
-	
+
 	/**
 	 * the screen width percent unit
 	 */
 	public final static String UNIT_HP = "hp";
+
 	/**
 	 * a zero dimension
 	 */
@@ -79,39 +90,23 @@ public class Dimension {
 	}
 
 	/**
-	 * Calculates and returns the pixels
+	 * Calculates and returns the pixel value. The base for relative dimensions
+	 * (like percent) is the screen width.
 	 * 
 	 * @return the calculated pixels
 	 */
 	public int getValue() {
-		int deviceWidth = Display.getWidth();
-		int deviceHeight = Display.getHeight();
-		return getValue(deviceWidth, deviceWidth, deviceHeight);
+		return getValue(Display.getWidth());
 	}
 
 	/**
-	 * Calculates and returns the pixels
-	 * 
-	 * @param availableWidth
-	 *            the available width
-	 * @return the calculated pixels
-	 */
-	public int getValue(int availableWidth) {
-		int deviceWidth = Display.getWidth();
-		int deviceHeight = Display.getHeight();
-		return getValue(availableWidth, deviceWidth, deviceHeight);
-	}
-
-	/**
-	 * Calculates and returns the pixels
+	 * Calculates and returns the pixel value.
 	 * 
 	 * @param availableWidth
 	 *            the available width (for percentual calculations)
-	 * @param deviceWidth
-	 *            the device width (for percentual calculations)
 	 * @return the calculated pixels
 	 */
-	private int getValue(int availableWidth, int deviceWidth, int deviceHeight) {
+	public int getValue(int availableWidth) {
 		int pixels = 0;
 		if (UNIT_PX.equals(this.unit)) {
 			pixels = MathUtilities.round(this.value);
@@ -134,10 +129,12 @@ public class Dimension {
 			float pxValue = ((float) availableWidth / 100) * this.value;
 			pixels = MathUtilities.round(pxValue);
 		} else if (UNIT_WP.equals(this.unit)) {
-			float pxValue = ((float) deviceWidth / 100) * this.value;
+			int screenWidth = Display.getWidth();
+			float pxValue = ((float) screenWidth / 100) * this.value;
 			pixels = MathUtilities.round(pxValue);
 		} else if (UNIT_HP.equals(this.unit)) {
-			float pxValue = ((float) deviceHeight / 100) * this.value;
+			int screenHeight = Display.getHeight();
+			float pxValue = ((float) screenHeight / 100) * this.value;
 			pixels = MathUtilities.round(pxValue);
 		} else {
 			throw new IllegalArgumentException("unknown dimension unit : "

@@ -13,6 +13,12 @@ import de.enough.glaze.style.parser.property.DimensionPropertyParser;
 import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.property.border.GzBorderFactory;
 
+/**
+ * A {@link Converter} implementation to convert a definition to a bevel border 
+ * 
+ * @author Andre
+ * 
+ */
 public class BevelBorderConverter implements Converter {
 
 	/**

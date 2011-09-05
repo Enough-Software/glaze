@@ -4,7 +4,6 @@ import java.util.Vector;
 
 import de.enough.glaze.style.parser.CssParser;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
-import de.enough.glaze.style.parser.property.Property;
 
 public class ParserUtils {
 
@@ -39,6 +38,15 @@ public class ParserUtils {
 		return value.indexOf(delimiter) != -1;
 	}
 
+	/**
+	 * Returns true if the delimiter is in the given value
+	 * 
+	 * @param value
+	 *            the value
+	 * @param delimiter
+	 *            the delimiter
+	 * @return true if the delimiter is in the given value otherwise false
+	 */
 	public static boolean hasDelimiter(String value, String delimiter) {
 		return value.indexOf(delimiter) != -1;
 	}

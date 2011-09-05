@@ -3,7 +3,7 @@ package de.enough.glaze.style.parser.exception;
 import de.enough.glaze.style.parser.property.Property;
 
 /**
- * An exception implementation for css syntax errors
+ * An exception implementation for CSS syntax errors
  * 
  * @author Andre
  * 

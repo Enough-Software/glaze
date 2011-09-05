@@ -22,6 +22,12 @@ import de.enough.glaze.style.property.background.GzBackground;
 import de.enough.glaze.style.property.border.GzBorder;
 import de.enough.glaze.style.property.font.GzFont;
 
+/**
+ * A converter implementation to convert a definition to a style.
+ * 
+ * @author Andre
+ * 
+ */
 public class StyleConverter implements Converter {
 
 	/**
@@ -176,13 +182,13 @@ public class StyleConverter implements Converter {
 	}
 
 	/**
-	 * Converts the given definition to a background
+	 * Converts the background properties of the given definition
 	 * 
 	 * @param definition
 	 *            the definition
-	 * @return the created background
+	 * @return the created border
 	 * @throws CssSyntaxError
-	 *             if the css syntax is wrong
+	 *             if a CSS syntax error is found
 	 */
 	public GzBackground convertBackground(Definition definition)
 			throws CssSyntaxError {
@@ -230,6 +236,15 @@ public class StyleConverter implements Converter {
 				definition);
 	}
 
+	/**
+	 * Converts the border properties of the given definition
+	 * 
+	 * @param definition
+	 *            the definition
+	 * @return the created border
+	 * @throws CssSyntaxError
+	 *             if a CSS syntax error is found
+	 */
 	public GzBorder convertBorder(Definition definition) throws CssSyntaxError {
 		// get the border definitions
 		StyleSheetDefinition definitions = StyleSheet.getInstance()
@@ -270,6 +285,15 @@ public class StyleConverter implements Converter {
 		return (GzBorder) BorderConverter.getInstance().convert(definition);
 	}
 
+	/**
+	 * Converts the font properties of the given definition
+	 * 
+	 * @param definition
+	 *            the definition
+	 * @return the created font
+	 * @throws CssSyntaxError
+	 *             if a CSS syntax error is found
+	 */
 	public GzFont convertFont(Definition definition) throws CssSyntaxError {
 		// get the font definitions
 		StyleSheetDefinition definitions = StyleSheet.getInstance()
@@ -308,6 +332,17 @@ public class StyleConverter implements Converter {
 		return (GzFont) FontConverter.getInstance().convert(definition);
 	}
 
+	/**
+	 * Converts the width properties of the given definition and sets it in the
+	 * given style
+	 * 
+	 * @param definition
+	 *            the definition
+	 * @param style
+	 *            the style
+	 * @throws CssSyntaxError
+	 *             if a CSS syntax error is found
+	 */
 	public void convertWidthDimensions(Definition definition, Style style)
 			throws CssSyntaxError {
 		Property minWidthProp = definition.getProperty("min-width");
@@ -339,6 +374,17 @@ public class StyleConverter implements Converter {
 		}
 	}
 
+	/**
+	 * Converts the height properties of the given definition and sets it in the
+	 * given style
+	 * 
+	 * @param definition
+	 *            the definition
+	 * @param style
+	 *            the style
+	 * @throws CssSyntaxError
+	 *             if a CSS syntax error is found
+	 */
 	public void convertHeightDimensions(Definition definition, Style style)
 			throws CssSyntaxError {
 		Property minHeightProp = definition.getProperty("min-height");
@@ -370,6 +416,17 @@ public class StyleConverter implements Converter {
 		}
 	}
 
+	/**
+	 * Converts the visibility property of the given definition and sets it in
+	 * the given style
+	 * 
+	 * @param definition
+	 *            the definition
+	 * @param style
+	 *            the style
+	 * @throws CssSyntaxError
+	 *             if a CSS syntax error is found
+	 */
 	public void convertVisibility(Definition definition, Style style)
 			throws CssSyntaxError {
 		Property visibilityProp = definition.getProperty("visibility");

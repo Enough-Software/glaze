@@ -1,5 +1,6 @@
 package de.enough.glaze.ui.delegate;
 
+import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.ui.Manager;
 import net.rim.device.api.ui.decor.Background;
@@ -41,7 +42,8 @@ public class ManagerDelegate {
 				// handler ...
 				if (handler.isVisualStateChanged()) {
 					// update the style with the available width
-					handler.updateStyle(maxWidth);
+					handler.updateStyle();
+					handler.applyStyle(maxWidth);
 					// update the visual style
 					handler.updateVisualState();
 				}
@@ -89,6 +91,7 @@ public class ManagerDelegate {
 				gzManager.gz_paint(graphics);
 			}
 
+			boolean updateLayout = false;
 			// get the handlers
 			StyleManager styleManager = gzManager.getStyleManager();
 			// for each style handler ...
@@ -96,10 +99,40 @@ public class ManagerDelegate {
 				StyleHandler handler = styleManager.get(index);
 				// if the visual state of a field has changed ...
 				if (handler.isVisualStateChanged()) {
-					// update the layout and return
-					gzManager.gz_updateLayout();
-					return;
+					// if the style change requires a layout update ...
+					if (handler.layoutUpdate()) {
+						// indicate that an update is needed
+						updateLayout = true;
+						// otherwise ...
+					} else {
+						// get the updated style
+						Field field = handler.getField();
+						int visualState = field.getVisualState();
+						Style updatedStyle = style.getStyle(visualState);
+						// if the updated style has extensions ...
+						if (updatedStyle.usesExtensions()) {
+							// update the layout
+							updateLayout = true;
+							// otherwise ...
+						} else {
+							// update the visual state and style
+							handler.updateVisualState();
+							handler.updateStyle();
+							// apply the font
+							handler.applyFont();
+						}
+					}
 				}
+			}
+
+			// if a layout update is needed ...
+			if (updateLayout) {
+				// update the layout
+				gzManager.gz_updateLayout();
+				// otherwise ...
+			} else {
+				// invalidate to fully repaint
+				manager.invalidate();
 			}
 		} else {
 			Log.error("manager must implement GzManager", manager);

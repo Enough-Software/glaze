@@ -8,6 +8,13 @@ import de.enough.glaze.style.parser.property.ColorPropertyParser;
 import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.property.background.GzBackgroundFactory;
 
+/**
+ * A {@link Converter} implementation to convert a definition to a solid
+ * background
+ * 
+ * @author Andre
+ * 
+ */
 public class SolidBackgroundConverter implements Converter {
 
 	/**

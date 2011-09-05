@@ -3,7 +3,7 @@ package de.enough.glaze.style.definition;
 import java.util.Vector;
 
 /**
- * A collection of definitions
+ * A collection of definitions used in {@link StyleSheetDefinition}
  * 
  * @author Andre
  * 
@@ -14,7 +14,7 @@ public class DefinitionCollection {
 	 * the definitions
 	 */
 	private final Vector definitions;
-	
+
 	private int cursor;
 
 	/**
@@ -23,7 +23,7 @@ public class DefinitionCollection {
 	public DefinitionCollection() {
 		this.definitions = new Vector();
 	}
-	
+
 	public void resetCursor() {
 		this.cursor = 0;
 	}

@@ -6,31 +6,57 @@ import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.property.border.GzBorder;
 
+/**
+ * Provides helper methods for border converters
+ * 
+ * @author Andre
+ * 
+ */
 public class BorderConverterUtils {
+
+	/**
+	 * Converts the given border style value and creates a {@link XYEdges}
+	 * instance from the result
+	 * 
+	 * @param borderStyle
+	 *            the border style value
+	 * @param borderStyleProp
+	 *            the border style property
+	 * @return the created {@link XYEdges} instance
+	 * @throws CssSyntaxError
+	 *             if the CSS syntax is wrong
+	 */
 	public static XYEdges toXYEdges(String borderStyle, Property borderStyleProp)
 			throws CssSyntaxError {
 		return toXYEdges(getBorderStyle(borderStyle, borderStyleProp));
 	}
 
+	/**
+	 * Creates a {@link XYEdges} instance from the given border style
+	 * 
+	 * @param borderStyle
+	 *            the border style
+	 * @return the created {@link XYEdges} instance
+	 */
 	public static XYEdges toXYEdges(int borderStyle) {
 		return new XYEdges(borderStyle, borderStyle, borderStyle, borderStyle);
 	}
 
+	/**
+	 * Converts the given border style values and creates a {@link XYEdges}
+	 * instance from the results
+	 * 
+	 * @param borderStyles
+	 *            the border style values
+	 * @param borderStyleProp
+	 *            the border style property
+	 * @return the created {@link XYEdges} instance
+	 * @throws CssSyntaxError
+	 *             if the CSS syntax is wrong
+	 */
 	public static XYEdges toXYEdges(String[] borderStyles,
 			Property borderStyleProp) throws CssSyntaxError {
 		switch (borderStyles.length) {
-		case 2:
-			return new XYEdges(
-					getBorderStyle(borderStyles[0], borderStyleProp),
-					getBorderStyle(borderStyles[1], borderStyleProp),
-					getBorderStyle(borderStyles[0], borderStyleProp),
-					getBorderStyle(borderStyles[1], borderStyleProp));
-		case 3:
-			return new XYEdges(
-					getBorderStyle(borderStyles[0], borderStyleProp),
-					getBorderStyle(borderStyles[1], borderStyleProp),
-					getBorderStyle(borderStyles[2], borderStyleProp),
-					getBorderStyle(borderStyles[1], borderStyleProp));
 		case 4:
 			return new XYEdges(
 					getBorderStyle(borderStyles[0], borderStyleProp),
@@ -38,10 +64,21 @@ public class BorderConverterUtils {
 					getBorderStyle(borderStyles[2], borderStyleProp),
 					getBorderStyle(borderStyles[3], borderStyleProp));
 		default:
-			throw new CssSyntaxError("must be 1,2,3 or 4 ids", borderStyleProp);
+			throw new CssSyntaxError("must be 1 or 4 ids", borderStyleProp);
 		}
 	}
 
+	/**
+	 * Returns the border style constant for the given border style value
+	 * 
+	 * @param borderStyle
+	 *            the border style value
+	 * @param borderStyleProp
+	 *            the border style property
+	 * @return the border style constatn
+	 * @throws CssSyntaxError
+	 *             if the CSS syntax is wrong
+	 */
 	public static int getBorderStyle(String borderStyle,
 			Property borderStyleProp) throws CssSyntaxError {
 		if (GzBorder.STYLE_DASHED.equals(borderStyle)) {

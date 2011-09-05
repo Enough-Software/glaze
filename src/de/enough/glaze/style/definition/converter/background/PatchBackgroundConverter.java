@@ -13,6 +13,13 @@ import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.parser.property.UrlPropertyParser;
 import de.enough.glaze.style.property.background.GzBackgroundFactory;
 
+/**
+ * A {@link Converter} implementation to convert a definition to a patch/bitmap
+ * background
+ * 
+ * @author Andre
+ * 
+ */
 public class PatchBackgroundConverter implements Converter {
 
 	/**
@@ -39,7 +46,8 @@ public class PatchBackgroundConverter implements Converter {
 	 * @see de.enough.glaze.style.definition.converter.Converter#getIds()
 	 */
 	public String[] getIds() {
-		return new String[] { "background-image", "background-width", "background-margin" };
+		return new String[] { "background-image", "background-width",
+				"background-margin" };
 	}
 
 	/*
@@ -54,13 +62,17 @@ public class PatchBackgroundConverter implements Converter {
 			return null;
 		}
 
-		Property backgroundImageProp = definition.getProperty("background-image");
-		Property backgroundWidthProp = definition.getProperty("background-width");
-		
-		Bitmap imageBitmap = null;		
-		Dimension[] dimensions = new Dimension[] {Dimension.ZERO, Dimension.ZERO, Dimension.ZERO, Dimension.ZERO};
-		Dimension[] margins = new Dimension[] {Dimension.ZERO, Dimension.ZERO, Dimension.ZERO, Dimension.ZERO};
-		
+		Property backgroundImageProp = definition
+				.getProperty("background-image");
+		Property backgroundWidthProp = definition
+				.getProperty("background-width");
+
+		Bitmap imageBitmap = null;
+		Dimension[] dimensions = new Dimension[] { Dimension.ZERO,
+				Dimension.ZERO, Dimension.ZERO, Dimension.ZERO };
+		Dimension[] margins = new Dimension[] { Dimension.ZERO, Dimension.ZERO,
+				Dimension.ZERO, Dimension.ZERO };
+
 		if (backgroundImageProp != null) {
 			Object result = UrlPropertyParser.getInstance().parse(
 					backgroundImageProp);
@@ -77,18 +89,20 @@ public class PatchBackgroundConverter implements Converter {
 						backgroundImageProp);
 			}
 		}
-		
+
 		if (backgroundWidthProp != null) {
 			Object result = DimensionPropertyParser.getInstance().parse(
 					backgroundWidthProp);
 			if (result instanceof Dimension) {
 				Dimension dimension = (Dimension) result;
-				dimensions = new Dimension [] {dimension, dimension, dimension, dimension};
+				dimensions = new Dimension[] { dimension, dimension, dimension,
+						dimension };
 			} else if (result instanceof Dimension[]) {
 				dimensions = (Dimension[]) result;
 			}
 		}
-		
-		return GzBackgroundFactory.createPatchBackground(imageBitmap, margins, dimensions);
+
+		return GzBackgroundFactory.createPatchBackground(imageBitmap, margins,
+				dimensions);
 	}
 }

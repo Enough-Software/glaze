@@ -69,17 +69,18 @@ public class FontConverter implements Converter {
 
 		// prepare the default values
 		Font defaultFont = Font.getDefault();
-		FontFamily fontFamily = defaultFont.getFontFamily();
-		Dimension fontSize = new Dimension(defaultFont.getHeight(),
+		String name = FontFamily.FAMILY_SYSTEM;
+		FontFamily family = defaultFont.getFontFamily();
+		Dimension size = new Dimension(defaultFont.getHeight(),
 				Dimension.UNIT_PX);
-		int fontStyle = defaultFont.getStyle();
-		Color fontColor = new Color(0x000000);
+		int style = defaultFont.getStyle();
+		Color color = new Color(0x000000);
 
 		// convert the font-family property
 		if (fontfamilyAttr != null) {
-			String fontName = fontFamily.getName();
+			name = family.getName();
 			try {
-				fontFamily = FontFamily.forName(fontName);
+				family = FontFamily.forName(name);
 			} catch (ClassNotFoundException e) {
 				throw new CssSyntaxError("unknown font family", fontfamilyAttr);
 			}
@@ -87,7 +88,7 @@ public class FontConverter implements Converter {
 
 		// convert the font-size property
 		if (fontSizeAttr != null) {
-			fontSize = (Dimension) DimensionPropertyParser.getInstance().parse(
+			size = (Dimension) DimensionPropertyParser.getInstance().parse(
 					fontSizeAttr);
 		}
 
@@ -97,36 +98,36 @@ public class FontConverter implements Converter {
 					fontStyleAttr);
 			if (result instanceof String) {
 				String fontStyleEnum = (String) result;
-				fontStyle |= getFontStyle(fontStyleEnum, fontStyleAttr);
+				style |= getFontStyle(fontStyleEnum, fontStyleAttr);
 			} else if (result instanceof String[]) {
 				String[] fontStyleEnums = (String[]) result;
 				for (int index = 0; index < fontStyleEnums.length; index++) {
 					String fontStyleEnum = fontStyleEnums[index];
-					fontStyle |= getFontStyle(fontStyleEnum, fontStyleAttr);
+					style |= getFontStyle(fontStyleEnum, fontStyleAttr);
 				}
 			}
 		}
 
 		// convert the font-color property
 		if (fontColorAttr != null) {
-			fontColor = (Color) ColorPropertyParser.getInstance().parse(
+			color = (Color) ColorPropertyParser.getInstance().parse(
 					fontColorAttr);
 		}
 
 		// convert the color property
 		if (colorAttr != null) {
-			fontColor = (Color) ColorPropertyParser.getInstance().parse(
+			color = (Color) ColorPropertyParser.getInstance().parse(
 					colorAttr);
 		}
 
 		// get the font size in pixels
-		int fontHeightPixels = fontSize.getValue(defaultFont.getHeight());
+		int fontHeightPixels = size.getValue(defaultFont.getHeight());
 
 		// create the result font
-		Font resultFont = fontFamily.getFont(fontStyle, fontHeightPixels,
+		Font resultFont = family.getFont(style, fontHeightPixels,
 				Ui.UNITS_px);
 
-		return new GzFont(resultFont, fontColor);
+		return new GzFont(name, resultFont, color);
 	}
 
 	/**

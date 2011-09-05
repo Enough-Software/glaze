@@ -5,6 +5,12 @@ import java.util.Vector;
 import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 
+/**
+ * A {@link PropertyParser} implementation to parse dimensions
+ * 
+ * @author Andre
+ * 
+ */
 public class DimensionPropertyParser extends PropertyParser {
 
 	/**
@@ -24,7 +30,7 @@ public class DimensionPropertyParser extends PropertyParser {
 
 		return INSTANCE;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -37,7 +43,8 @@ public class DimensionPropertyParser extends PropertyParser {
 		for (; index < value.length(); index++) {
 			char character = value.charAt(index);
 			// while the characters in the value are digits ...
-			if (Character.isDigit(character) || character == ',' || character == '.') {
+			if (Character.isDigit(character) || character == ','
+					|| character == '.') {
 				// append the digit to the value buffer
 				valueBuffer.append(character);
 			} else {
@@ -76,8 +83,12 @@ public class DimensionPropertyParser extends PropertyParser {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see de.enough.glaze.style.parser.property.PropertyParser#toArray(java.util.Vector)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.enough.glaze.style.parser.property.PropertyParser#toArray(java.util
+	 * .Vector)
 	 */
 	protected Object toArray(Vector vector) {
 		Dimension[] dimension = new Dimension[vector.size()];

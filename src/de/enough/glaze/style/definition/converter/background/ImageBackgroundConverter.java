@@ -13,6 +13,13 @@ import de.enough.glaze.style.parser.property.ValuePropertyParser;
 import de.enough.glaze.style.property.background.GzBackgroundFactory;
 import de.enough.glaze.style.property.background.ImageBackground;
 
+/**
+ * A {@link Converter} implementation to convert a definition to an image
+ * background
+ * 
+ * @author Andre
+ * 
+ */
 public class ImageBackgroundConverter implements Converter {
 
 	/**

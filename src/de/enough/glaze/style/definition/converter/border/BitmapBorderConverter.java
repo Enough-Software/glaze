@@ -15,6 +15,12 @@ import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.parser.property.UrlPropertyParser;
 import de.enough.glaze.style.property.border.GzBorderFactory;
 
+/**
+ * A {@link Converter} implementation to convert a definition to a bitmap border
+ * 
+ * @author Andre
+ * 
+ */
 public class BitmapBorderConverter implements Converter {
 	/**
 	 * the instance
@@ -90,8 +96,9 @@ public class BitmapBorderConverter implements Converter {
 						borderWidthProp);
 			}
 		}
-		
-		return GzBorderFactory.createImageBorder(borderWidths, borderWidths, imageBitmap);
+
+		return GzBorderFactory.createImageBorder(borderWidths, borderWidths,
+				imageBitmap);
 	}
 
 }
