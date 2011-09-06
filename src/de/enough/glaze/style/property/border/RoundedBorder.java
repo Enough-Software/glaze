@@ -11,15 +11,15 @@ public class RoundedBorder extends GzBorder {
 	private final int STIPPLE_DOTS = 0xAAAAAAAA;
 	private final int STIPPLE_SOLID = 0xFFFFFFFF;
 	
-	private final XYEdges padding;
+	private final XYEdges widths;
 	private final int color;
 	private final int style;
 
-	public RoundedBorder(XYEdges padding,
+	public RoundedBorder(XYEdges widths,
             int color,
             int style) {
-		super(padding, style);
-		this.padding = padding;
+		super(widths, style);
+		this.widths = widths;
 		this.color = color;
 		this.style = style;
 		
@@ -71,14 +71,14 @@ public class RoundedBorder extends GzBorder {
 		
 		int width = rect.width;
 		int x = rect.x;
-		int xPts [] = new int[] { x, x, x+this.padding.left, x+width - this.padding.right, x+width, x+width,
-			      x+width, x+width, x+width - this.padding.right, x+this.padding.left, x, x
+		int xPts [] = new int[] { x, x, x+this.widths.left, x+width - this.widths.right, x+width, x+width,
+			      x+width, x+width, x+width - this.widths.right, x+this.widths.left, x, x
 		};
 		
 		int height = rect.height;
 		int y = rect.y;
-		int yPts [] = new int[] { y+this.padding.top, y, y, y, y, y+this.padding.top,
-			      y + height - this.padding.bottom, y+height, y+height, y+height, y+height, y+height-this.padding.bottom
+		int yPts [] = new int[] { y+this.widths.top, y, y, y, y, y+this.widths.top,
+			      y + height - this.widths.bottom, y+height, y+height, y+height, y+height, y+height-this.widths.bottom
 		};
 		
 		graphics.drawPathOutline(xPts, yPts, PATH_POINT_TYPES, null, true);

@@ -4,6 +4,7 @@ import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
 import de.enough.glaze.style.Style;
 import de.enough.glaze.style.handler.StyleManager;
+import de.enough.glaze.ui.delegate.FieldDelegate;
 import de.enough.glaze.ui.delegate.GzManager;
 import de.enough.glaze.ui.delegate.ManagerDelegate;
 
@@ -120,6 +121,13 @@ public class FlowFieldManager extends
 		this.styleManager.replace(oldField, newField);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.enough.glaze.ui.delegate.GzManager#replace(net.rim.device.api.ui.Field
+	 * , net.rim.device.api.ui.Field, de.enough.glaze.style.Style)
+	 */
 	public void replace(Field oldField, Field newField, Style style) {
 		super.replace(oldField, newField);
 		this.styleManager.replace(oldField, newField, style);
@@ -178,6 +186,24 @@ public class FlowFieldManager extends
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see net.rim.device.api.ui.component.Field#getPreferredWidth()
+	 */
+	public int getPreferredWidth() {
+		return FieldDelegate.getPreferredWidth(this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.rim.device.api.ui.component.Field#getPreferredHeight()
+	 */
+	public int getPreferredHeight() {
+		return FieldDelegate.getPreferredHeight(this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.enough.glaze.ui.container.GzManager#gz_sublayout(int, int)
 	 */
 	public void gz_sublayout(int maxWidth, int maxHeight) {
@@ -213,6 +239,24 @@ public class FlowFieldManager extends
 	 */
 	public void gz_updateLayout() {
 		super.updateLayout();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.enough.glaze.ui.delegate.GzExtent#gz_getPreferredWidth()
+	 */
+	public int gz_getPreferredWidth() {
+		return super.getPreferredWidth();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.enough.glaze.ui.delegate.GzExtent#gz_getPreferredHeight()
+	 */
+	public int gz_getPreferredHeight() {
+		return super.getPreferredHeight();
 	}
 
 	/*

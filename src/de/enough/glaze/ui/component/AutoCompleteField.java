@@ -237,4 +237,22 @@ public class AutoCompleteField extends
 		super.onUndisplay();
 		this.styleManager.onUndisplay();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.enough.glaze.ui.delegate.GzExtent#gz_getPreferredWidth()
+	 */
+	public int gz_getPreferredWidth() {
+		return super.getPreferredWidth();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.enough.glaze.ui.delegate.GzExtent#gz_getPreferredHeight()
+	 */
+	public int gz_getPreferredHeight() {
+		return super.getPreferredHeight();
+	}
 }

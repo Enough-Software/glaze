@@ -22,6 +22,48 @@ import de.enough.glaze.style.property.font.GzFont;
 public class FieldDelegate {
 
 	/**
+	 * Returns the preferred width for the field and its style
+	 * 
+	 * @param field
+	 *            the field
+	 * @return the preferred width
+	 */
+	public static int getPreferredWidth(Field field) {
+		if (field instanceof GzField) {
+			GzField gzField = (GzField) field;
+			int preferredWidth = gzField.gz_getPreferredWidth();
+			// get the style of the field
+			Style style = getStyle(field);
+			return ExtentDelegate.getPreferredWidth(preferredWidth, field,
+					style);
+		} else {
+			Log.error("field must implement GzField", field);
+			return 0;
+		}
+	}
+
+	/**
+	 * Returns the preferred height for the field and its style
+	 * 
+	 * @param field
+	 *            the field
+	 * @return the preferred height
+	 */
+	public static int getPreferredHeight(Field field) {
+		if (field instanceof GzField) {
+			GzField gzField = (GzField) field;
+			int preferredHeight = gzField.gz_getPreferredHeight();
+			// get the style of the field
+			Style style = getStyle(field);
+			return ExtentDelegate.getPreferredHeight(preferredHeight, field,
+					style);
+		} else {
+			Log.error("field must implement GzField", field);
+			return 0;
+		}
+	}
+
+	/**
 	 * Layout the given field with the given width and height
 	 * 
 	 * @param width
@@ -38,17 +80,15 @@ public class FieldDelegate {
 			// get the style of the field
 			Style style = getStyle(field);
 			// get the maximum width and height to layout the field
-			int preprocessedWidth = ExtentDelegate.preprocessWidth(width,
-					height, field, style);
-			int preprocessedHeight = ExtentDelegate.preprocessHeight(width,
-					height, field, style);
+			int layoutWidth = ExtentDelegate
+					.getLayoutWidth(width, field, style);
+			int layoutHeight = ExtentDelegate.getLayoutHeight(height, field,
+					style);
 			// layout the field
-			gzField.gz_layout(preprocessedWidth, preprocessedHeight);
+			gzField.gz_layout(layoutWidth, layoutHeight);
 			// adjust the width and height
-			ExtentDelegate.postprocessWidth(width, height, field, gzField,
-					style);
-			ExtentDelegate.postprocessHeight(width, height, field, gzField,
-					style);
+			ExtentDelegate.setExtentWidth(field, gzField, style);
+			ExtentDelegate.setExtentHeight(field, gzField, style);
 		} else {
 			Log.error("field must implement GzField", field);
 		}

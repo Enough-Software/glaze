@@ -122,7 +122,7 @@ public class MaskBackground extends GzCachedBackground {
 
 		int[] backgroundData = new int[width * height];
 
-		backgroundBitmap.getARGB(backgroundData, 0, width, 0, 0, width, height);
+		backgroundBitmap.getARGB(backgroundData, 0, width, 0, 0, width, height, true);
 
 		for (int i = 0; i < resultMask.length; i++) {
 			backgroundData[i] = (backgroundData[i] & 0x00FFFFFF)

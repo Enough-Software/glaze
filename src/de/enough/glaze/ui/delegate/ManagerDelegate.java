@@ -56,17 +56,15 @@ public class ManagerDelegate {
 			// get the style of the manager
 			Style style = FieldDelegate.getStyle(manager);
 			// get the available width and height to layout the manager
-			int preprocessedWidth = ExtentDelegate.preprocessWidth(maxWidth,
-					maxHeight, manager, style);
-			int preprocessedHeight = ExtentDelegate.preprocessHeight(maxWidth,
-					maxHeight, manager, style);
+			int preprocessedWidth = ExtentDelegate.getLayoutWidth(maxWidth,
+					manager, style);
+			int preprocessedHeight = ExtentDelegate.getLayoutHeight(maxHeight,
+					manager, style);
 			// layout the manager
 			gzManager.gz_sublayout(preprocessedWidth, preprocessedHeight);
 			// adjust the width and height
-			ExtentDelegate.postprocessWidth(maxWidth, maxHeight, manager,
-					gzManager, style);
-			ExtentDelegate.postprocessHeight(maxWidth, maxHeight, manager,
-					gzManager, style);
+			ExtentDelegate.setExtentWidth(manager, gzManager, style);
+			ExtentDelegate.setExtentHeight(manager, gzManager, style);
 		} else {
 			Log.error("manager must implement GzManager", manager);
 		}

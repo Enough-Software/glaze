@@ -154,6 +154,8 @@ public class Style {
 
 	public Style(String id) {
 		this.id = id;
+		this.margin = Margin.ZERO;
+		this.padding = Padding.ZERO;
 		this.visibility = Visibility.VISIBLE;
 		this.extensions = new Hashtable();
 		this.layoutUpdate = false;

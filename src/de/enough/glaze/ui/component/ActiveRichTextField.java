@@ -26,9 +26,27 @@ public class ActiveRichTextField extends
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see net.rim.device.api.ui.component.Field#getPreferredWidth()
+	 */
+	public int getPreferredWidth() {
+		return FieldDelegate.getPreferredWidth(this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.rim.device.api.ui.component.Field#getPreferredHeight()
+	 */
+	public int getPreferredHeight() {
+		return FieldDelegate.getPreferredHeight(this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.rim.device.api.ui.component.LabelField#layout(int, int)
 	 */
-	protected void layout(int width, int height) {
+	public void layout(int width, int height) {
 		FieldDelegate.layout(width, height, this);
 	}
 
@@ -70,5 +88,23 @@ public class ActiveRichTextField extends
 	 */
 	public void gz_setExtent(int width, int height) {
 		super.setExtent(width, height);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.enough.glaze.ui.delegate.GzExtent#gz_getPreferredWidth()
+	 */
+	public int gz_getPreferredWidth() {
+		return super.getPreferredWidth();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.enough.glaze.ui.delegate.GzExtent#gz_getPreferredHeight()
+	 */
+	public int gz_getPreferredHeight() {
+		return super.getPreferredHeight();
 	}
 }

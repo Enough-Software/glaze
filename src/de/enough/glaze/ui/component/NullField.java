@@ -4,19 +4,11 @@ import net.rim.device.api.ui.Graphics;
 import de.enough.glaze.ui.delegate.FieldDelegate;
 import de.enough.glaze.ui.delegate.GzField;
 
-public class CheckboxField extends
-		net.rim.device.api.ui.component.CheckboxField implements GzField {
+public class NullField extends net.rim.device.api.ui.component.NullField
+		implements GzField {
 
-	public CheckboxField() {
+	public NullField() {
 		super();
-	}
-
-	public CheckboxField(String label, boolean checked) {
-		super(label, checked);
-	}
-
-	public CheckboxField(String label, boolean checked, long style) {
-		super(label, checked, style);
 	}
 
 	/*

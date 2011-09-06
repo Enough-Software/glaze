@@ -83,7 +83,11 @@ public class StyleHandler {
 	 *         false
 	 */
 	public boolean layoutUpdate() {
-		return this.style.layoutUpdate();
+		if (this.style != null) {
+			return this.style.layoutUpdate();
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -138,10 +142,12 @@ public class StyleHandler {
 	 *            the available width to use
 	 */
 	public void applyStyle(int availableWidth) {
-		applyMargin(availableWidth);
-		applyPadding(availableWidth);
-		applyFont();
-		applyExtensions();
+		if (this.style != null) {
+			applyMargin(availableWidth);
+			applyPadding(availableWidth);
+			applyFont();
+			applyExtensions();
+		}
 	}
 
 	/**
@@ -257,11 +263,13 @@ public class StyleHandler {
 	 * Applie the font of the current style to the field
 	 */
 	public void applyFont() {
-		GzFont font = this.style.getFont();
-		if (font != null) {
-			this.field.setFont(font.getFont());
-		} else {
-			this.field.setFont(Font.getDefault());
+		if (this.style != null) {
+			GzFont font = this.style.getFont();
+			if (font != null) {
+				this.field.setFont(font.getFont());
+			} else {
+				this.field.setFont(Font.getDefault());
+			}
 		}
 	}
 

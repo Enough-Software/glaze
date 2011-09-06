@@ -26,18 +26,19 @@ public class ButtonField extends net.rim.device.api.ui.component.ButtonField
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.rim.device.api.ui.component.ButtonField#getPreferredWidth()
+	 * @see net.rim.device.api.ui.component.Field#getPreferredWidth()
 	 */
 	public int getPreferredWidth() {
-		// if fiels style contains USE_ALL_WIDTH ...
-		if ((getStyle() & Field.USE_ALL_WIDTH) == Field.USE_ALL_WIDTH) {
-			// return the maximum width
-			return Integer.MAX_VALUE;
-			// otherwise ...
-		} else {
-			// return the preferred width
-			return super.getPreferredWidth();
-		}
+		return FieldDelegate.getPreferredWidth(this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.rim.device.api.ui.component.Field#getPreferredHeight()
+	 */
+	public int getPreferredHeight() {
+		return FieldDelegate.getPreferredHeight(this);
 	}
 
 	/*
@@ -45,7 +46,7 @@ public class ButtonField extends net.rim.device.api.ui.component.ButtonField
 	 * 
 	 * @see net.rim.device.api.ui.component.LabelField#layout(int, int)
 	 */
-	protected void layout(int width, int height) {
+	public void layout(int width, int height) {
 		FieldDelegate.layout(width, height, this);
 	}
 
@@ -87,5 +88,23 @@ public class ButtonField extends net.rim.device.api.ui.component.ButtonField
 	 */
 	public void gz_setExtent(int width, int height) {
 		super.setExtent(width, height);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.enough.glaze.ui.delegate.GzExtent#gz_getPreferredWidth()
+	 */
+	public int gz_getPreferredWidth() {
+		return super.getPreferredWidth();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.enough.glaze.ui.delegate.GzExtent#gz_getPreferredHeight()
+	 */
+	public int gz_getPreferredHeight() {
+		return super.getPreferredHeight();
 	}
 }

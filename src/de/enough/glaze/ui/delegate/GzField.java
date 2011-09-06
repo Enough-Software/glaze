@@ -5,6 +5,15 @@ import net.rim.device.api.ui.Graphics;
 public interface GzField extends GzExtent {
 
 	/**
+	 * Must call FieldDelegate.layout(width, height, Field) in an implementing
+	 * field
+	 * 
+	 * @param width
+	 * @param height
+	 */
+	public void layout(int width, int height);
+
+	/**
 	 * Must call super.layout(width,height) in an implementing field
 	 * 
 	 * @param width
