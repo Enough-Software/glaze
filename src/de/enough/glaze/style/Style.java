@@ -7,7 +7,9 @@ import net.rim.device.api.ui.Field;
 import de.enough.glaze.style.extension.Extension;
 import de.enough.glaze.style.property.Visibility;
 import de.enough.glaze.style.property.background.GzBackground;
+import de.enough.glaze.style.property.background.ZeroBackground;
 import de.enough.glaze.style.property.border.GzBorder;
+import de.enough.glaze.style.property.border.ZeroBorder;
 import de.enough.glaze.style.property.font.GzFont;
 
 /**
@@ -156,6 +158,8 @@ public class Style {
 		this.id = id;
 		this.margin = Margin.ZERO;
 		this.padding = Padding.ZERO;
+		this.background = ZeroBackground.getInstance();
+		this.border = ZeroBorder.getInstance();
 		this.visibility = Visibility.VISIBLE;
 		this.extensions = new Hashtable();
 		this.layoutUpdate = false;
@@ -570,9 +574,10 @@ public class Style {
 	public Enumeration getExtensions() {
 		return this.extensions.keys();
 	}
-	
+
 	/**
 	 * Returns true if this style uses extensions
+	 * 
 	 * @return true if this style uses extensions otherwise
 	 */
 	public boolean usesExtensions() {
