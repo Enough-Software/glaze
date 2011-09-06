@@ -46,8 +46,7 @@ public class PatchBackgroundConverter implements Converter {
 	 * @see de.enough.glaze.style.definition.converter.Converter#getIds()
 	 */
 	public String[] getIds() {
-		return new String[] { "background-image", "background-width",
-				"background-margin" };
+		return new String[] { "background-image", "background-width" };
 	}
 
 	/*
