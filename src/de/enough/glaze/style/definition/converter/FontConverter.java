@@ -61,11 +61,11 @@ public class FontConverter implements Converter {
 			return null;
 		} 
 
-		Property fontfamilyAttr = definition.getProperty("font-family");
-		Property fontSizeAttr = definition.getProperty("font-size");
-		Property fontStyleAttr = definition.getProperty("font-style");
-		Property fontColorAttr = definition.getProperty("font-color");
-		Property colorAttr = definition.getProperty("color");
+		Property fontFamilyProp = definition.getProperty("font-family");
+		Property fontSizeProp = definition.getProperty("font-size");
+		Property fontStyleProp = definition.getProperty("font-style");
+		Property fontColorProp = definition.getProperty("font-color");
+		Property colorProp = definition.getProperty("color");
 
 		// prepare the default values
 		Font defaultFont = Font.getDefault();
@@ -77,47 +77,52 @@ public class FontConverter implements Converter {
 		Color color = new Color(0x000000);
 
 		// convert the font-family property
-		if (fontfamilyAttr != null) {
-			name = family.getName();
-			try {
-				family = FontFamily.forName(name);
-			} catch (ClassNotFoundException e) {
-				throw new CssSyntaxError("unknown font family", fontfamilyAttr);
+		if (fontFamilyProp != null) {
+			Object result = ValuePropertyParser.getInstance().parse(fontFamilyProp);
+			if(result instanceof String) {
+				name = (String)result;
+				try {
+					family = FontFamily.forName(name);
+				} catch (ClassNotFoundException e) {
+					throw new CssSyntaxError("unknown font family", fontFamilyProp);
+				}
+			} else {
+				throw new CssSyntaxError("must be a single font name", fontFamilyProp);
 			}
 		}
 
 		// convert the font-size property
-		if (fontSizeAttr != null) {
+		if (fontSizeProp != null) {
 			size = (Dimension) DimensionPropertyParser.getInstance().parse(
-					fontSizeAttr);
+					fontSizeProp);
 		}
 
 		// convert the font-style property
-		if (fontStyleAttr != null) {
+		if (fontStyleProp != null) {
 			Object result = ValuePropertyParser.getInstance().parse(
-					fontStyleAttr);
+					fontStyleProp);
 			if (result instanceof String) {
 				String fontStyleEnum = (String) result;
-				style |= getFontStyle(fontStyleEnum, fontStyleAttr);
+				style |= getFontStyle(fontStyleEnum, fontStyleProp);
 			} else if (result instanceof String[]) {
 				String[] fontStyleEnums = (String[]) result;
 				for (int index = 0; index < fontStyleEnums.length; index++) {
 					String fontStyleEnum = fontStyleEnums[index];
-					style |= getFontStyle(fontStyleEnum, fontStyleAttr);
+					style |= getFontStyle(fontStyleEnum, fontStyleProp);
 				}
 			}
 		}
 
 		// convert the font-color property
-		if (fontColorAttr != null) {
+		if (fontColorProp != null) {
 			color = (Color) ColorPropertyParser.getInstance().parse(
-					fontColorAttr);
+					fontColorProp);
 		}
 
 		// convert the color property
-		if (colorAttr != null) {
+		if (colorProp != null) {
 			color = (Color) ColorPropertyParser.getInstance().parse(
-					colorAttr);
+					colorProp);
 		}
 
 		// get the font size in pixels
