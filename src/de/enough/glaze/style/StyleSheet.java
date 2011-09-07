@@ -36,6 +36,11 @@ public class StyleSheet {
 	private static StyleSheet INSTANCE;
 
 	/**
+	 * the url
+	 */
+	private Url url;
+
+	/**
 	 * the colors
 	 */
 	private final Hashtable colors;
@@ -183,8 +188,7 @@ public class StyleSheet {
 		new Thread() {
 			public void run() {
 				try {
-					InputStream stream = new URL(url).openStream();
-					load(stream);
+					load(new Url(url));
 					notifyLoaded(url);
 				} catch (CssSyntaxError e) {
 					notifySyntaxError(e);
@@ -208,8 +212,7 @@ public class StyleSheet {
 	public void load(final String url) throws CssSyntaxError, Exception {
 		synchronized (this) {
 			try {
-				InputStream stream = new URL(url).openStream();
-				load(stream);
+				load(new Url(url));
 				notifyLoaded(url);
 			} catch (CssSyntaxError e) {
 				notifySyntaxError(e);
@@ -232,13 +235,18 @@ public class StyleSheet {
 	 * @throws CssSyntaxError
 	 *             if the syntax of the CSS is wrong
 	 */
-	private void load(InputStream stream) throws IOException, CssSyntaxError {
-		InputStreamReader reader = new InputStreamReader(stream);
+	private void load(Url url) throws IOException, CssSyntaxError {
+		this.url = url;
+		InputStreamReader reader = new InputStreamReader(url.openStream());
 		CssParser cssParser = new CssParser(reader);
 		CssContentHandlerImpl cssContentHandler = new CssContentHandlerImpl(
-				StyleSheet.getInstance());
+				this);
 		cssParser.setContentHandler(cssContentHandler);
 		cssParser.parse();
+	}
+	
+	public Url getUrl() {
+		return this.url;
 	}
 
 	/**

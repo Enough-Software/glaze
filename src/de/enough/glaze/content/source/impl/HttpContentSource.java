@@ -7,7 +7,7 @@ import de.enough.glaze.content.ContentDescriptor;
 import de.enough.glaze.content.helper.StreamHelper;
 import de.enough.glaze.content.source.ContentSource;
 import de.enough.glaze.content.storage.StorageReference;
-import de.enough.glaze.style.URL;
+import de.enough.glaze.style.Url;
 
 /**
  * A sample HttpContentSource that receives byte[]
@@ -36,13 +36,11 @@ public class HttpContentSource extends ContentSource{
 		byte[] data = null;
 		
 		// open the http connection
-		URL url = new URL(descriptor.getUrl());
+		Url url = new Url(descriptor.getUrl());
 		InputStream stream = url.openStream();
 
 		// read all bytes into data
 		data = StreamHelper.toBytes(stream);
-		
-		System.out.println(new String(data));
 		
 		return data;
 	}

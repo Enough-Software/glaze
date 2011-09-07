@@ -13,32 +13,159 @@ import de.enough.glaze.content.io.RedirectHttpConnection;
 
 /**
  * A class representing a URL. {@link #openStream()} interprets and opens an
- * {@link InputStream} to the URL location. Supported URL locations are the
- * application resources and web-based resources (http://).
+ * {@link InputStream} to the URL location. Supported URLs are the application
+ * resources (res://) and web-based resources (http://) and relatives.
  * 
  * @author Andre
  * 
  */
-public class URL {
+public class Url {
 
 	/**
-	 * the http prefix to identify a web-based resource
+	 * the resources protocol
 	 */
-	private static final String HTTP_PREFIX = "http://";
+	private static final String PROTOCOL_RESOURCE = "res";
 
 	/**
-	 * the url
+	 * the http protocol
 	 */
-	private final String url;
+	private static final String PROTOCOL_HTTP = "http";
 
 	/**
-	 * Creates a new {@link URL} instance
+	 * the https protocol
+	 */
+	private static final String PROTOCOL_HTTPS = "https";
+
+	private static final int PORT_HTTP = 80;
+
+	private String protocol;
+
+	private String host;
+
+	private int port;
+
+	private String path;
+
+	private String file;
+
+	private String query;
+
+	private String url;
+
+	/**
+	 * Constructs a new {@link Url} instance
 	 * 
 	 * @param url
 	 *            the url
 	 */
-	public URL(String url) {
-		this.url = url;
+	public Url(String url) {
+		this(url, null);
+	}
+
+	/**
+	 * Constructs a new {@link Url} instance
+	 * 
+	 * @param url
+	 *            the url
+	 * @param context
+	 *            the context for url
+	 */
+	public Url(String url, Url context) {
+		this.protocol = "";
+		this.host = "";
+		this.port = PORT_HTTP;
+		this.path = "";
+		this.file = "";
+		parse(url, context);
+	}
+
+	/**
+	 * Parses the url with the context
+	 */
+	private void parse(String url, Url context) {
+		String result = url;
+
+		int index = result.indexOf("://");
+		// if a protocol could be found ...
+		if (index != -1) {
+			// parse the protocol
+			this.protocol = result.substring(0, index);
+			result = result.substring(index + "://".length());
+			if (!PROTOCOL_RESOURCE.equals(this.protocol)) {
+				// parse the host and port
+				index = result.indexOf('/');
+				if (index < 0) {
+					index = result.indexOf('?');
+				}
+				String server;
+				if (index >= 0) {
+					server = result.substring(0, index);
+				} else {
+					server = result;
+				}
+
+				if (index >= 0) {
+					result = result.substring(index);
+				} else {
+					result = "";
+				}
+
+				index = server.indexOf(':');
+				if (index >= 0) {
+					this.host = server.substring(0, index);
+					String port = server.substring(index + 1);
+					if (port.length() > 0) {
+						this.port = Integer.parseInt(port);
+					} else {
+						this.port = PORT_HTTP;
+					}
+				} else {
+					this.host = server;
+					this.port = PORT_HTTP;
+				}
+			}
+			// otherwise ...
+		} else if (context != null) {
+			// use the context data to fill the url
+			this.protocol = context.getProtocol();
+			this.host = context.getHost();
+			this.port = context.getPort();
+			this.path = context.getPath();
+			this.file = context.getFile();
+		} else {
+			this.protocol = PROTOCOL_RESOURCE;
+		}
+
+		// if a file and path is given ...
+		if (result.length() > 0) {
+			// find the path end
+			int pathEnd = result.lastIndexOf('/');
+			// if there is a valid path ...
+			if (pathEnd > 0) {
+				String path = result.substring(0, pathEnd);
+				// if this path is absolute ...
+				if (path.startsWith("/")) {
+					// store the path
+					this.path = path;
+					// otherwise ...
+				} else {
+					// join the context path and the path and store it
+					this.path = this.path + '/' + path;
+				}
+
+				// if a file is present ...
+				if (pathEnd != result.length() - 1) {
+					// store the file
+					this.file = result.substring(pathEnd);
+				}
+				// if no path is given ...
+			} else if (result.startsWith("/")) {
+				// store the file
+				this.file = result;
+			} else {
+				this.file = '/' + result;
+			}
+		}
 	}
 
 	/**
@@ -49,10 +176,11 @@ public class URL {
 	 *             if an error occurs
 	 */
 	public InputStream openStream() throws IOException {
-		if (this.url.startsWith(HTTP_PREFIX)) {
-			return openHttpStream(url);
+		if (PROTOCOL_HTTPS.equals(this.protocol)
+				|| PROTOCOL_HTTP.equals(this.protocol)) {
+			return openHttpStream();
 		} else {
-			return openResourceStream(url);
+			return openResourceStream();
 		}
 	}
 
@@ -65,7 +193,9 @@ public class URL {
 	 * @throws IOException
 	 *             if an error occurs
 	 */
-	private InputStream openHttpStream(String url) throws IOException {
+	private InputStream openHttpStream() throws IOException {
+		String url = getUrl();
+		// add the connection suffix
 		url = url + getConnectionSuffix();
 		RedirectHttpConnection connection = new RedirectHttpConnection(url);
 		InputStream stream = connection.openInputStream();
@@ -143,8 +273,8 @@ public class URL {
 	 * @throws IOException
 	 *             if an error occurs
 	 */
-	private InputStream openResourceStream(String url) throws IOException {
-		InputStream stream = getClass().getResourceAsStream(url);
+	private InputStream openResourceStream() throws IOException {
+		InputStream stream = getClass().getResourceAsStream(getUrl());
 		if (stream == null) {
 			throw new IOException("resources stream could not be opened : "
 					+ url);
@@ -153,12 +283,94 @@ public class URL {
 		}
 	}
 
+	/**
+	 * Returns the protocol
+	 * 
+	 * @return the protocol
+	 */
+	public String getProtocol() {
+		return this.protocol;
+	}
+
+	/**
+	 * Returns the host
+	 * 
+	 * @return the host
+	 */
+	public String getHost() {
+		return this.host;
+	}
+
+	/**
+	 * Returns the port
+	 * 
+	 * @return the port
+	 */
+	public int getPort() {
+		return this.port;
+	}
+
+	/**
+	 * Returns the path
+	 * 
+	 * @return the path
+	 */
+	public String getPath() {
+		return this.path;
+	}
+
+	/**
+	 * Returns the file
+	 * 
+	 * @return the file
+	 */
+	public String getFile() {
+		return this.file;
+	}
+
+	/**
+	 * Returns the query
+	 * 
+	 * @return the query
+	 */
+	public String getQuery() {
+		return this.query;
+	}
+
+	/**
+	 * Returns the url
+	 * 
+	 * @return the url
+	 */
+	private String getUrl() {
+		// if the url has not been build yet ...
+		if (this.url == null) {
+			// build it
+			StringBuffer urlBuffer = new StringBuffer();
+			if (PROTOCOL_HTTPS.equals(this.protocol)
+					|| PROTOCOL_HTTP.equals(this.protocol)) {
+				urlBuffer.append(this.protocol).append("://").append(this.host);
+				if (this.port != PORT_HTTP) {
+					urlBuffer.append(":").append(this.port);
+				}
+				urlBuffer.append(this.path);
+				urlBuffer.append(this.file);
+			} else {
+				urlBuffer.append(this.path);
+				urlBuffer.append(this.file);
+			}
+			this.url = urlBuffer.toString();
+		}
+
+		return this.url;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return this.url;
+		return getUrl();
 	}
 }

@@ -13,7 +13,7 @@ import java.util.Hashtable;
 import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
 
-import de.enough.glaze.style.URL;
+import de.enough.glaze.style.Url;
 
 /**
  * Provides a <code>HttpConnection</code> that supports HTTP redirects. This
@@ -99,7 +99,7 @@ public class RedirectHttpConnection implements HttpConnection {
 		String url = this.originalUrl;
 
 		while (true) {
-			url += URL.getConnectionSuffix();
+			url += Url.getConnectionSuffix();
 			
 			if (tmpHttpConnection == null) {
 				tmpHttpConnection = (HttpConnection) Connector.open(url,

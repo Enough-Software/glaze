@@ -4,7 +4,7 @@ import net.rim.device.api.system.Bitmap;
 import de.enough.glaze.content.ContentException;
 import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.StyleResources;
-import de.enough.glaze.style.URL;
+import de.enough.glaze.style.Url;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.converter.Converter;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
@@ -75,8 +75,8 @@ public class PatchBackgroundConverter implements Converter {
 		if (backgroundImageProp != null) {
 			Object result = UrlPropertyParser.getInstance().parse(
 					backgroundImageProp);
-			if (result instanceof URL) {
-				URL url = (URL) result;
+			if (result instanceof Url) {
+				Url url = (Url) result;
 				try {
 					imageBitmap = StyleResources.getInstance().loadBitmap(url);
 				} catch (ContentException e) {

@@ -7,7 +7,7 @@ import javax.microedition.m2g.SVGImage;
 import de.enough.glaze.content.ContentException;
 import de.enough.glaze.style.StyleResources;
 import de.enough.glaze.style.StyleSheet;
-import de.enough.glaze.style.URL;
+import de.enough.glaze.style.Url;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.StyleSheetDefinition;
 import de.enough.glaze.style.definition.converter.BackgroundConverter;
@@ -74,8 +74,8 @@ public class SvgBackgroundConverter implements Converter {
 		if (backgroundFileProp != null) {
 			Object result = UrlPropertyParser.getInstance().parse(
 					backgroundFileProp);
-			if (result instanceof URL) {
-				URL url = (URL) result;
+			if (result instanceof Url) {
+				Url url = (Url) result;
 				try {
 					svgImage = StyleResources.getInstance().loadSVG(url);
 				} catch (IOException e) {

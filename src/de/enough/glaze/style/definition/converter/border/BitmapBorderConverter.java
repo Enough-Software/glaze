@@ -5,7 +5,7 @@ import net.rim.device.api.ui.XYEdges;
 import de.enough.glaze.content.ContentException;
 import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.StyleResources;
-import de.enough.glaze.style.URL;
+import de.enough.glaze.style.Url;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.converter.Converter;
 import de.enough.glaze.style.definition.converter.utils.DimensionConverterUtils;
@@ -70,8 +70,8 @@ public class BitmapBorderConverter implements Converter {
 		if (borderImageProp != null) {
 			Object result = UrlPropertyParser.getInstance().parse(
 					borderImageProp);
-			if (result instanceof URL) {
-				URL url = (URL) result;
+			if (result instanceof Url) {
+				Url url = (Url) result;
 				try {
 					imageBitmap = StyleResources.getInstance().loadBitmap(url);
 				} catch (ContentException e) {

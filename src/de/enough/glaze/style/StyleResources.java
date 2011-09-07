@@ -81,7 +81,7 @@ public class StyleResources {
 	 * @throws ContentException
 	 *             if an error occurs while loading the bitmap
 	 */
-	public Bitmap loadBitmap(URL url) throws ContentException {
+	public Bitmap loadBitmap(Url url) throws ContentException {
 		return loadBitmap(url.toString());
 	}
 
@@ -124,7 +124,7 @@ public class StyleResources {
 	 * @throws IOException
 	 *             if an error occurs while loading the data
 	 */
-	public SVGImage loadSVG(URL url) throws ContentException, IOException {
+	public SVGImage loadSVG(Url url) throws ContentException, IOException {
 		return loadSVG(url.toString());
 	}
 
