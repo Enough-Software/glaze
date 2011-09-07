@@ -17,10 +17,20 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 		this(null);
 	}
 
-	public MainScreen(Style style) {
+	public MainScreen(long style) {
+		this(style, null);
+	}
+
+	public MainScreen(Style screenStyle) {
 		super();
 		this.styleManager = new StyleManager(getMainManager());
-		this.styleManager.add(getMainManager(), style);
+		this.styleManager.add(getMainManager(), screenStyle);
+	}
+
+	public MainScreen(long style, Style screenStyle) {
+		super(style);
+		this.styleManager = new StyleManager(getMainManager());
+		this.styleManager.add(getMainManager(), screenStyle);
 	}
 
 	/*

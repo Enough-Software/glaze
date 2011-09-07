@@ -40,7 +40,7 @@ public class ExtentDelegate {
 				int maxWidth = styleManager.getMaxWidth();
 				if (widthDimension != null) {
 					int widthValue = widthDimension.getValue(maxWidth);
-					preferredWidth = widthValue;
+					return widthValue;
 				} else if (minWidthDimension != null) {
 					int minWidthValue = minWidthDimension.getValue(maxWidth);
 					// if the preferred width is smaller than the minimum
@@ -57,11 +57,16 @@ public class ExtentDelegate {
 					// ...
 					if (preferredWidth > maxWidthValue) {
 						// adjust the preferred width to the maximum width
-						preferredWidth = maxWidthValue;
+						return maxWidthValue;
 					}
 				}
-
 			}
+		}
+
+		// if USE_ALL_WIDTH is set ...
+		if ((field.getStyle() & Field.USE_ALL_WIDTH) == Field.USE_ALL_WIDTH) {
+			// return Integer.MAX_VALUE
+			return Integer.MAX_VALUE;
 		}
 
 		return preferredWidth;
@@ -100,7 +105,7 @@ public class ExtentDelegate {
 
 				if (heightDimension != null) {
 					int heightValue = heightDimension.getValue(maxWidth);
-					preferredHeight = heightValue;
+					return heightValue;
 				} else if (minHeightDimension != null) {
 					int minHeightValue = minHeightDimension.getValue(maxWidth);
 					// if the preferred height is smaller than the minimum
@@ -117,11 +122,18 @@ public class ExtentDelegate {
 					// ...
 					if (preferredHeight > maxHeightValue) {
 						// adjust the preferred height to the maximum height
-						preferredHeight = maxHeightValue;
+						return maxHeightValue;
 					}
 				}
 
+				return preferredHeight;
 			}
+		}
+
+		// if USE_ALL_HEIGHT is set ...
+		if ((field.getStyle() & Field.USE_ALL_HEIGHT) == Field.USE_ALL_HEIGHT) {
+			// return Integer.MAX_VALUE
+			return Integer.MAX_VALUE;
 		}
 
 		return preferredHeight;
