@@ -107,7 +107,7 @@ public class BorderConverter implements Converter {
 		// if the definition has no properties handled by this converter ...
 		if (!definition.hasProperties(this)) {
 			// return null
-			return ZeroBorder.getInstance();
+			return null;
 		}
 
 		Property borderTypeProp = definition.getProperty("border-type");

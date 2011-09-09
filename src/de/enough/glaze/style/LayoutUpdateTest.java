@@ -140,11 +140,17 @@ public class LayoutUpdateTest {
 	private boolean borderChanges(Style firstStyle, Style secondStyle) {
 		GzBorder firstBorder = firstStyle.getBorder();
 		GzBorder secondBorder = secondStyle.getBorder();
-
-		XYEdges firstEdges = firstBorder.getEdges();
-		XYEdges secondEdges = secondBorder.getEdges();
-
-		return edgesChange(firstEdges, secondEdges);
+		if (firstBorder != null && secondBorder != null) {
+			XYEdges firstEdges = firstBorder.getEdges();
+			XYEdges secondEdges = secondBorder.getEdges();
+			return edgesChange(firstEdges, secondEdges);
+		} else if (firstBorder != null) {
+			return true;
+		} else if (secondBorder != null) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -230,13 +236,23 @@ public class LayoutUpdateTest {
 		GzFont firstFont = firstStyle.getFont();
 		GzFont secondFont = secondStyle.getFont();
 
-		boolean nameChanges = !firstFont.getName().equals(secondFont.getName());
-		boolean heightChanges = firstFont.getFont().getHeight() != secondFont
-				.getFont().getHeight();
-		boolean styleChanges = firstFont.getFont().getStyle() != secondFont
-				.getFont().getStyle();
+		if (firstFont != null && secondFont != null) {
+			boolean nameChanges = !firstFont.getName().equals(
+					secondFont.getName());
+			boolean heightChanges = firstFont.getFont().getHeight() != secondFont
+					.getFont().getHeight();
+			boolean styleChanges = firstFont.getFont().getStyle() != secondFont
+					.getFont().getStyle();
 
-		return nameChanges || heightChanges || styleChanges;
+			return nameChanges || heightChanges || styleChanges;
+		} else if (firstFont != null) {
+			return true;
+		} else if (secondFont != null) {
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 
 	/**

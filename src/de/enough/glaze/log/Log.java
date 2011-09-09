@@ -18,11 +18,7 @@ public class Log {
 	private static final String HEADER = "\n//" + TAG
 			+ "/////////////////////////////////";
 
-	private static final String SYNTAX_ERROR_INTRO_LINE_HEADER = "\nA CSS syntax error was found in line ";
-
-	private static final String SYNTAX_ERROR_INTRO_LINE_FOOTER = " : \n\n";
-
-	private static final String SYNTAX_ERROR_INTRO = "\nA CSS syntax error was found : \n\n";
+	private static final String SYNTAX_ERROR = "\nA CSS syntax error was found : \n\n";
 
 	private static final String FOOTER = "\n////////////////////////////////////////\n";
 
@@ -208,22 +204,9 @@ public class Log {
 	 *            the {@link CssSyntaxError}
 	 */
 	public static void syntaxError(CssSyntaxError syntaxError) {
-		int line = syntaxError.getLine();
-		String value = syntaxError.getValue();
-		String error = syntaxError.getError();
-
 		System.err.println(HEADER);
-
-		if (line != Integer.MIN_VALUE) {
-			System.err.print(SYNTAX_ERROR_INTRO_LINE_HEADER);
-			System.err.print(line);
-			System.err.print(SYNTAX_ERROR_INTRO_LINE_FOOTER);
-		} else {
-			System.err.print(SYNTAX_ERROR_INTRO);
-		}
-
-		System.err.println(error + " : " + value);
-
+		System.err.print(SYNTAX_ERROR);
+		System.err.println(syntaxError.toString());
 		System.err.println(FOOTER);
 	}
 

@@ -115,7 +115,7 @@ public class BackgroundConverter implements Converter {
 		// if the definition has no properties handled by this converter ...
 		if (!definition.hasProperties(this)) {
 			// return null
-			return ZeroBackground.getInstance();
+			return null;
 		}
 
 		Property backgroundTypeProp = definition.getProperty("background-type");

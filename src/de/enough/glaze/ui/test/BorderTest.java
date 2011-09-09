@@ -17,14 +17,6 @@ public final class BorderTest extends MainScreen {
 	public BorderTest() {
 		super();
 
-		MenuItem updateItem = new MenuItem("Update", 0, 0) {
-			public void run() {
-				MyApp.updateStyle();
-			}
-		};
-
-		addMenuItem(updateItem);
-
 		FlowFieldManager flow = new FlowFieldManager();
 
 		flow.add(new NullField(), Style.id("simple_test"));

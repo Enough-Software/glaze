@@ -13,20 +13,43 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 
 	private final StyleManager styleManager;
 
+	/**
+	 * Constructs a new {@link MainScreen} instance
+	 */
 	public MainScreen() {
 		this(null);
 	}
 
+	/**
+	 * Constructs a new {@link MainScreen} instance
+	 * 
+	 * @param style
+	 *            the style
+	 */
 	public MainScreen(long style) {
 		this(style, null);
 	}
 
+	/**
+	 * Constructs a new {@link MainScreen} instance
+	 * 
+	 * @param screenStyle
+	 *            the screen style
+	 */
 	public MainScreen(Style screenStyle) {
 		super();
 		this.styleManager = new StyleManager(getMainManager());
 		this.styleManager.add(getMainManager(), screenStyle);
 	}
 
+	/**
+	 * Constructs a new {@link MainScreen} instance
+	 * 
+	 * @param style
+	 *            the style
+	 * @param screenStyle
+	 *            the screen style
+	 */
 	public MainScreen(long style, Style screenStyle) {
 		super(style);
 		this.styleManager = new StyleManager(getMainManager());
@@ -43,6 +66,13 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 		this.styleManager.add(field);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.enough.glaze.ui.delegate.GzManager#add(net.rim.device.api.ui.Field,
+	 * de.enough.glaze.style.Style)
+	 */
 	public void add(Field field, Style style) {
 		super.add(field);
 		this.styleManager.add(field, style);
@@ -125,6 +155,13 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 		this.styleManager.replace(oldField, newField);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.enough.glaze.ui.delegate.GzManager#replace(net.rim.device.api.ui.Field
+	 * , net.rim.device.api.ui.Field, de.enough.glaze.style.Style)
+	 */
 	public void replace(Field oldField, Field newField, Style style) {
 		super.replace(oldField, newField);
 		this.styleManager.replace(oldField, newField, style);

@@ -1,9 +1,5 @@
 package de.enough.glaze.ui.test;
 
-import net.rim.device.api.ui.Field;
-import net.rim.device.api.ui.FieldChangeListener;
-import net.rim.device.api.ui.MenuItem;
-import net.rim.device.api.ui.UiApplication;
 import de.enough.glaze.style.Style;
 import de.enough.glaze.ui.component.NullField;
 import de.enough.glaze.ui.container.FlowFieldManager;
@@ -19,14 +15,6 @@ public final class BackgroundTest extends MainScreen {
 	 */
 	public BackgroundTest() {
 		super();
-
-		MenuItem updateItem = new MenuItem("Update", 0, 0) {
-			public void run() {
-				MyApp.updateStyle();
-			}
-		};
-
-		addMenuItem(updateItem);
 
 		FlowFieldManager flow = new FlowFieldManager();
 

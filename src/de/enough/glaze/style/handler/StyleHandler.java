@@ -5,6 +5,7 @@ import java.util.Enumeration;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Font;
 import net.rim.device.api.ui.XYEdges;
+import net.rim.device.api.ui.decor.Border;
 import de.enough.glaze.style.Margin;
 import de.enough.glaze.style.Padding;
 import de.enough.glaze.style.Style;
@@ -183,11 +184,13 @@ public class StyleHandler {
 			padding = this.style.getPadding();
 			padding.setEdges(this.paddingEdges, availableWidth);
 			GzBorder border = this.style.getBorder();
-			// compensate the zero border in the padding
-			this.paddingEdges.set(this.paddingEdges.top + border.getTop(),
-					this.paddingEdges.right + border.getRight(),
-					this.paddingEdges.bottom + border.getBottom(),
-					this.paddingEdges.left + border.getLeft());
+			if (border != null) {
+				// compensate the zero border in the padding
+				this.paddingEdges.set(this.paddingEdges.top + border.getTop(),
+						this.paddingEdges.right + border.getRight(),
+						this.paddingEdges.bottom + border.getBottom(),
+						this.paddingEdges.left + border.getLeft());
+			}
 		} else {
 			padding = this.style.getPadding();
 			padding.setEdges(this.paddingEdges, availableWidth);
@@ -213,17 +216,17 @@ public class StyleHandler {
 	 *            the visual state
 	 */
 	public void applyBackground(int visualState) {
-		GzBackground background;
+		GzBackground background = null;
+
 		Style style = this.style.getStyle(visualState);
 		// if the visibility is visible ...
 		if (style.getVisibility() == Visibility.VISIBLE) {
 			// use the style background
-			background = style.getBackground();
-			// otherwise ...
+			background = style.getBackground(); 
 		} else {
-			// use the zero (none) background
 			background = ZeroBackground.getInstance();
 		}
+
 		this.field.setBackground(visualState, background);
 	}
 
@@ -245,18 +248,21 @@ public class StyleHandler {
 	 *            the visual state
 	 */
 	public void applyBorder(int visualState) {
-		GzBorder border;
+		GzBorder border = null;
+
 		Style style = this.style.getStyle(visualState);
+		int visibility = style.getVisibility(); 
 		// if the visibility is visible ...
-		if (style.getVisibility() == Visibility.VISIBLE) {
+		if (visibility == Visibility.VISIBLE) {
 			// use the style border
 			border = style.getBorder();
 			// otherwise ...
-		} else {
+		} else if(visibility == Visibility.COLLAPSE || visibility == Visibility.HIDDEN){
 			// use the zero (none) border
 			border = ZeroBorder.getInstance();
 		}
-		this.field.setBorder(visualState, border, true);
+
+		this.field.setBorder(visualState, border);
 	}
 
 	/**

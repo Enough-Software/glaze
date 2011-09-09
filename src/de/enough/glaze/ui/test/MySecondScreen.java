@@ -55,7 +55,7 @@ public final class MySecondScreen extends MainScreen implements
 		
 		//FlowFieldManager flow = new FlowFieldManager();
 		//flow.
-		add(new LabelField("test"), Style.id("test"));	
+		add(new Entry());	
 		
 		//add(flow);
 	}

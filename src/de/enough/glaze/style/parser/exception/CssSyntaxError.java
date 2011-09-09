@@ -26,6 +26,11 @@ public class CssSyntaxError extends Exception {
 	private String error;
 
 	/**
+	 * the message
+	 */
+	private String message;
+
+	/**
 	 * Constructs a new {@link CssSyntaxError} instance
 	 * 
 	 * @param error
@@ -91,6 +96,25 @@ public class CssSyntaxError extends Exception {
 	 */
 	public String getError() {
 		return this.error;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Throwable#toString()
+	 */
+	public String toString() {
+		if (this.message == null) {
+			StringBuffer messageBuffer = new StringBuffer();
+			if(this.line != Integer.MIN_VALUE) {
+				messageBuffer.append(this.line);
+				messageBuffer.append(" : ");
+			} 
+			messageBuffer.append(this.error);
+			messageBuffer.append(" : ");
+			messageBuffer.append(this.value);
+			this.message = messageBuffer.toString();
+		}
+
+		return this.message;
 	}
 
 }

@@ -22,6 +22,31 @@ public class VerticalFieldManager extends
 		super(style);
 		this.styleManager = new StyleManager(this);
 	}
+	
+	
+
+	/*public void invalidate() {
+		// TODO Auto-generated method stub
+		super.invalidate();
+		System.out.println(this + " : invalidate()");
+	}*/
+
+	protected void invalidate(int x, int y, int width, int height) {
+		super.invalidate(x, y, width, height);
+		System.out.println(this + " : invalidate(x, y, width, height)");
+	}
+	
+	/*
+	protected void invalidateFieldRange(int lower, int upper) {
+		// TODO Auto-generated method stub
+		super.invalidateFieldRange(lower, upper);
+	}
+
+	protected void invalidateAll(int x, int y, int width, int height) {
+		// TODO Auto-generated method stub
+		super.invalidateAll(x, y, width, height);
+		System.out.println(this + " : invalidateAll(x, y, width, height)");
+	}*/
 
 	/*
 	 * (non-Javadoc)

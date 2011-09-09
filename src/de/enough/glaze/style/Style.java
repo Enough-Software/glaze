@@ -158,8 +158,8 @@ public class Style {
 		this.id = id;
 		this.margin = Margin.ZERO;
 		this.padding = Padding.ZERO;
-		this.background = ZeroBackground.getInstance();
-		this.border = ZeroBorder.getInstance();
+		this.background = null;
+		this.border = null;
 		this.visibility = Visibility.VISIBLE;
 		this.extensions = new Hashtable();
 		this.layoutUpdate = false;
@@ -618,11 +618,15 @@ public class Style {
 		if (style != null) {
 			// release its border
 			GzBorder border = style.getBorder();
-			border.release();
+			if (border != null) {
+				border.release();
+			}
 
 			// release its background
 			GzBackground background = style.getBackground();
-			background.release();
+			if (background != null) {
+				background.release();
+			}
 		}
 	}
 }
