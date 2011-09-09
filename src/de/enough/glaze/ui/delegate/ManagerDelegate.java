@@ -127,34 +127,6 @@ public class ManagerDelegate {
 				// paint it
 				gzManager.gz_paint(graphics);
 			}
-
-			/*
-			 * boolean updateLayout = false; boolean visualStateChanged = false;
-			 * // get the handlers StyleManager styleManager =
-			 * gzManager.getStyleManager(); // for each style handler ... for
-			 * (int index = 0; index < styleManager.size(); index++) {
-			 * StyleHandler handler = styleManager.get(index); // if the visual
-			 * state of a field has changed ... if
-			 * (handler.isVisualStateChanged()) { visualStateChanged = true; //
-			 * if the style change requires a layout update ... if
-			 * (handler.layoutUpdate()) { // indicate that an update is needed
-			 * updateLayout = true; // otherwise ... } else { // get the updated
-			 * style Field field = handler.getField(); int visualState =
-			 * field.getVisualState(); if (style != null) { Style updatedStyle =
-			 * style.getStyle(visualState); // if the updated style has
-			 * extensions ... if (updatedStyle.usesExtensions()) { // update the
-			 * layout updateLayout = true; // otherwise ... } else { // update
-			 * the visual state and style handler.updateVisualState();
-			 * handler.updateStyle(); // apply the font handler.applyFont(); } }
-			 * else { // update the visual state and style
-			 * handler.updateVisualState(); handler.updateStyle(); // apply the
-			 * font handler.applyFont(); } } } }
-			 * 
-			 * if (visualStateChanged) { // if a layout update is needed ... if
-			 * (updateLayout) { // update the layout
-			 * gzManager.gz_updateLayout(); // otherwise ... } else { //
-			 * invalidate to fully repaint manager.invalidate(); } }
-			 */
 		} else {
 			Log.error("manager must implement GzManager", manager);
 		}
