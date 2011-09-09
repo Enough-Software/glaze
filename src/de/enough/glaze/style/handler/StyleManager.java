@@ -11,6 +11,7 @@ import de.enough.glaze.style.Style;
 import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.StyleSheetListener;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
+import de.enough.glaze.ui.delegate.GzManager;
 
 /**
  * A management class managing {@link StyleHandler} instances for all fields of
@@ -290,19 +291,18 @@ public class StyleManager implements StyleSheetListener {
 				if (styleHandler.layoutUpdate()) {
 					return true;
 				}
-			} 
+			}
 		}
-		
+
 		return false;
 	}
-	
 
 	boolean layouting;
-	
+
 	public boolean isLayouting() {
 		return layouting;
 	}
-	
+
 	public void setLayouting(boolean layouting) {
 		this.layouting = layouting;
 	}
@@ -361,8 +361,12 @@ public class StyleManager implements StyleSheetListener {
 		}
 
 		// request a layout update on the parenting manager
-		this.manager.setDirty(true);
-		this.manager.invalidate();
+		synchronized (UiApplication.getEventLock()) {
+			if (this.manager instanceof GzManager) {
+				GzManager gzManager = (GzManager) this.manager;
+				gzManager.gz_updateLayout();
+			}
+		}
 	}
 
 	/*
