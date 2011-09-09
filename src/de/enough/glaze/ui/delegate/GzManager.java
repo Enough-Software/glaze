@@ -137,6 +137,20 @@ public interface GzManager extends GzExtent {
 	public void replace(Field oldField, Field newField, Style style);
 
 	/**
+	 * Must call super.invalidate(x,y,width,height) in an implementing manager
+	 * 
+	 * @param x
+	 *            the x offset
+	 * @param y
+	 *            the y offset
+	 * @param width
+	 *            the width
+	 * @param height
+	 *            the height
+	 */
+	public void gz_invalidate(int x, int y, int width, int height);
+
+	/**
 	 * Must call super.sublayout(maxWidth, maxHeight) in an implementing manager
 	 * 
 	 * @param maxWidth

@@ -64,6 +64,31 @@ public class FieldDelegate {
 	}
 
 	/**
+	 * Invalidates the full given field
+	 * 
+	 * @param x
+	 *            the x offset
+	 * @param y
+	 *            the y offset
+	 * @param width
+	 *            the width
+	 * @param height
+	 *            the height
+	 * @param field
+	 *            the field
+	 */
+	public static void invalidate(int x, int y, int width, int height,
+			Field field) {
+		GzField gzField;
+		if (field instanceof GzField) {
+			gzField = (GzField) field;
+			gzField.gz_invalidateAll(x, y, field.getWidth(), field.getHeight());
+		} else {
+			Log.error("field must implement GzField", field);
+		}
+	}
+
+	/**
 	 * Layout the given field with the given width and height
 	 * 
 	 * @param width

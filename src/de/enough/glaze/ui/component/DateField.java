@@ -53,6 +53,15 @@ public class DateField extends net.rim.device.api.ui.component.DateField
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see net.rim.device.api.ui.Field#invalidate(int, int, int, int)
+	 */
+	public void invalidate(int x, int y, int width, int height) {
+		FieldDelegate.invalidate(x, y, width, height, this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.rim.device.api.ui.component.LabelField#layout(int, int)
 	 */
 	public void layout(int width, int height) {
@@ -84,6 +93,16 @@ public class DateField extends net.rim.device.api.ui.component.DateField
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see de.enough.glaze.ui.delegate.GzField#gz_invalidateAll(int, int, int,
+	 * int)
+	 */
+	public void gz_invalidateAll(int x, int y, int width, int height) {
+		super.invalidateAll(x, y, width, height);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.enough.glaze.ui.component.GzField#gz_layout(int, int)
 	 */
 	public void gz_layout(int width, int height) {
@@ -109,7 +128,6 @@ public class DateField extends net.rim.device.api.ui.component.DateField
 	public void gz_setExtent(int width, int height) {
 		super.setExtent(width, height);
 	}
-
 
 	/*
 	 * (non-Javadoc)

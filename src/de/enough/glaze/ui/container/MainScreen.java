@@ -197,6 +197,15 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see net.rim.device.api.ui.Manager#invalidate(int, int, int, int)
+	 */
+	public void invalidate(int x, int y, int width, int height) {
+		ManagerDelegate.invalidate(x, y, width, height, this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.rim.device.api.ui.container.VerticalFieldManager#sublayout(int,
 	 * int)
 	 */
@@ -220,6 +229,16 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 	 */
 	public void gz_setExtent(int width, int height) {
 		super.setExtent(width, height);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.enough.glaze.ui.delegate.GzManager#gz_invalidate(int, int, int,
+	 * int)
+	 */
+	public void gz_invalidate(int x, int y, int width, int height) {
+		super.invalidate(x, y, width, height);
 	}
 
 	/*

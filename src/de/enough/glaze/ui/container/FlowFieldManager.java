@@ -141,6 +141,15 @@ public class FlowFieldManager extends
 	public StyleManager getStyleManager() {
 		return this.styleManager;
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.rim.device.api.ui.Manager#invalidate(int, int, int, int)
+	 */
+	protected void invalidate(int x, int y, int width, int height) {
+		ManagerDelegate.invalidate(x, y, width, height, this);
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -177,15 +186,6 @@ public class FlowFieldManager extends
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.enough.glaze.ui.container.GzManager#gz_setExtent(int, int)
-	 */
-	public void gz_setExtent(int width, int height) {
-		super.setExtent(width, height);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see net.rim.device.api.ui.component.Field#getPreferredWidth()
 	 */
 	public int getPreferredWidth() {
@@ -199,6 +199,25 @@ public class FlowFieldManager extends
 	 */
 	public int getPreferredHeight() {
 		return FieldDelegate.getPreferredHeight(this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.enough.glaze.ui.container.GzManager#gz_setExtent(int, int)
+	 */
+	public void gz_setExtent(int width, int height) {
+		super.setExtent(width, height);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.enough.glaze.ui.delegate.GzManager#gz_invalidate(int, int, int,
+	 * int)
+	 */
+	public void gz_invalidate(int x, int y, int width, int height) {
+		super.invalidate(x, y, width, height);
 	}
 
 	/*

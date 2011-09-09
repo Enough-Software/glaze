@@ -5,6 +5,7 @@ import java.util.Vector;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Manager;
 import net.rim.device.api.ui.UiApplication;
+import net.rim.device.api.ui.XYRect;
 import de.enough.glaze.log.Log;
 import de.enough.glaze.style.Style;
 import de.enough.glaze.style.StyleSheet;
@@ -279,6 +280,31 @@ public class StyleManager implements StyleSheetListener {
 	 */
 	public int getMaxWidth() {
 		return this.maxWidth;
+	}
+
+	public boolean layoutUpdate() {
+		for (int index = 0; index < size(); index++) {
+			StyleHandler styleHandler = get(index);
+			if (styleHandler.isVisualStateChanged()) {
+				styleHandler.updateVisualState();
+				if (styleHandler.layoutUpdate()) {
+					return true;
+				}
+			} 
+		}
+		
+		return false;
+	}
+	
+
+	boolean layouting;
+	
+	public boolean isLayouting() {
+		return layouting;
+	}
+	
+	public void setLayouting(boolean layouting) {
+		this.layouting = layouting;
 	}
 
 	/**

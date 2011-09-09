@@ -55,6 +55,15 @@ public class ObjectChoiceField extends
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see net.rim.device.api.ui.Field#invalidate(int, int, int, int)
+	 */
+	public void invalidate(int x, int y, int width, int height) {
+		FieldDelegate.invalidate(x, y, width, height, this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.rim.device.api.ui.component.LabelField#layout(int, int)
 	 */
 	public void layout(int width, int height) {
@@ -81,6 +90,16 @@ public class ObjectChoiceField extends
 	 */
 	protected void drawFocus(Graphics graphics, boolean on) {
 		// do nothing, let the style handle the focus
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.enough.glaze.ui.delegate.GzField#gz_invalidateAll(int, int, int,
+	 * int)
+	 */
+	public void gz_invalidateAll(int x, int y, int width, int height) {
+		super.invalidateAll(x, y, width, height);
 	}
 
 	/*
