@@ -50,5 +50,6 @@ public final class LoginScreen extends MainScreen {
 		add(base);
 
 		addMenuItem(MyApp.sandbox.createUpdateMenuItem());
+		addMenuItem(MyApp.complex.createUpdateMenuItem());
 	}
 }

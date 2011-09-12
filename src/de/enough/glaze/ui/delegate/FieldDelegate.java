@@ -82,7 +82,7 @@ public class FieldDelegate {
 		GzField gzField;
 		if (field instanceof GzField) {
 			gzField = (GzField) field;
-			gzField.gz_invalidateAll(x, y, field.getWidth(), field.getHeight());
+			gzField.gz_invalidateAll(0, 0, field.getWidth(), field.getHeight());
 		} else {
 			Log.error("field must implement GzField", field);
 		}

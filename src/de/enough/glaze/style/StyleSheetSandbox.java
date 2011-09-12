@@ -44,6 +44,14 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 				Dialog.GLOBAL_STATUS,
 				Bitmap.getPredefinedBitmap(Bitmap.HOURGLASS));
 	}
+	
+	/**
+	 * Returns the update menu item text
+	 * @return the update menu item text
+	 */
+	protected String getUpdateMenuTextItem() {
+		return MENU_UPDATE;
+	}
 
 	/**
 	 * Creates an menu item to update the stylesheet
@@ -51,7 +59,7 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 	 * @return the created menu item
 	 */
 	public MenuItem createUpdateMenuItem() {
-		MenuItem updateMenuItem = new MenuItem(MENU_UPDATE, 0, 0) {
+		MenuItem updateMenuItem = new MenuItem(getUpdateMenuTextItem(), 0, 0) {
 
 			public void run() {
 				StyleSheetSandbox.this.update();
@@ -94,6 +102,7 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 				Screen sandboxScreen = createSandboxScreen();
 				UiApplication.getUiApplication().pushScreen(sandboxScreen);
 			}
+			StyleSheet.getInstance().removeListener(this);
 		}
 	}
 
@@ -129,6 +138,7 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 						}
 					});
 			this.errorDialog.show();
+			StyleSheet.getInstance().removeListener(this);
 		}
 	}
 
@@ -163,6 +173,7 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 						}
 					});
 			this.errorDialog.show();
+			StyleSheet.getInstance().removeListener(this);
 		}
 	}
 }

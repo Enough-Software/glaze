@@ -15,6 +15,8 @@ public class MyApp extends UiApplication {
 
 	public static StyleSheetSandbox sandbox;
 
+	public static StyleSheetSandbox complex;
+
 	/**
 	 * Entry point for application
 	 * 
@@ -51,7 +53,31 @@ public class MyApp extends UiApplication {
 				return new LoginScreen();
 			}
 		};
-		
+
+		complex = new StyleSheetSandbox(
+				"http://pastebin.com/raw.php?i=Xmr8We8q") {
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see
+			 * de.enough.glaze.style.StyleSheetSandbox#getUpdateMenuTextItem()
+			 */
+			protected String getUpdateMenuTextItem() {
+				return "Complex Example";
+			}
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see
+			 * de.enough.glaze.style.StyleSheetSandbox#createSandboxScreen()
+			 */
+			public Screen createSandboxScreen() {
+				return new LoginScreen();
+			}
+		};
+
 		sandbox.update();
 	}
 }
