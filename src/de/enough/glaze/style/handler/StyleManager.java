@@ -11,6 +11,7 @@ import de.enough.glaze.style.Style;
 import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.StyleSheetListener;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
+import de.enough.glaze.ui.delegate.FieldDelegate;
 import de.enough.glaze.ui.delegate.GzManager;
 
 /**
@@ -41,6 +42,11 @@ public class StyleManager implements StyleSheetListener {
 	 * the maximum width the parenting {@link Manager} uses to layout
 	 */
 	private int maxWidth;
+
+	/**
+	 * flag to indicate that the {@link Manager} is currently layouting
+	 */
+	private boolean layouting;
 
 	/**
 	 * Constructs a new {@link StyleManager} instance
@@ -179,7 +185,7 @@ public class StyleManager implements StyleSheetListener {
 		}
 
 		throw new IllegalArgumentException(
-				"no Stylehandler is already registered for field " + field);
+				"no Stylehandler is registered for field " + field);
 	}
 
 	/**
@@ -283,30 +289,6 @@ public class StyleManager implements StyleSheetListener {
 		return this.maxWidth;
 	}
 
-	public boolean layoutUpdate() {
-		for (int index = 0; index < size(); index++) {
-			StyleHandler styleHandler = get(index);
-			if (styleHandler.isVisualStateChanged()) {
-				styleHandler.updateVisualState();
-				if (styleHandler.layoutUpdate()) {
-					return true;
-				}
-			}
-		}
-
-		return false;
-	}
-
-	boolean layouting;
-
-	public boolean isLayouting() {
-		return layouting;
-	}
-
-	public void setLayouting(boolean layouting) {
-		this.layouting = layouting;
-	}
-
 	/**
 	 * Sets the maximum width the parenting {@link Manager} uses to layout.
 	 * 
@@ -330,7 +312,6 @@ public class StyleManager implements StyleSheetListener {
 	 * Called by onUndisplay() of the parenting {@link Manager}
 	 */
 	public void onUndisplay() {
-		Log.debug("undisplay", this);
 		// removes this style manager
 		StyleSheet.getInstance().removeListener(this);
 		// release all style handlers
@@ -358,14 +339,77 @@ public class StyleManager implements StyleSheetListener {
 					styleHandler.setStyle(newStyle);
 				}
 			}
-		}
 
-		// request a layout update on the parenting manager
-		synchronized (UiApplication.getEventLock()) {
 			if (this.manager instanceof GzManager) {
 				GzManager gzManager = (GzManager) this.manager;
 				gzManager.gz_updateLayout();
 			}
+		}
+	}
+
+	/**
+	 * Applies the margin and padding for all field
+	 * 
+	 * @param availableWidth
+	 *            the available width
+	 */
+	public void applyLayouts(int availableWidth) {
+		for (int index = 0; index < size(); index++) {
+			StyleHandler styleHandler = get(index);
+			styleHandler.applyLayout(availableWidth);
+		}
+	}
+
+	/**
+	 * Checks all fields if their visual states have changed and applies the
+	 * corresponding style
+	 * 
+	 * @return true if the new style of a field requires a relayout of the
+	 *         {@link Manager} otherwise false
+	 */
+	public boolean applyStyles() {
+		boolean layoutUpdate = false;
+		// for all style handlers ...
+		for (int index = 0; index < size(); index++) {
+			StyleHandler styleHandler = get(index);
+			// if the visual state of the field has changed ...
+			if (styleHandler.isVisualStateChanged()) {
+				// update the style
+				styleHandler.updateVisualState();
+				styleHandler.applyStyle();
+				// if the style requires a layout update ...
+				if (styleHandler.layoutUpdate()) {
+					// set the layout update flag to true
+					layoutUpdate = true;
+				}
+			}
+		}
+
+		return layoutUpdate;
+	}
+
+	/**
+	 * Returns true if the {@link Manager} of this {@link StyleManager} is
+	 * currently layouting
+	 * 
+	 * @return true if the {@link Manager} of this {@link StyleManager} is
+	 *         currently layouting otherwise false
+	 */
+	public boolean isLayouting() {
+		synchronized (UiApplication.getEventLock()) {
+			return this.layouting;
+		}
+	}
+
+	/**
+	 * Sets the flag to indicate that the {@link Manager} is currently layouting
+	 * 
+	 * @param layouting
+	 *            the layouting flag
+	 */
+	public void setLayouting(boolean layouting) {
+		synchronized (UiApplication.getEventLock()) {
+			this.layouting = layouting;
 		}
 	}
 

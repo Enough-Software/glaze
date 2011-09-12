@@ -1,13 +1,11 @@
 package de.enough.glaze.ui.delegate;
 
-import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.ui.Manager;
 import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.decor.Background;
 import de.enough.glaze.log.Log;
 import de.enough.glaze.style.Style;
-import de.enough.glaze.style.handler.StyleHandler;
 import de.enough.glaze.style.handler.StyleManager;
 import de.enough.glaze.style.property.background.GzBackground;
 
@@ -45,9 +43,12 @@ public class ManagerDelegate {
 			synchronized (UiApplication.getEventLock()) {
 				// if the manager is not layouting and a one of the fields needs
 				// a layout update ...
-				if (!styleManager.isLayouting() && styleManager.layoutUpdate()) {
-					// update the layout
-					gzManager.gz_updateLayout();
+				if (!styleManager.isLayouting()) {
+					boolean layoutUpdate = styleManager.applyStyles();
+					if (layoutUpdate) {
+						// update the layout
+						gzManager.gz_updateLayout();
+					}
 				}
 			}
 
@@ -76,20 +77,11 @@ public class ManagerDelegate {
 			StyleManager styleManager = gzManager.getStyleManager();
 			// indicate that the manager is layouting
 			styleManager.setLayouting(true);
-			// for each style handler ...
-			for (int index = 0; index < styleManager.size(); index++) {
-				StyleHandler handler = styleManager.get(index);
-				// if the visual state has changed for the field of the style
-				// handler ...
-				// update the style with the available width
-				handler.updateStyle();
-				handler.applyStyle(maxWidth);
-			}
-
+			// apply the margin and padding for all fields
+			styleManager.applyLayouts(maxWidth);
 			// set the maximum width in the style manager for percentual field
 			// dimensions
 			styleManager.setMaxWidth(maxWidth);
-
 			// get the style of the manager
 			Style style = FieldDelegate.getStyle(manager);
 			// get the available width and height to layout the manager
@@ -102,7 +94,7 @@ public class ManagerDelegate {
 			// adjust the width and height
 			ExtentDelegate.setExtentWidth(manager, gzManager, style);
 			ExtentDelegate.setExtentHeight(manager, gzManager, style);
-
+			// reset the layouting flag
 			styleManager.setLayouting(false);
 		} else {
 			Log.error("manager must implement GzManager", manager);

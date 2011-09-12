@@ -12,6 +12,7 @@ import de.enough.glaze.style.definition.StyleSheetDefinition;
 import de.enough.glaze.style.definition.converter.Converter;
 import de.enough.glaze.style.extension.Extension;
 import de.enough.glaze.style.extension.Processor;
+import de.enough.glaze.style.handler.StyleManager;
 import de.enough.glaze.style.parser.CssContentHandlerImpl;
 import de.enough.glaze.style.parser.CssParser;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
@@ -244,7 +245,12 @@ public class StyleSheet {
 		cssParser.setContentHandler(cssContentHandler);
 		cssParser.parse();
 	}
-	
+
+	/**
+	 * Returns the url
+	 * 
+	 * @return the url
+	 */
 	public Url getUrl() {
 		return this.url;
 	}
