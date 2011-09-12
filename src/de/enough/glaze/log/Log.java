@@ -13,7 +13,7 @@ public class Log {
 	/**
 	 * the tag
 	 */
-	private static final String TAG = "GLAZE";
+	public static final String TAG = "GLAZE";
 
 	private static final String HEADER = "\n//" + TAG
 			+ "/////////////////////////////////";

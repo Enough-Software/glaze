@@ -6,6 +6,7 @@ import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.component.Dialog;
 import net.rim.device.api.ui.component.DialogClosedListener;
+import de.enough.glaze.log.Log;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 
 public abstract class StyleSheetSandbox implements StyleSheetListener {
@@ -44,9 +45,10 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 				Dialog.GLOBAL_STATUS,
 				Bitmap.getPredefinedBitmap(Bitmap.HOURGLASS));
 	}
-	
+
 	/**
 	 * Returns the update menu item text
+	 * 
 	 * @return the update menu item text
 	 */
 	protected String getUpdateMenuTextItem() {
@@ -116,8 +118,9 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 	public void onSyntaxError(final CssSyntaxError syntaxError) {
 		synchronized (UiApplication.getEventLock()) {
 			String error = syntaxError.toString();
+			String message = Log.TAG + "\n" + error;
 			UiApplication.getUiApplication().popScreen(this.waitDialog);
-			this.errorDialog = new Dialog(error, new String[] { "OK" }, null,
+			this.errorDialog = new Dialog(message, new String[] { "OK" }, null,
 					Dialog.OK, Bitmap.getPredefinedBitmap(Bitmap.EXCLAMATION));
 			this.errorDialog
 					.setDialogClosedListener(new DialogClosedListener() {
