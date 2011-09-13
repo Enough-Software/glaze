@@ -12,7 +12,6 @@ import de.enough.glaze.style.definition.StyleSheetDefinition;
 import de.enough.glaze.style.definition.converter.Converter;
 import de.enough.glaze.style.extension.Extension;
 import de.enough.glaze.style.extension.Processor;
-import de.enough.glaze.style.handler.StyleManager;
 import de.enough.glaze.style.parser.CssContentHandlerImpl;
 import de.enough.glaze.style.parser.CssParser;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
@@ -22,9 +21,9 @@ import de.enough.glaze.style.property.font.GzFont;
 
 /**
  * A class representing an abstraction of a CSS stylesheet. A stylesheet is
- * loaded and parsed through {@link #load(String, StyleSheetListener)} or
- * {@link #load(String)}. Various method provide access to backgrounds, borders,
- * fonts etc..
+ * loaded and parsed through {@link #update(String, StyleSheetListener)} or
+ * {@link #update(String)}. Various method provide access to backgrounds,
+ * borders, fonts etc..
  * 
  * @author Andre
  * 
@@ -175,21 +174,21 @@ public class StyleSheet {
 	}
 
 	/**
-	 * Loads and parses the given url asynchronously and notifies the given
-	 * listener of the result of the loading process
+	 * Updates the stylesheet asynchronously with the given url and notifies the
+	 * given listener of the result of the loading process
 	 * 
 	 * @param url
 	 *            the url
 	 * @param listener
 	 *            the {@link StyleSheetListener}
 	 */
-	public void load(final String url, StyleSheetListener listener) {
+	public void update(final String url, StyleSheetListener listener) {
 		addListener(listener);
 
 		new Thread() {
 			public void run() {
 				try {
-					load(new Url(url));
+					update(url);
 					notifyLoaded(url);
 				} catch (CssSyntaxError e) {
 					notifySyntaxError(e);
@@ -201,7 +200,8 @@ public class StyleSheet {
 	}
 
 	/**
-	 * Loads and parses the given url
+	 * Updates the stylesheet by clearing the definitions and loading and
+	 * parsing the given url.
 	 * 
 	 * @param url
 	 *            the url
@@ -210,19 +210,54 @@ public class StyleSheet {
 	 * @throws Exception
 	 *             if an error occurs
 	 */
-	public void load(final String url) throws CssSyntaxError, Exception {
-		synchronized (this) {
-			try {
-				load(new Url(url));
-				notifyLoaded(url);
-			} catch (CssSyntaxError e) {
-				notifySyntaxError(e);
-				throw e;
-			} catch (Exception e) {
-				notifyError(e);
-				throw e;
+	public synchronized void update(String url) throws CssSyntaxError,
+			Exception {
+		// clear all definitions for an update
+		this.definition.clear();
+		// load and parse the url
+		load(new Url(url));
+	}
+
+	/**
+	 * Extends the stylesheet asynchronously with the given url and notifies the
+	 * given listener of the result of the loading process
+	 * 
+	 * @param url
+	 *            the url
+	 * @param listener
+	 *            the {@link StyleSheetListener}
+	 */
+	public void extend(final String url, StyleSheetListener listener) {
+		addListener(listener);
+
+		new Thread() {
+			public void run() {
+				try {
+					extend(url);
+					notifyLoaded(url);
+				} catch (CssSyntaxError e) {
+					notifySyntaxError(e);
+				} catch (Exception e) {
+					notifyError(e);
+				}
 			}
-		}
+		}.start();
+	}
+
+	/**
+	 * Extends the stylesheet by loading and parsing the given url
+	 * 
+	 * @param url
+	 *            the url
+	 * @throws CssSyntaxError
+	 *             if the syntax of the CSS is wrong
+	 * @throws Exception
+	 *             if an error occurs
+	 */
+	public synchronized void extend(String url) throws CssSyntaxError,
+			Exception {
+		// load and parse the url
+		load(new Url(url));
 	}
 
 	/**

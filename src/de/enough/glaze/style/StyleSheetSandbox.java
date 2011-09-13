@@ -88,7 +88,7 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 	public void update() {
 		synchronized (UiApplication.getEventLock()) {
 			this.waitDialog.show();
-			StyleSheet.getInstance().load(this.url, this);
+			StyleSheet.getInstance().update(this.url, this);
 		}
 	}
 

@@ -15,17 +15,11 @@ public class DefinitionCollection {
 	 */
 	private final Vector definitions;
 
-	private int cursor;
-
 	/**
 	 * Creates a new {@link DefinitionCollection} instance
 	 */
 	public DefinitionCollection() {
 		this.definitions = new Vector();
-	}
-
-	public void resetCursor() {
-		this.cursor = 0;
 	}
 
 	/**
@@ -81,5 +75,12 @@ public class DefinitionCollection {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Removes all definitions.
+	 */
+	public void clear() {
+		this.definitions.removeAllElements();
 	}
 }

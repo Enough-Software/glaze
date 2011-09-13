@@ -46,7 +46,7 @@ public class StyleSheetDefinition {
 	public DefinitionCollection getBackgroundDefinitions() {
 		return this.backgroundDefinitions;
 	}
-	
+
 	public Definition getBackgroundDefinition(String id) {
 		return this.backgroundDefinitions.getDefinition(id);
 	}
@@ -59,7 +59,7 @@ public class StyleSheetDefinition {
 	public DefinitionCollection getBorderDefinitions() {
 		return this.borderDefinitions;
 	}
-	
+
 	public Definition getBorderDefinition(String id) {
 		return this.borderDefinitions.getDefinition(id);
 	}
@@ -88,5 +88,15 @@ public class StyleSheetDefinition {
 
 	public Definition getStyleDefinition(String id) {
 		return this.styleDefinitions.getDefinition(id);
+	}
+
+	/**
+	 * Clear all definitions.
+	 */
+	public void clear() {
+		this.backgroundDefinitions.clear();
+		this.borderDefinitions.clear();
+		this.fontDefinitions.clear();
+		this.styleDefinitions.clear();
 	}
 }

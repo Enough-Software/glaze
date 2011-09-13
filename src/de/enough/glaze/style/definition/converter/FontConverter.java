@@ -59,7 +59,7 @@ public class FontConverter implements Converter {
 	public Object convert(Definition definition) throws CssSyntaxError {
 		if (!definition.hasProperties(this)) {
 			return null;
-		} 
+		}
 
 		Property fontFamilyProp = definition.getProperty("font-family");
 		Property fontSizeProp = definition.getProperty("font-size");
@@ -78,23 +78,33 @@ public class FontConverter implements Converter {
 
 		// convert the font-family property
 		if (fontFamilyProp != null) {
-			Object result = ValuePropertyParser.getInstance().parse(fontFamilyProp);
-			if(result instanceof String) {
-				name = (String)result;
+			Object result = ValuePropertyParser.getInstance().parse(
+					fontFamilyProp);
+			if (result instanceof String) {
+				name = (String) result;
 				try {
 					family = FontFamily.forName(name);
 				} catch (ClassNotFoundException e) {
-					throw new CssSyntaxError("unknown font family", fontFamilyProp);
+					throw new CssSyntaxError("unknown font family",
+							fontFamilyProp);
 				}
 			} else {
-				throw new CssSyntaxError("must be a single font name", fontFamilyProp);
+				throw new CssSyntaxError("must be a single font name",
+						fontFamilyProp);
 			}
 		}
 
 		// convert the font-size property
 		if (fontSizeProp != null) {
-			size = (Dimension) DimensionPropertyParser.getInstance().parse(
+			Object result = ValuePropertyParser.getInstance().parse(
 					fontSizeProp);
+			if (result instanceof String) {
+				String fontSizeValue = (String) result;
+				size = getFontSize(fontSizeValue, fontSizeProp);
+			} else {
+				throw new CssSyntaxError("must be a single dimension or value",
+						fontFamilyProp);
+			}
 		}
 
 		// convert the font-style property
@@ -121,16 +131,14 @@ public class FontConverter implements Converter {
 
 		// convert the color property
 		if (colorProp != null) {
-			color = (Color) ColorPropertyParser.getInstance().parse(
-					colorProp);
+			color = (Color) ColorPropertyParser.getInstance().parse(colorProp);
 		}
 
 		// get the font size in pixels
 		int fontHeightPixels = size.getValue(defaultFont.getHeight());
 
 		// create the result font
-		Font resultFont = family.getFont(style, fontHeightPixels,
-				Ui.UNITS_px);
+		Font resultFont = family.getFont(style, fontHeightPixels, Ui.UNITS_px);
 
 		return new GzFont(name, resultFont, color);
 	}
@@ -144,7 +152,7 @@ public class FontConverter implements Converter {
 	 *            the font style property
 	 * @return the font style bit
 	 * @throws CssSyntaxError
-	 *             if the css syntax is wrong
+	 *             if the CSS syntax is wrong
 	 */
 	private int getFontStyle(String fontStyleValue, Property fontStyleProp)
 			throws CssSyntaxError {
@@ -156,6 +164,31 @@ public class FontConverter implements Converter {
 			return Font.ITALIC;
 		} else {
 			throw new CssSyntaxError("unknown font style", fontStyleProp);
+		}
+	}
+
+	/**
+	 * Returns the font size for the given font size value
+	 * 
+	 * @param fontSizeValue
+	 *            the font size value
+	 * @param fontSizeProp
+	 *            the font size property
+	 * @return the font size dimension
+	 * @throws CssSyntaxError
+	 *             if the CSS syntax is wrong
+	 */
+	private Dimension getFontSize(String fontSizeValue, Property fontSizeProp)
+			throws CssSyntaxError {
+		if (GzFont.SIZE_SMALL.equals(fontSizeValue)) {
+			return new Dimension(75, Dimension.UNIT_PERCENT);
+		} else if (GzFont.SIZE_MEDIUM.equals(fontSizeValue)) {
+			return new Dimension(100, Dimension.UNIT_PERCENT);
+		} else if (GzFont.SIZE_LARGE.equals(fontSizeValue)) {
+			return new Dimension(150, Dimension.UNIT_PERCENT);
+		} else {
+			return (Dimension) DimensionPropertyParser.getInstance().parse(
+					fontSizeProp);
 		}
 	}
 }
