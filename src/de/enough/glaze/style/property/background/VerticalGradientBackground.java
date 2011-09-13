@@ -53,8 +53,8 @@ public class VerticalGradientBackground extends GzBackground {
 		graphics.fillRect(x, y, width, startGradientPixels);
 
 		// Draw the gradient
-		int[] gradientColors = GradientUtils.getGradient(startColor.getColor(),
-				endColor.getColor(),
+		int[] gradientColors = GradientUtils.getGradient(
+				this.startColor.getColor(), this.endColor.getColor(),
 				Math.abs(endGradientPixels - startGradientPixels));
 		int pos = startGradientPixels;
 		int i = 0;

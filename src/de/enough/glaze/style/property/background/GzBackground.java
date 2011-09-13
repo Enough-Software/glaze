@@ -2,6 +2,7 @@ package de.enough.glaze.style.property.background;
 
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
+import net.rim.device.api.ui.Manager;
 import net.rim.device.api.ui.XYRect;
 import net.rim.device.api.ui.decor.Background;
 
@@ -17,6 +18,13 @@ public abstract class GzBackground extends Background {
 		return this.field;
 	}
 
+	/**
+	 * Adjusts the rectangle to draw the background in. Introduced due to a bug
+	 * in the background drawing of {@link Manager} instances.
+	 * 
+	 * @param rect
+	 *            the rectangle
+	 */
 	protected void adjustRect(XYRect rect) {
 		if (this.field != null) {
 			rect.width = this.field.getPaddingLeft()
@@ -28,6 +36,13 @@ public abstract class GzBackground extends Background {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.rim.device.api.ui.decor.Background#draw(net.rim.device.api.ui.Graphics
+	 * , net.rim.device.api.ui.XYRect)
+	 */
 	public void draw(Graphics graphics, XYRect rect) {
 		adjustRect(rect);
 		draw(graphics, rect.x, rect.y, rect.width, rect.height);
@@ -36,6 +51,11 @@ public abstract class GzBackground extends Background {
 	public abstract void draw(Graphics graphics, int x, int y, int width,
 			int height);
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.rim.device.api.ui.decor.Background#isTransparent()
+	 */
 	public boolean isTransparent() {
 		return true;
 	}

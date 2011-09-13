@@ -5,30 +5,18 @@ import de.enough.glaze.style.Color;
 
 public class SolidBackground extends GzBackground {
 
-	private final int color;
+	private final Color color;
 	
 	public SolidBackground(Color color) {
-		this.color = color.getColor();
+		this.color = color;
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.rim.device.api.ui.decor.Background#draw(net.rim.device.api.ui.Graphics, net.rim.device.api.ui.XYRect)
 	 */
 	public void draw(Graphics graphics, int x, int y, int width, int height) {
-		// remember original color
-		int originalColor = graphics.getColor();
-		
-		graphics.setColor(this.color);
+		this.color.set(graphics);
 		graphics.fillRect(x, y, width, height);
-		
-		// restore original color
-		graphics.setColor(originalColor);
+		this.color.reset(graphics);
 	}
-
-	/* (non-Javadoc)
-	 * @see net.rim.device.api.ui.decor.Background#isTransparent()
-	 */
-	public boolean isTransparent() {
-		return true;
-	} 
 }

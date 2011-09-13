@@ -2,6 +2,8 @@ package de.enough.glaze.style;
 
 import java.util.Hashtable;
 
+import net.rim.device.api.ui.Graphics;
+
 /**
  * A class representing a color with its alpha and rgb value.
  * 
@@ -58,6 +60,10 @@ public class Color {
 	 */
 	private final int alpha;
 
+	private int storedColor;
+
+	private int storedGlobalAlpha;
+
 	/**
 	 * Creates a new {@link Color} instance
 	 * 
@@ -66,8 +72,18 @@ public class Color {
 	 */
 	public Color(int argb) {
 		this.argb = argb;
+		System.out.println(Integer.toHexString(argb));
 		this.rgb = argb & RGB_MASK;
-		this.alpha = (argb & ALPHA_MASK) >> 32;
+		int alpha = (argb >> 24) & 0xFF;
+		// if no alpha is set ...
+		if (alpha == 0) {
+			// use full opacity
+			this.alpha = 0xFF;
+			// otherwise ...
+		} else {
+			// use the alpha value
+			this.alpha = alpha;
+		}
 	}
 
 	/**
@@ -86,6 +102,34 @@ public class Color {
 	 */
 	public int getColor() {
 		return this.rgb;
+	}
+
+	/**
+	 * Sets the color in the given {@link Graphics} instance
+	 * 
+	 * @param graphics
+	 *            the {@link Graphics} instance
+	 */
+	public void set(Graphics graphics) {
+		// store the original color and global alpha
+		this.storedGlobalAlpha = graphics.getGlobalAlpha();
+		this.storedColor = graphics.getColor();
+
+		// set the global alpha and color
+		graphics.setGlobalAlpha(this.alpha);
+		graphics.setColor(this.rgb);
+	}
+
+	/**
+	 * Resets the color and alpha in the given {@link Graphics} instance
+	 * 
+	 * @param graphics
+	 *            the {@link Graphics} instance
+	 */
+	public void reset(Graphics graphics) {
+		// reset the global alpha and color
+		graphics.setGlobalAlpha(this.storedGlobalAlpha);
+		graphics.setColor(this.storedColor);
 	}
 
 	/*

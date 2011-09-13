@@ -6,11 +6,11 @@ import de.enough.glaze.style.Color;
 
 public class RoundedBackground extends GzBackground {
 
-	private final int color;
+	private final Color color;
 	private final XYEdges widths;
 
 	public RoundedBackground(Color color, XYEdges widths) {
-		this.color = color.getColor();
+		this.color = color;
 		this.widths = widths;
 	}
 
@@ -33,8 +33,7 @@ public class RoundedBackground extends GzBackground {
 	 * , net.rim.device.api.ui.XYRect)
 	 */
 	public void draw(Graphics graphics, int x, int y, int width, int height) {
-		int oldColor = graphics.getColor();
-		graphics.setColor(this.color);
+		this.color.set(graphics);
 		graphics.setDrawingStyle(Graphics.DRAWSTYLE_AAPOLYGONS, true);
 
 		int marginTop = this.widths.top;
@@ -51,7 +50,7 @@ public class RoundedBackground extends GzBackground {
 				y + height, y + height - marginBottom };
 
 		graphics.drawFilledPath(xPts, yPts, PATH_POINT_TYPES, null);
-		graphics.setColor(oldColor);
+		this.color.reset(graphics);
 		graphics.setDrawingStyle(Graphics.DRAWSTYLE_AAPOLYGONS, false);
 	}
 }
