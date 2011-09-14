@@ -5,13 +5,11 @@ import java.util.Vector;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Manager;
 import net.rim.device.api.ui.UiApplication;
-import net.rim.device.api.ui.XYRect;
 import de.enough.glaze.log.Log;
 import de.enough.glaze.style.Style;
 import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.StyleSheetListener;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
-import de.enough.glaze.ui.delegate.FieldDelegate;
 import de.enough.glaze.ui.delegate.GzManager;
 
 /**
@@ -89,34 +87,6 @@ public class StyleManager implements StyleSheetListener {
 	 */
 	public void add(Field field, Style style) {
 		add(new StyleHandler(field, style));
-	}
-
-	/**
-	 * Adds all the given fields. Uses {@link #add(Field)} internally.
-	 * 
-	 * @param fields
-	 *            the fields
-	 */
-	public void addAll(Field[] fields) {
-		for (int index = 0; index < fields.length; index++) {
-			Field field = fields[index];
-			add(field);
-		}
-	}
-
-	/**
-	 * Adds all the given fields. Uses {@link #add(Field,Style)} internally.
-	 * 
-	 * @param fields
-	 *            the fields
-	 * @param style
-	 *            the style
-	 */
-	public void addAll(Field[] fields, Style style) {
-		for (int index = 0; index < fields.length; index++) {
-			Field field = fields[index];
-			add(field, style);
-		}
 	}
 
 	/**

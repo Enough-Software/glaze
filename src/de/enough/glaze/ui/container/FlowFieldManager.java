@@ -50,8 +50,10 @@ public class FlowFieldManager extends
 	 * @see net.rim.device.api.ui.Manager#addAll(net.rim.device.api.ui.Field[])
 	 */
 	public void addAll(Field[] fields) {
-		super.addAll(fields);
-		this.styleManager.addAll(fields);
+		for (int index = 0; index < fields.length; index++) {
+			Field field = fields[index];
+			add(field);
+		}
 	}
 
 	/*
@@ -60,8 +62,10 @@ public class FlowFieldManager extends
 	 * @see net.rim.device.api.ui.Manager#addAll(net.rim.device.api.ui.Field[])
 	 */
 	public void addAll(Field[] fields, Style style) {
-		super.addAll(fields);
-		this.styleManager.addAll(fields, style);
+		for (int index = 0; index < fields.length; index++) {
+			Field field = fields[index];
+			add(field, style);
+		}
 	}
 
 	/*

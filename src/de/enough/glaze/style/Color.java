@@ -46,7 +46,7 @@ public class Color {
 	/**
 	 * the mask to extract the alpha value of a color
 	 */
-	private static final int ALPHA_MASK = 0xFF000000;
+	private static final int ALPHA_MASK = 0xFF;
 
 	private final int argb;
 
@@ -72,9 +72,8 @@ public class Color {
 	 */
 	public Color(int argb) {
 		this.argb = argb;
-		System.out.println(Integer.toHexString(argb));
 		this.rgb = argb & RGB_MASK;
-		int alpha = (argb >> 24) & 0xFF;
+		int alpha = (argb >> 24) & ALPHA_MASK;
 		// if no alpha is set ...
 		if (alpha == 0) {
 			// use full opacity

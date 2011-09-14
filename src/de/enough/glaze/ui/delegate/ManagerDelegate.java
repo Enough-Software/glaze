@@ -77,11 +77,11 @@ public class ManagerDelegate {
 			StyleManager styleManager = gzManager.getStyleManager();
 			// indicate that the manager is layouting
 			styleManager.setLayouting(true);
-			// apply the margin and padding for all fields
-			styleManager.applyLayouts(maxWidth);
 			// set the maximum width in the style manager for percentual field
 			// dimensions
 			styleManager.setMaxWidth(maxWidth);
+			// apply the margin and padding for all fields
+			styleManager.applyLayouts(maxWidth);
 			// get the style of the manager
 			Style style = FieldDelegate.getStyle(manager);
 			// get the available width and height to layout the manager

@@ -21,10 +21,10 @@ public class MaskBackground extends GzCachedBackground {
 	 */
 	public int[] create(int width, int height) {
 		Bitmap maskBitmap = new Bitmap(width, height);
-		Graphics maskBuffer = Graphics.create(maskBitmap);
+		Graphics maskBuffer = new Graphics(maskBitmap);
 
 		Bitmap backgroundBitmap = new Bitmap(width, height);
-		Graphics backgroundBuffer = Graphics.create(backgroundBitmap);
+		Graphics backgroundBuffer = new Graphics(backgroundBitmap);
 		this.background.draw(backgroundBuffer, new XYRect(0, 0, width, height));
 
 		int bgColorBlack = 0x0;
@@ -122,7 +122,7 @@ public class MaskBackground extends GzCachedBackground {
 
 		int[] backgroundData = new int[width * height];
 
-		backgroundBitmap.getARGB(backgroundData, 0, width, 0, 0, width, height, true);
+		backgroundBitmap.getARGB(backgroundData, 0, width, 0, 0, width, height);
 
 		for (int i = 0; i < resultMask.length; i++) {
 			backgroundData[i] = (backgroundData[i] & 0x00FFFFFF)
