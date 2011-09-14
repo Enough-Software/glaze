@@ -71,17 +71,22 @@ public class RoundedBorder extends GzBorder {
 		
 		int width = rect.width;
 		int x = rect.x;
-		int xPts [] = new int[] { x, x, x+this.widths.left, x+width - this.widths.right, x+width, x+width,
-			      x+width, x+width, x+width - this.widths.right, x+this.widths.left, x, x
+		int xPts [] = new int[] { x, x, x+this.widths.left-1, x+width - this.widths.right, x+width-1, x+width-1,
+			      x+width-1, x+width-1, x+width - this.widths.right, x+this.widths.left-1, x, x
 		};
 		
 		int height = rect.height;
 		int y = rect.y;
-		int yPts [] = new int[] { y+this.widths.top, y, y, y, y, y+this.widths.top,
-			      y + height - this.widths.bottom, y+height, y+height, y+height, y+height, y+height-this.widths.bottom
+		int yPts [] = new int[] { y+this.widths.top-1, y, y, y, y, y+this.widths.top-1,
+			      y + height - this.widths.bottom, y+height-1, y+height-1, y+height-1, y+height-1, y+height-this.widths.bottom
 		};
 		
-		graphics.drawPathOutline(xPts, yPts, PATH_POINT_TYPES, null, true);
+		graphics.drawPathOutline(xPts, yPts, PATH_POINT_TYPES, null,true);
+		for (int i=0;i <yPts.length;i++) {
+			graphics.drawPoint(xPts[i], yPts[i]);
+		}
+		graphics.setColor(0xAA00FF00);
+		graphics.drawRoundRect(x, y, width, height, this.widths.right*2, this.widths.right*2);
 		graphics.setColor(oldColor);
 		graphics.setStipple(oldStipple);
 		graphics.setDrawingStyle(Graphics.DRAWSTYLE_AALINES, false);

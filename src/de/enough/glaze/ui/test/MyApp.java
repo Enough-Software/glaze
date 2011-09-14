@@ -41,7 +41,7 @@ public class MyApp extends UiApplication {
 		}
 
 		sandbox = new StyleSheetSandbox(
-				"http://pastebin.com/raw.php?i=auTcDFec") {
+				"http://pastebin.com/raw.php?i=YAT0FubV") {
 
 			/*
 			 * (non-Javadoc)
