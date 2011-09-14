@@ -29,11 +29,6 @@ public class ObjectChoiceField extends
 		super(label, choices, initialObject);
 	}
 
-	public ObjectChoiceField(String label, Object[] choices,
-			Object initialObject, long style) {
-		super(label, choices, initialObject, style);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -213,6 +213,9 @@ public class CssParser {
 			CssSyntaxError {
 		if (this.bufferStartIndex >= this.bufferEndIndex) {
 			int read = this.reader.read(this.readBuffer);
+			this.bufferStartIndex = 0;
+			this.bufferEndIndex = read;
+			this.hasNextToken = (read == BUFFER_SIZE);
 			if (read == -1) {
 				if (getBlockDepth() > 0) {
 					Log.syntaxError(new CssSyntaxError("block not closed",
@@ -220,9 +223,6 @@ public class CssParser {
 				}
 				return;
 			}
-			this.bufferStartIndex = 0;
-			this.bufferEndIndex = read;
-			this.hasNextToken = (read == BUFFER_SIZE);
 		}
 		boolean checkNextCharForEndComment = false;
 		boolean checkNextCharForStartComment = false;

@@ -22,7 +22,7 @@ public class SvgBackground extends GzCachedBackground {
 	public int[] create(int width, int height) {
 		ScalableGraphics scalableGraphics = ScalableGraphics.createInstance();
 		Bitmap bitmap = new Bitmap(width, height);
-		Graphics graphics = Graphics.create(bitmap);
+		Graphics graphics = new Graphics(bitmap);
 
 		// render the image to the graphics instance
 		scalableGraphics.bindTarget(graphics);

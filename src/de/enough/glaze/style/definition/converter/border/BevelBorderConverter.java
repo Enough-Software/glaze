@@ -20,6 +20,16 @@ import de.enough.glaze.style.property.border.GzBorderFactory;
  * 
  */
 public class BevelBorderConverter implements Converter {
+	
+	/**
+	 * a light grey for the default inner bevel color
+	 */
+	private static int LIGHTGRAY = 0xd3d3d3;
+	
+	/**
+	 * a dark grey for the default inner bevel color
+	 */
+	private static int DARKGRAY = 0xa9a9a9a;
 
 	/**
 	 * the instance
@@ -68,9 +78,9 @@ public class BevelBorderConverter implements Converter {
 		Property borderWidthProp = definition.getProperty("border-width");
 
 		XYEdges borderInnerColors = ColorConverterUtils
-				.toXYEdges(net.rim.device.api.ui.Color.LIGHTGRAY);
+				.toXYEdges(LIGHTGRAY);
 		XYEdges borderOuterColors = ColorConverterUtils
-				.toXYEdges(net.rim.device.api.ui.Color.DARKGRAY);
+				.toXYEdges(DARKGRAY);
 		XYEdges borderWidths = DimensionConverterUtils.toXYEdges(1);
 
 		if (borderInnerColorProp != null) {
