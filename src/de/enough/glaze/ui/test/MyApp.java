@@ -41,7 +41,7 @@ public class MyApp extends UiApplication {
 		}
 
 		sandbox = new StyleSheetSandbox(
-				"http://pastebin.com/raw.php?i=auTcDFec") {
+				"http://pastebin.com/raw.php?i=i8d0SgHf") {
 
 			/*
 			 * (non-Javadoc)
@@ -50,7 +50,7 @@ public class MyApp extends UiApplication {
 			 * de.enough.glaze.style.StyleSheetSandbox#createSandboxScreen()
 			 */
 			public Screen createSandboxScreen() {
-				return new LoginScreen();
+				return new BackgroundTest();
 			}
 		};
 
