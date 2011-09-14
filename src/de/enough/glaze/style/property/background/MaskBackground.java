@@ -110,6 +110,11 @@ public class MaskBackground extends GzCachedBackground {
 								/ (blueBlack - blueWhite + 255);
 						originalAlpha = blueBlack - blueWhite + 255;
 					}
+					if ( originalAlpha >  255) {
+						originalAlpha = 255;
+					} else if ( originalAlpha < 0 ) {
+						originalAlpha = 0;
+					}
 					lastPixelWhite = pixelWhite;
 					lastPixelBlack = pixelBlack;
 					lastPixelResult = ((originalAlpha << 24)
