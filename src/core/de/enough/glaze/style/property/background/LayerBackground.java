@@ -1,16 +1,19 @@
 package de.enough.glaze.style.property.background;
 
 import net.rim.device.api.ui.Graphics;
+import net.rim.device.api.ui.XYRect;
 import de.enough.glaze.style.Dimension;
 
 public class LayerBackground extends GzBackground {
 
 	private final GzBackground[] backgrounds;
 	private final Dimension[] margins;
+	private final XYRect drawRect;
 
 	public LayerBackground(GzBackground[] backgrounds, Dimension[] margins) {
 		this.backgrounds = backgrounds;
 		this.margins = margins;
+		this.drawRect = new XYRect();
 	}
 
 	/*
@@ -27,12 +30,11 @@ public class LayerBackground extends GzBackground {
 		for (int index = 0; index < this.backgrounds.length; index++) {
 			Dimension childMargin = this.margins[index];
 			int marginValue = childMargin.getValue();
-			int childX = x + marginValue;
-			int childY = y + marginValue;
-			int childWidth = width - (marginValue * 2);
-			int childHeight = height - (marginValue * 2);
-			this.backgrounds[index].draw(graphics, childX, childY, childWidth,
-					childHeight);
+			this.drawRect.x = x + marginValue;
+			this.drawRect.y = y + marginValue;
+			this.drawRect.width = width - (marginValue * 2);
+			this.drawRect.height = height - (marginValue * 2);
+			this.backgrounds[index].draw(graphics, this.drawRect);
 
 		}
 
