@@ -64,7 +64,7 @@ public class BorderConverterUtils {
 					getBorderStyle(borderStyles[2], borderStyleProp),
 					getBorderStyle(borderStyles[3], borderStyleProp));
 		default:
-			throw new CssSyntaxError("must be 1 or 4 ids", borderStyleProp);
+			throw new CssSyntaxError("must be 1 or 4 border styles", borderStyleProp);
 		}
 	}
 

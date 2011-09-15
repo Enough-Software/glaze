@@ -102,8 +102,12 @@ public class SimpleBorderConverter implements Converter {
 			Object result = ValuePropertyParser.getInstance().parse(
 					borderStyleProp);
 			if (result instanceof String) {
-				String borderStyle = (String) result;
-				borderStyles = BorderConverterUtils.toXYEdges(borderStyle,
+				String borderStyleValue = (String) result;
+				borderStyles = BorderConverterUtils.toXYEdges(borderStyleValue,
+						borderStyleProp);
+			} else if(result instanceof String[]) {
+				String[] borderStyleValues = (String[]) result;
+				borderStyles = BorderConverterUtils.toXYEdges(borderStyleValues,
 						borderStyleProp);
 			}
 		}
