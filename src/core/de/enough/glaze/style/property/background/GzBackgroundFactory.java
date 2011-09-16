@@ -6,6 +6,7 @@ import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.XYEdges;
 import de.enough.glaze.style.Color;
 import de.enough.glaze.style.Dimension;
+import de.enough.glaze.style.property.background.image.ImageBackgroundPosition;
 
 public class GzBackgroundFactory {
 
@@ -52,7 +53,7 @@ public class GzBackgroundFactory {
 	 * @return the created background
 	 */
 	public static GzBackground createImageBackground(Bitmap bitmap,
-			int position, int repeat) {
+			ImageBackgroundPosition position, int repeat) {
 		// a background displaying an image
 		// - bitmap : the image to draw
 		// - position : must be 1 or 2 values of the following :

@@ -2,6 +2,7 @@ package de.enough.glaze.style.property.background;
 
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.Graphics;
+import de.enough.glaze.style.property.background.image.ImageBackgroundPosition;
 
 public class ImageBackground extends GzBackground {
 
@@ -18,11 +19,12 @@ public class ImageBackground extends GzBackground {
 	public static final int REPEAT_Y = 4;
 
 	private final Bitmap image;
-	private final int positionFlag, repeatFlag;
+	private final ImageBackgroundPosition position;
+	private final int repeatFlag;
 
-	public ImageBackground(Bitmap image, int positionFlag, int repeatFlag) {
+	public ImageBackground(Bitmap image, ImageBackgroundPosition position, int repeatFlag) {
 		this.image = image;
-		this.positionFlag = positionFlag;
+		this.position = position;
 		this.repeatFlag = repeatFlag;
 	}
 
@@ -40,7 +42,8 @@ public class ImageBackground extends GzBackground {
 		// Calculate startX and startY for drawing the image, based on the
 		// position flag
 		int startX = 0, startY = 0;
-		if ((this.positionFlag & POSITION_TOP) != 0) {
+		// TODO use ImageBackgroundPosition 
+		/*if ((this.positionFlag & POSITION_TOP) != 0) {
 			startY = y;
 		}
 		if ((this.positionFlag & POSITION_BOTTOM) != 0) {
@@ -61,13 +64,14 @@ public class ImageBackground extends GzBackground {
 		if ((this.positionFlag & POSITION_CENTER) != 0) {
 			startX = x + (width - imageWidth) / 2;
 			startY = y + (height - imageHeight) / 2;
-		}
+		}*/
 
 		// Calculate endX and endY for drawing the image, based on the repeat
 		// flag
 		int endX = startX;
 		int endY = startY;
-		if ((this.repeatFlag & REPEAT_X) != 0) {
+		// TODO use ImageBackgroundPosition 
+		/*if ((this.repeatFlag & REPEAT_X) != 0) {
 			endX = width;
 			startX = 0;
 			if ( (this.positionFlag & POSITION_RIGHT)  != 0) {
@@ -82,7 +86,7 @@ public class ImageBackground extends GzBackground {
 				int offset = (height % this.image.getHeight()) - image.getHeight();
 				startY += offset;
 			}
-		}
+		}*/
 
 		// Draw the image
 		x = startX;

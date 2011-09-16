@@ -1,4 +1,4 @@
-package de.enough.glaze.style.property.background.utils;
+package de.enough.glaze.style.property.background.gradient;
 
 /**
  * A class containing methods for gradient drawing
@@ -6,7 +6,7 @@ package de.enough.glaze.style.property.background.utils;
  * @author Andre
  * 
  */
-public class GradientUtils {
+public class GradientBackgroundUtils {
 
 	/**
 	 * Creates a gradient of colors. This method is highly optimized and only

@@ -2,16 +2,19 @@ package de.enough.glaze.style.definition.converter.background;
 
 import net.rim.device.api.system.Bitmap;
 import de.enough.glaze.content.ContentException;
+import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.StyleResources;
 import de.enough.glaze.style.Url;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.converter.Converter;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
+import de.enough.glaze.style.parser.property.DimensionPropertyParser;
 import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.parser.property.UrlPropertyParser;
 import de.enough.glaze.style.parser.property.ValuePropertyParser;
 import de.enough.glaze.style.property.background.GzBackgroundFactory;
 import de.enough.glaze.style.property.background.ImageBackground;
+import de.enough.glaze.style.property.background.image.ImageBackgroundPosition;
 
 /**
  * A {@link Converter} implementation to convert a definition to an image
@@ -62,7 +65,7 @@ public class ImageBackgroundConverter implements Converter {
 						"background-repeat" });
 
 		Bitmap imageBitmap = null;
-		int imagePosition = ImageBackground.POSITION_CENTER;
+		ImageBackgroundPosition imagePosition = new ImageBackgroundPosition();
 		int imageRepeat = ImageBackground.REPEAT_NONE;
 
 		if (backgroundImageProp != null) {
@@ -82,28 +85,7 @@ public class ImageBackgroundConverter implements Converter {
 			}
 
 			if (backgroundImagePositionProp != null) {
-				result = ValuePropertyParser.getInstance().parse(
-						backgroundImagePositionProp);
-				if (result instanceof String) {
-					String positionValue = (String) result;
-					imagePosition = getPosition(positionValue,
-							backgroundImagePositionProp);
-				} else if (result instanceof String[]) {
-					String[] positionValues = (String[]) result;
-					imagePosition = 0;
-					for (int index = 0; index < positionValues.length; index++) {
-						String positionValue = positionValues[index];
-						int tempImagePosition = getPosition(positionValue,
-								backgroundImagePositionProp);
-						if ( index == 0 && tempImagePosition == ImageBackground.POSITION_CENTER ) {
-							imagePosition |= ImageBackground.POSITION_V_CENTER;
-						} else if ( index == 1 && tempImagePosition == ImageBackground.POSITION_CENTER ) {
-							imagePosition |= ImageBackground.POSITION_H_CENTER;
-						} else {
-							imagePosition |= tempImagePosition;
-						}
-					}
-				}
+				imagePosition = getPosition(backgroundImagePositionProp);
 			}
 
 			if (backgroundImageRepeatProp != null) {
@@ -132,21 +114,73 @@ public class ImageBackgroundConverter implements Converter {
 		return null;
 	}
 
-	private int getPosition(String position,
+	private ImageBackgroundPosition getPosition(
 			Property backgroundImagePositionProp) throws CssSyntaxError {
-		if ("top".equals(position)) {
-			return ImageBackground.POSITION_TOP;
-		} else if ("bottom".equals(position)) {
-			return ImageBackground.POSITION_BOTTOM;
-		} else if ("left".equals(position)) {
-			return ImageBackground.POSITION_LEFT;
-		} else if ("right".equals(position)) {
-			return ImageBackground.POSITION_RIGHT;
-		} else if ("center".equals(position)) {
-			return ImageBackground.POSITION_CENTER;
+		Object result = ValuePropertyParser.getInstance().parse(
+				backgroundImagePositionProp);
+
+		if (result instanceof String) {
+			String imageBackgroundPositionValue = (String)result;
+			Dimension imageBackgroundPosition = getRelativePosition(imageBackgroundPositionValue);
+			if( imageBackgroundPosition != null && ImageBackgroundPosition.isValidHorizontalPosition(imageBackgroundPosition)) {
+				return new ImageBackgroundPosition(imageBackgroundPosition);
+			} else {
+				imageBackgroundPosition = (Dimension)DimensionPropertyParser.getInstance().parse(backgroundImagePositionProp);
+				return new ImageBackgroundPosition(imageBackgroundPosition);
+			}
+		} else if (result instanceof String[]) {
+			Dimension horizontalPosition = ImageBackgroundPosition.CENTER;
+			Dimension verticalPosition = ImageBackgroundPosition.CENTER;
+			
+			String[] imageBackgroundPositionValues = (String[]) result;
+			if (imageBackgroundPositionValues.length == 2) {
+				for (int index = 0; index < imageBackgroundPositionValues.length; index++) {
+					String imageBackgroundPositionValue = imageBackgroundPositionValues[index];
+					Dimension imageBackgroundPosition = getRelativePosition(imageBackgroundPositionValue);
+					if (imageBackgroundPosition != null) {
+						if (index == 0
+								&& ImageBackgroundPosition
+										.isValidHorizontalPosition(imageBackgroundPosition)) {
+							horizontalPosition = imageBackgroundPosition;
+						} else if (index == 1
+								&& ImageBackgroundPosition
+										.isValidVerticalPosition(imageBackgroundPosition)) {
+							verticalPosition = imageBackgroundPosition;
+						}
+					} else {
+						imageBackgroundPosition = (Dimension)DimensionPropertyParser.getInstance().parse(backgroundImagePositionProp);
+						if (index == 0) {
+							horizontalPosition = imageBackgroundPosition;
+						} else if (index == 1) {
+							verticalPosition = imageBackgroundPosition;
+						}
+					}
+				}
+				
+				return new ImageBackgroundPosition(horizontalPosition, verticalPosition);
+			} else {
+				throw new CssSyntaxError(
+						"must be 1 or two dimensions or values",
+						backgroundImagePositionProp);
+			}
 		} else {
-			throw new CssSyntaxError("invalid background position",
-					backgroundImagePositionProp);
+			return new ImageBackgroundPosition();
+		}
+	}
+
+	private Dimension getRelativePosition(String position) {
+		if ("top".equals(position)) {
+			return ImageBackgroundPosition.TOP;
+		} else if ("bottom".equals(position)) {
+			return ImageBackgroundPosition.BOTTOM;
+		} else if ("left".equals(position)) {
+			return ImageBackgroundPosition.LEFT;
+		} else if ("right".equals(position)) {
+			return ImageBackgroundPosition.RIGHT;
+		} else if ("center".equals(position)) {
+			return ImageBackgroundPosition.CENTER;
+		} else {
+			return null;
 		}
 	}
 
