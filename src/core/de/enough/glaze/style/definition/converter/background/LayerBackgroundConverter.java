@@ -1,6 +1,7 @@
 package de.enough.glaze.style.definition.converter.background;
 
 import de.enough.glaze.style.Dimension;
+import de.enough.glaze.style.Margin;
 import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.StyleSheetDefinition;
@@ -122,8 +123,15 @@ public class LayerBackgroundConverter implements Converter {
 				}
 			}
 		}
+		
+		if(margins == null && backgrounds != null) {
+			margins = new Dimension[backgrounds.length];
+			for (int index = 0; index < margins.length; index++) {
+				margins[index] = Dimension.ZERO;
+			}
+		}
 
-		if (backgrounds != null && margins != null) {
+		if (backgrounds != null) {
 			return GzBackgroundFactory.createLayerBackground(backgrounds,
 					margins);
 		} else {
