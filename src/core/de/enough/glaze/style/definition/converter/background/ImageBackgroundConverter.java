@@ -114,41 +114,78 @@ public class ImageBackgroundConverter implements Converter {
 		return null;
 	}
 
+	/**
+	 * Returns the image background position for the given property
+	 * 
+	 * @param backgroundImagePositionProp
+	 *            the image background position property
+	 * @return the created {@link ImageBackgroundPosition} instance
+	 * @throws CssSyntaxError
+	 *             if the CSS syntax is wrong
+	 */
 	private ImageBackgroundPosition getPosition(
 			Property backgroundImagePositionProp) throws CssSyntaxError {
 		Object result = ValuePropertyParser.getInstance().parse(
 				backgroundImagePositionProp);
-
+		// if a single value is given ...
 		if (result instanceof String) {
-			String imageBackgroundPositionValue = (String)result;
+			String imageBackgroundPositionValue = (String) result;
+			// get the relative position from the value
 			Dimension imageBackgroundPosition = getRelativePosition(imageBackgroundPositionValue);
-			if( imageBackgroundPosition != null && ImageBackgroundPosition.isValidHorizontalPosition(imageBackgroundPosition)) {
+			// if the value is a relative horizontal position ...
+			if (imageBackgroundPosition != null
+					&& ImageBackgroundPosition
+							.isValidHorizontalPosition(imageBackgroundPosition)) {
+				// return the image background position
 				return new ImageBackgroundPosition(imageBackgroundPosition);
+				// otherwise ...
 			} else {
-				imageBackgroundPosition = (Dimension)DimensionPropertyParser.getInstance().parse(backgroundImagePositionProp);
+				// parse the dimension
+				imageBackgroundPosition = (Dimension) DimensionPropertyParser
+						.getInstance().parse(backgroundImagePositionProp);
+				// return the image background position
 				return new ImageBackgroundPosition(imageBackgroundPosition);
 			}
+			// if multiple values are given ...
 		} else if (result instanceof String[]) {
 			Dimension horizontalPosition = ImageBackgroundPosition.CENTER;
 			Dimension verticalPosition = ImageBackgroundPosition.CENTER;
-			
+
 			String[] imageBackgroundPositionValues = (String[]) result;
+			// if 2 values are given ...
 			if (imageBackgroundPositionValues.length == 2) {
+				// for each value ...
 				for (int index = 0; index < imageBackgroundPositionValues.length; index++) {
 					String imageBackgroundPositionValue = imageBackgroundPositionValues[index];
+					// get the relative position for the value
 					Dimension imageBackgroundPosition = getRelativePosition(imageBackgroundPositionValue);
+					// if the value is a relative position ...
 					if (imageBackgroundPosition != null) {
+						// if the relative position is the first value and a
+						// valid horizontal position ...
 						if (index == 0
 								&& ImageBackgroundPosition
 										.isValidHorizontalPosition(imageBackgroundPosition)) {
 							horizontalPosition = imageBackgroundPosition;
+							// if the relative position is the second value and
+							// a
+							// valid vertical position ...
 						} else if (index == 1
 								&& ImageBackgroundPosition
 										.isValidVerticalPosition(imageBackgroundPosition)) {
 							verticalPosition = imageBackgroundPosition;
+						} else {
+							throw new CssSyntaxError(
+									"invalid image background position",
+									backgroundImagePositionProp);
 						}
+						// otherwise ...
 					} else {
-						imageBackgroundPosition = (Dimension)DimensionPropertyParser.getInstance().parse(backgroundImagePositionProp);
+						// parse the dimension
+						imageBackgroundPosition = (Dimension) DimensionPropertyParser
+								.getInstance().parse(
+										imageBackgroundPositionValue,
+										backgroundImagePositionProp);
 						if (index == 0) {
 							horizontalPosition = imageBackgroundPosition;
 						} else if (index == 1) {
@@ -156,18 +193,28 @@ public class ImageBackgroundConverter implements Converter {
 						}
 					}
 				}
-				
-				return new ImageBackgroundPosition(horizontalPosition, verticalPosition);
+
+				// return the image background position
+				return new ImageBackgroundPosition(horizontalPosition,
+						verticalPosition);
 			} else {
 				throw new CssSyntaxError(
 						"must be 1 or two dimensions or values",
 						backgroundImagePositionProp);
 			}
 		} else {
+			// return an default image background position
 			return new ImageBackgroundPosition();
 		}
 	}
 
+	/**
+	 * Returns the dimension for the given position value
+	 * 
+	 * @param position
+	 *            the position value
+	 * @return the dimension for the given position value
+	 */
 	private Dimension getRelativePosition(String position) {
 		if ("top".equals(position)) {
 			return ImageBackgroundPosition.TOP;
@@ -184,6 +231,16 @@ public class ImageBackgroundConverter implements Converter {
 		}
 	}
 
+	/**
+	 * Returns the repeat flag for the given repeat value
+	 * 
+	 * @param repeat
+	 *            the repeat value
+	 * @param backgroundImageRepeatProp
+	 *            the repeat property
+	 * @return the repeat flag
+	 * @throws CssSyntaxError
+	 */
 	private int getRepeat(String repeat, Property backgroundImageRepeatProp)
 			throws CssSyntaxError {
 		if ("repeat".equals(repeat)) {
