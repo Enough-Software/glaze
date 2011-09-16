@@ -42,64 +42,77 @@ public class ImageBackground extends GzBackground {
 		// Calculate startX and startY for drawing the image, based on the
 		// position flag
 		int startX = 0, startY = 0;
-		// TODO use ImageBackgroundPosition 
-		/*if ((this.positionFlag & POSITION_TOP) != 0) {
-			startY = y;
+		
+		// Set the vertical position
+		if ( this.position.isVerticalPositionRelative() ) {
+			if (this.position.getVerticalPosition() == ImageBackgroundPosition.TOP) {
+				startY = y;
+			} else if (this.position.getVerticalPosition() == ImageBackgroundPosition.BOTTOM) {
+				startY = y + height - imageHeight;
+			} else if (this.position.getVerticalPosition() == ImageBackgroundPosition.CENTER) {
+				startY = y + (height - imageHeight) / 2;
+			}
+		} else {
+			startY = this.position.getVerticalPosition().getValue(width);
 		}
-		if ((this.positionFlag & POSITION_BOTTOM) != 0) {
-			startY = y + height - imageHeight;
+		
+		// Set the horizontal position
+		if ( this.position.isHorizontalPositionRelative() ) {
+			if (this.position.getHorizontalPosition() == ImageBackgroundPosition.LEFT) {
+				startX = x;
+			} else if (this.position.getHorizontalPosition() == ImageBackgroundPosition.RIGHT) {
+				startX = x + width - imageWidth;
+			} else if (this.position.getHorizontalPosition() == ImageBackgroundPosition.CENTER) {
+				startX = x + (width - imageWidth) / 2;
+			}
+		} else {
+			startX = this.position.getHorizontalPosition().getValue(width);
 		}
-		if ((this.positionFlag & POSITION_V_CENTER) != 0) {
-			startY = y + (height - imageHeight) / 2;
-		}
-		if ((this.positionFlag & POSITION_LEFT) != 0) {
-			startX = x;
-		}
-		if ((this.positionFlag & POSITION_RIGHT) != 0) {
-			startX = x + width - imageWidth;
-		}
-		if ((this.positionFlag & POSITION_H_CENTER) != 0) {
-			startX = x + (width - imageWidth) / 2;
-		}
-		if ((this.positionFlag & POSITION_CENTER) != 0) {
-			startX = x + (width - imageWidth) / 2;
-			startY = y + (height - imageHeight) / 2;
-		}*/
 
-		// Calculate endX and endY for drawing the image, based on the repeat
-		// flag
+		// Adjust the background startX, startY, endX and endY based on the repeat flag
 		int endX = startX;
 		int endY = startY;
-		// TODO use ImageBackgroundPosition 
-		/*if ((this.repeatFlag & REPEAT_X) != 0) {
+		if ((this.repeatFlag & REPEAT_X) != 0) {
 			endX = width;
-			startX = 0;
-			if ( (this.positionFlag & POSITION_RIGHT)  != 0) {
-				int offset = (width % this.image.getWidth()) - image.getWidth();
-				startX += offset;
+			if ( this.position.isHorizontalPositionRelative() ) {
+				if (this.position.getHorizontalPosition() == ImageBackgroundPosition.RIGHT) {
+					startX = (width % imageWidth) - imageWidth;
+				} else if ( this.position.getHorizontalPosition() == ImageBackgroundPosition.CENTER ) {
+					startX = (((width-imageWidth) / 2) % imageWidth) - imageWidth; ;
+				} else {
+					startX = 0;
+				}
+			} else {
+				startX = (startX % imageWidth) - imageWidth; 
 			}
 		}
 		if ((this.repeatFlag & REPEAT_Y) != 0) {
 			endY = height;
-			startY = 0;
-			if ( (this.positionFlag & POSITION_BOTTOM)  != 0) {
-				int offset = (height % this.image.getHeight()) - image.getHeight();
-				startY += offset;
+			if ( this.position.isVerticalPositionRelative() ) {
+				if (this.position.getVerticalPosition() == ImageBackgroundPosition.BOTTOM) {
+					startY = (height % imageHeight) - imageHeight;
+				} else if ( this.position.getVerticalPosition() == ImageBackgroundPosition.CENTER ) {
+					startY = (((height-imageHeight) / 2) % imageHeight) - imageHeight; ;
+				} else {
+					startY = 0;
+				}
+			} else {
+				startY = (startY % imageHeight) - imageHeight; 
 			}
-		}*/
+		}
 
 		// Draw the image
-		x = startX;
-		y = startY;
+		int drawX = startX;
+		int drawY = startY;
 		graphics.pushContext(x, y, width, height, 0, 0);
-		while (x <= endX) {
-			while (y <= endY) {
-				graphics.drawBitmap(x, y, imageWidth, imageHeight, this.image,
+		while (drawX <= endX) {
+			while (drawY <= endY) {
+				graphics.drawBitmap(drawX, drawY, imageWidth, imageHeight, this.image,
 						0, 0);
-				y += imageHeight;
+				drawY += imageHeight;
 			}
-			x += imageWidth;
-			y = startY;
+			drawX += imageWidth;
+			drawY = startY;
 		}
 		graphics.popContext();
 	}
