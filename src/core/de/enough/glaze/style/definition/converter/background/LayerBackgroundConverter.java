@@ -1,14 +1,11 @@
 package de.enough.glaze.style.definition.converter.background;
 
-import de.enough.glaze.style.Dimension;
-import de.enough.glaze.style.Margin;
 import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.StyleSheetDefinition;
 import de.enough.glaze.style.definition.converter.BackgroundConverter;
 import de.enough.glaze.style.definition.converter.Converter;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
-import de.enough.glaze.style.parser.property.DimensionPropertyParser;
 import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.parser.property.ValuePropertyParser;
 import de.enough.glaze.style.property.background.GzBackground;
@@ -47,7 +44,7 @@ public class LayerBackgroundConverter implements Converter {
 	 * @see de.enough.glaze.style.definition.converter.Converter#getIds()
 	 */
 	public String[] getIds() {
-		return new String[] { "background-backgrounds", "background-margins" };
+		return new String[] { "background-backgrounds" };
 	}
 
 	/*
@@ -65,11 +62,8 @@ public class LayerBackgroundConverter implements Converter {
 		Property backgroundTypeProp = definition.getProperty("background-type");
 		Property backgroundsProp = definition
 				.getProperty("background-backgrounds");
-		Property backgroundMarginsProp = definition
-				.getProperty("background-margins");
 
 		GzBackground[] backgrounds = null;
-		Dimension[] margins = null;
 
 		if (backgroundsProp != null) {
 			Object result = ValuePropertyParser.getInstance().parse(
@@ -100,40 +94,8 @@ public class LayerBackgroundConverter implements Converter {
 			}
 		}
 
-		if (backgroundMarginsProp != null) {
-			Object result = DimensionPropertyParser.getInstance().parse(
-					backgroundMarginsProp);
-			if (result instanceof Dimension) {
-				Dimension dimension = (Dimension) result;
-				if (backgrounds.length == 1) {
-					margins = new Dimension[] { dimension };
-				} else {
-					throw new CssSyntaxError(
-							"the number of margins must match the number of backgrounds",
-							backgroundMarginsProp);
-				}
-			} else if (result instanceof Dimension[]) {
-				Dimension[] dimensions = (Dimension[]) result;
-				if (backgrounds.length == dimensions.length) {
-					margins = dimensions;
-				} else {
-					throw new CssSyntaxError(
-							"the number of margins must match the number of backgrounds",
-							backgroundMarginsProp);
-				}
-			}
-		}
-		
-		if(margins == null && backgrounds != null) {
-			margins = new Dimension[backgrounds.length];
-			for (int index = 0; index < margins.length; index++) {
-				margins[index] = Dimension.ZERO;
-			}
-		}
-
 		if (backgrounds != null) {
-			return GzBackgroundFactory.createLayerBackground(backgrounds,
-					margins);
+			return GzBackgroundFactory.createLayerBackground(backgrounds);
 		} else {
 			throw new CssSyntaxError(
 					"unable to create layer background, properties are missing",

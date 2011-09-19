@@ -164,17 +164,14 @@ public class GzBackgroundFactory {
 	 *            the margins
 	 * @return the created background
 	 */
-	public static GzBackground createLayerBackground(
-			GzBackground[] backgrounds, Dimension[] margins) {
+	public static GzBackground createLayerBackground(GzBackground[] backgrounds) {
 		// a layer background which layers the given backgrounds onto each other
 		// (see de.enough.polish.ui.backgrounds.LayerBackground)
 		// - backgrounds : the backgrounds to layer, first is bottom
-		// - margins: the margins for the single backgrounds, must be null or
-		// the count
 		// of backgrounds
-		return new LayerBackground(backgrounds, margins);
+		return new LayerBackground(backgrounds);
 	}
-	
+
 	public static GzBackground createSvgBackground(SVGImage svgImage) {
 		return new SvgBackground(svgImage);
 	}

@@ -2,6 +2,7 @@ package de.enough.glaze.style.definition.converter;
 
 import java.util.Vector;
 
+import de.enough.glaze.style.Margin;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.converter.background.GradientBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.ImageBackgroundConverter;
@@ -68,6 +69,7 @@ public class BackgroundConverter implements Converter {
 			addIds(LayerBackgroundConverter.getInstance(), idCollection);
 			addIds(SvgBackgroundConverter.getInstance(), idCollection);
 			addIds(new String[] { "background-type" }, idCollection);
+			addIds(new String[] { "background-margin" }, idCollection);
 
 			// store the ids
 			this.ids = new String[idCollection.size()];
@@ -123,6 +125,10 @@ public class BackgroundConverter implements Converter {
 				.getProperty("background-image");
 		Property backgroundColorProp = definition
 				.getProperty("background-color");
+		Property backgroundMarginProp = definition
+		.getProperty("background-margin");
+
+		GzBackground background = null;
 
 		// if a background type is given ...
 		if (backgroundTypeProp != null) {
@@ -131,24 +137,34 @@ public class BackgroundConverter implements Converter {
 			if (result instanceof String) {
 				String backgroundType = (String) result;
 				// convert the background by its type
-				return convertType(backgroundType, definition,
-						backgroundTypeProp);
+				background = (GzBackground) convertType(backgroundType,
+						definition, backgroundTypeProp);
 			} else if (result instanceof String[]) {
 				throw new CssSyntaxError("must be a single id",
 						backgroundTypeProp);
 			}
-			return null;
 			// if a background image is given ...
 		} else if (backgroundImageProp != null) {
 			// convert to an image background
-			return ImageBackgroundConverter.getInstance().convert(definition);
+			background = (GzBackground) ImageBackgroundConverter.getInstance()
+					.convert(definition);
 			// if a background color is given ...
 		} else if (backgroundColorProp != null) {
 			// convert to a solid background
-			return SolidBackgroundConverter.getInstance().convert(definition);
+			background = (GzBackground) SolidBackgroundConverter.getInstance()
+					.convert(definition);
 		} else {
-			return ZeroBackground.getInstance();
+			background = (GzBackground) ZeroBackground.getInstance();
 		}
+		
+		// if a margin property is given ...
+		if(backgroundMarginProp != null) {
+			// convert and set the margin
+			Margin margin = (Margin)MarginConverter.getInstance().convert(definition);
+			background.setMargin(margin);
+		}
+		
+		return background;
 	}
 
 	/**
@@ -189,8 +205,8 @@ public class BackgroundConverter implements Converter {
 			return (GzBackground) PatchBackgroundConverter.getInstance()
 					.convert(definition);
 		} else if ("svg".equals(backgroundType)) {
-			return (GzBackground) SvgBackgroundConverter.getInstance()
-					.convert(definition);
+			return (GzBackground) SvgBackgroundConverter.getInstance().convert(
+					definition);
 		} else {
 			throw new CssSyntaxError("unknown background type",
 					backgroundTypeProperty);

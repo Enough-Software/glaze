@@ -39,7 +39,7 @@ public class MarginConverter implements Converter {
 	 * @see de.enough.glaze.style.definition.converter.Converter#getIds()
 	 */
 	public String[] getIds() {
-		return new String[] { "margin", "margin-left", "margin-top",
+		return new String[] { "background-margin", "margin", "margin-left", "margin-top",
 				"margin-right", "margin-bottom" };
 	}
 
@@ -57,7 +57,7 @@ public class MarginConverter implements Converter {
 		
 		Margin margin = new Margin();
 
-		Property marginProp = definition.getProperty("margin");
+		Property marginProp = definition.getProperty(new String[]{"margin","background-margin"});
 		Property marginLeftProp = definition.getProperty("margin-left");
 		Property marginTopProp = definition.getProperty("margin-top");
 		Property marginRightProp = definition.getProperty("margin-right");

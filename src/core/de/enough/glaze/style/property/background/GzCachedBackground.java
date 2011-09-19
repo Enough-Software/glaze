@@ -21,7 +21,7 @@ public abstract class GzCachedBackground extends GzBackground {
 	 * .ui.Graphics, net.rim.device.api.ui.XYRect)
 	 */
 	public void draw(Graphics graphics, XYRect rect) {
-		adjustRect(rect);
+		applyField(rect);
 
 		int[] buffer = (int[]) this.rectBufferMap.get(rect);
 
