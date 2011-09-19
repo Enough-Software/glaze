@@ -12,6 +12,8 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 		implements GzScreen {
 
 	private final StyleManager styleManager;
+	
+	private final VerticalFieldManager fieldManager;
 
 	/**
 	 * Constructs a new {@link MainScreen} instance
@@ -38,6 +40,8 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 	 */
 	public MainScreen(Style screenStyle) {
 		super();
+		this.fieldManager = new VerticalFieldManager(Field.USE_ALL_WIDTH | Manager.NO_VERTICAL_SCROLL | Manager.NO_VERTICAL_SCROLL);
+		super.add(this.fieldManager);
 		this.styleManager = new StyleManager(getMainManager());
 		this.styleManager.add(getMainManager(), screenStyle);
 	}
@@ -52,6 +56,8 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 	 */
 	public MainScreen(long style, Style screenStyle) {
 		super(style);
+		this.fieldManager = new VerticalFieldManager(Field.USE_ALL_WIDTH | Manager.NO_VERTICAL_SCROLL | Manager.NO_VERTICAL_SCROLL);
+		super.add(this.fieldManager);
 		this.styleManager = new StyleManager(getMainManager());
 		this.styleManager.add(getMainManager(), screenStyle);
 	}
@@ -62,8 +68,7 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 	 * @see net.rim.device.api.ui.Manager#add(net.rim.device.api.ui.Field)
 	 */
 	public void add(Field field) {
-		super.add(field);
-		this.styleManager.add(field);
+		this.fieldManager.add(field);
 	}
 
 	/*
@@ -74,8 +79,7 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 	 * de.enough.glaze.style.Style)
 	 */
 	public void add(Field field, Style style) {
-		super.add(field);
-		this.styleManager.add(field, style);
+		this.fieldManager.add(field, style);
 	}
 
 	/*
@@ -84,10 +88,7 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 	 * @see net.rim.device.api.ui.Manager#addAll(net.rim.device.api.ui.Field[])
 	 */
 	public void addAll(Field[] fields) {
-		for (int index = 0; index < fields.length; index++) {
-			Field field = fields[index];
-			add(field);
-		}
+		this.fieldManager.addAll(fields);
 	}
 
 	/*
@@ -96,10 +97,7 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 	 * @see net.rim.device.api.ui.Manager#addAll(net.rim.device.api.ui.Field[])
 	 */
 	public void addAll(Field[] fields, Style style) {
-		for (int index = 0; index < fields.length; index++) {
-			Field field = fields[index];
-			add(field, style);
-		}
+		this.fieldManager.addAll(fields, style);
 	}
 
 	/*
@@ -109,13 +107,11 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 	 * int)
 	 */
 	public void insert(Field field, int index) {
-		super.insert(field, index);
-		this.styleManager.insert(field, index);
+		this.fieldManager.insert(field, index);
 	}
 
 	public void insert(Field field, int index, Style style) {
-		super.insert(field, index);
-		this.styleManager.insert(field, index, style);
+		this.fieldManager.insert(field, index, style);
 	}
 
 	/*
@@ -124,8 +120,7 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 	 * @see net.rim.device.api.ui.Manager#delete(net.rim.device.api.ui.Field)
 	 */
 	public void delete(Field field) {
-		super.delete(field);
-		this.styleManager.delete(field);
+		this.fieldManager.delete(field);
 	}
 
 	/*
@@ -134,8 +129,7 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 	 * @see net.rim.device.api.ui.Manager#deleteAll()
 	 */
 	public void deleteAll() {
-		super.deleteAll();
-		this.styleManager.deleteAll();
+		this.fieldManager.deleteAll();
 	}
 
 	/*
@@ -144,8 +138,7 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 	 * @see net.rim.device.api.ui.Manager#deleteRange(int, int)
 	 */
 	public void deleteRange(int start, int count) {
-		super.deleteRange(start, count);
-		this.styleManager.deleteRange(start, count);
+		this.fieldManager.deleteRange(start, count);
 	}
 
 	/*
@@ -155,8 +148,7 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 	 * net.rim.device.api.ui.Field)
 	 */
 	public void replace(Field oldField, Field newField) {
-		super.replace(oldField, newField);
-		this.styleManager.replace(oldField, newField);
+		this.fieldManager.replace(oldField, newField);
 	}
 
 	/*
@@ -167,8 +159,7 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 	 * , net.rim.device.api.ui.Field, de.enough.glaze.style.Style)
 	 */
 	public void replace(Field oldField, Field newField, Style style) {
-		super.replace(oldField, newField);
-		this.styleManager.replace(oldField, newField, style);
+		this.fieldManager.replace(oldField, newField, style);
 	}
 
 	/*
