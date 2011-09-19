@@ -49,11 +49,13 @@ public class ManagerDelegate {
 						// update the layout
 						gzManager.gz_updateLayout();
 					}
-				}
+				} 
 			}
-
+			
 			// invalidate with the given offsets and dimension
-			gzManager.gz_invalidate(x, y, width, height);
+			gzManager.gz_invalidate(0, 0, manager.getContentWidth(),
+					manager.getContentHeight());
+
 		} else {
 			Log.error("manager must implement GzManager", manager);
 		}

@@ -7,6 +7,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import net.rim.device.api.ui.UiApplication;
+
 import de.enough.glaze.log.Log;
 import de.enough.glaze.style.definition.StyleSheetDefinition;
 import de.enough.glaze.style.definition.converter.Converter;
@@ -138,10 +140,12 @@ public class StyleSheet {
 	 *            the url
 	 */
 	private void notifyLoaded(String url) {
-		for (int index = 0; index < this.listeners.size(); index++) {
-			StyleSheetListener listener = (StyleSheetListener) this.listeners
-					.elementAt(index);
-			listener.onLoaded(url);
+		synchronized (UiApplication.getEventLock()) {
+			for (int index = 0; index < this.listeners.size(); index++) {
+				StyleSheetListener listener = (StyleSheetListener) this.listeners
+						.elementAt(index);
+				listener.onLoaded(url);
+			}
 		}
 	}
 

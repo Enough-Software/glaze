@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Manager;
+import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
 import de.enough.glaze.log.Log;
 import de.enough.glaze.style.Style;
@@ -11,6 +12,7 @@ import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.StyleSheetListener;
 import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.ui.delegate.GzManager;
+import de.enough.glaze.ui.delegate.GzScreen;
 
 /**
  * A management class managing {@link StyleHandler} instances for all fields of
@@ -288,35 +290,6 @@ public class StyleManager implements StyleSheetListener {
 		release();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.enough.glaze.style.StyleSheetListener#onLoaded(java.lang.String)
-	 */
-	public void onLoaded(String url) {
-		synchronized (UiApplication.getEventLock()) {
-			// for all style handlers ...
-			for (int index = 0; index < this.list.size(); index++) {
-				StyleHandler styleHandler = (StyleHandler) this.list
-						.elementAt(index);
-				// get the current style
-				Style style = styleHandler.getStyle();
-				if (style != null) {
-					// get the new style from the stylesheet
-					Style newStyle = StyleSheet.getInstance().getStyle(
-							style.getId());
-					// set the new style in the style handler
-					styleHandler.setStyle(newStyle);
-				}
-			}
-
-			if (this.manager instanceof GzManager) {
-				GzManager gzManager = (GzManager) this.manager;
-				gzManager.gz_updateLayout();
-			}
-		}
-	}
-
 	/**
 	 * Applies the margin and padding for all field
 	 * 
@@ -383,6 +356,41 @@ public class StyleManager implements StyleSheetListener {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.enough.glaze.style.StyleSheetListener#onLoaded(java.lang.String)
+	 */
+	public void onLoaded(String url) {
+		synchronized (UiApplication.getEventLock()) {
+			// for all style handlers ...
+			for (int index = 0; index < this.list.size(); index++) {
+				StyleHandler styleHandler = (StyleHandler) this.list
+						.elementAt(index);
+				// get the current style
+				Style style = styleHandler.getStyle();
+				if (style != null) {
+					// get the new style from the stylesheet
+					Style newStyle = StyleSheet.getInstance().getStyle(
+							style.getId());
+					// set the new style in the style handler
+					styleHandler.setStyle(newStyle);
+				}
+			}
+
+			if (this.manager instanceof GzManager) {
+				GzManager gzManager = (GzManager) this.manager;
+				gzManager.gz_updateLayout();
+			} else {
+				Screen screen = this.manager.getScreen();
+				if(screen instanceof GzScreen) {
+					GzScreen gzScreen = (GzScreen)screen;
+					gzScreen.gz_updateLayout();
+				}
+			}
+		}
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
