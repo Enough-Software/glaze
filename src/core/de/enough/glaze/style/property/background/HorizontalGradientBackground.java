@@ -45,9 +45,6 @@ public class HorizontalGradientBackground extends GzBackground {
 		int startGradientPixels = this.startPosition.getValue(width);
 		int endGradientPixels = this.endPosition.getValue(width);
 
-		// remember original color
-		int originalColor = graphics.getColor();
-
 		// Draw the pre-gradient area
 		graphics.setColor(this.startColor.getColor());
 		graphics.fillRect(x, y, startGradientPixels, height);
@@ -68,7 +65,5 @@ public class HorizontalGradientBackground extends GzBackground {
 		// Draw the post-gradient area
 		graphics.setColor(this.endColor.getColor());
 		graphics.fillRect(x + endGradientPixels, y, width - endGradientPixels, height);
-		// restore original color
-		graphics.setColor(originalColor);
 	}
 }

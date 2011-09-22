@@ -61,16 +61,14 @@ public class PatchBackgroundConverter implements Converter {
 			return null;
 		}
 
+		Property backgroundTypeProp = definition.getProperty("background-type");
 		Property backgroundImageProp = definition
 				.getProperty("background-image");
 		Property backgroundWidthProp = definition
 				.getProperty("background-width");
 
-		Bitmap imageBitmap = null;
-		Dimension[] dimensions = new Dimension[] { Dimension.ZERO,
-				Dimension.ZERO, Dimension.ZERO, Dimension.ZERO };
-		Dimension[] margins = new Dimension[] { Dimension.ZERO, Dimension.ZERO,
-				Dimension.ZERO, Dimension.ZERO };
+		Bitmap bitmap = null;
+		Dimension[] width = null;
 
 		if (backgroundImageProp != null) {
 			Object result = UrlPropertyParser.getInstance().parse(
@@ -78,7 +76,7 @@ public class PatchBackgroundConverter implements Converter {
 			if (result instanceof Url) {
 				Url url = (Url) result;
 				try {
-					imageBitmap = StyleResources.getInstance().loadBitmap(url);
+					bitmap = StyleResources.getInstance().loadBitmap(url);
 				} catch (ContentException e) {
 					throw new CssSyntaxError("unable to load image",
 							backgroundImageProp);
@@ -94,14 +92,20 @@ public class PatchBackgroundConverter implements Converter {
 					backgroundWidthProp);
 			if (result instanceof Dimension) {
 				Dimension dimension = (Dimension) result;
-				dimensions = new Dimension[] { dimension, dimension, dimension,
+				width = new Dimension[] { dimension, dimension, dimension,
 						dimension };
 			} else if (result instanceof Dimension[]) {
-				dimensions = (Dimension[]) result;
+				width = (Dimension[]) result;
 			}
 		}
 
-		return GzBackgroundFactory.createPatchBackground(imageBitmap, margins,
-				dimensions);
+		if (bitmap != null && width != null) {
+			return GzBackgroundFactory.createPatchBackground(bitmap,
+					width);
+		} else {
+			throw new CssSyntaxError(
+					"unable to create patch background, properties are missing",
+					backgroundTypeProp);
+		}
 	}
 }

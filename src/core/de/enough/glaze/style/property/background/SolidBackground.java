@@ -17,6 +17,5 @@ public class SolidBackground extends GzBackground {
 	public void draw(Graphics graphics, int x, int y, int width, int height) {
 		this.color.set(graphics);
 		graphics.fillRect(x, y, width, height);
-		this.color.reset(graphics);
 	}
 }

@@ -115,8 +115,7 @@ public class GzBackgroundFactory {
 	 *            the color
 	 * @return the created background
 	 */
-	public static GzBackground createPatchBackground(Bitmap bitmap,
-			Dimension[] margin, Dimension[] tiling) {
+	public static GzBackground createPatchBackground(Bitmap bitmap, Dimension[] tiling) {
 		// a patch background, comparable to a 9-patch on Android
 		// (see de.enough.polish.ui.background.PatchBackground)
 		// - bitmap : the bitmap to use
@@ -130,7 +129,7 @@ public class GzBackgroundFactory {
 		// 11px and the bottom height is 12px
 		// 10px 11px 12px 13px : the top height is 10px, the right width is
 		// 11px, the bottom height is 12px and the left width is 13px
-		return new PatchBackground(bitmap, margin, tiling);
+		return new PatchBackground(bitmap, tiling);
 	}
 
 	/**

@@ -66,7 +66,14 @@ public abstract class GzBackground extends Background {
 	public void draw(Graphics graphics, XYRect rect) {
 		applyField(rect);
 		applyMargin(rect);
+
+		// remember original color
+		int originalColor = graphics.getColor();
+		
 		draw(graphics, rect.x, rect.y, rect.width, rect.height);
+		
+		// restore original color
+		graphics.setColor(originalColor);
 	}
 
 	/**

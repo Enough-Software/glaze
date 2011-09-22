@@ -2,24 +2,224 @@ package de.enough.glaze.style.property.background;
 
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.Graphics;
-import net.rim.device.api.ui.XYRect;
+import net.rim.device.api.ui.XYEdges;
 import de.enough.glaze.style.Dimension;
+import de.enough.glaze.style.property.background.patch.Tile;
 
 public class PatchBackground extends GzBackground {
 
-	private final static int POS_TOP = 0;
-	private final static int POS_RIGHT = 1;
-	private static final int POS_BOTTOM = 2;
-	private static final int POS_LEFT = 3;
+	/**
+	 * the argb array
+	 */
+	private final int[] argb;
 
-	private final Bitmap image;
-	private final Dimension[] margins;
-	private final Dimension[] tiling;
+	/**
+	 * the argb width
+	 */
+	private final int argbWidth;
 
-	public PatchBackground(Bitmap image, Dimension[] margins, Dimension[] tiling) {
-		this.image = image;
-		this.margins = margins;
-		this.tiling = tiling;
+	/**
+	 * the argb height
+	 */
+	private final int argbHeight;
+
+	/**
+	 * the tiling
+	 */
+	private XYEdges tiling;
+
+	/**
+	 * the top/left corner tile
+	 */
+	private Tile topLeftTile;
+
+	/**
+	 * the top/right corner tile
+	 */
+	private Tile topRightTile;
+
+	/**
+	 * the bottom/right corner tile
+	 */
+	private Tile bottomRightTile;
+	/**
+	 * the bottom/left corner tile
+	 */
+	private Tile bottomLeftTile;
+
+	/**
+	 * the top tile
+	 */
+	private Tile topPatchTile;
+
+	/**
+	 * the left tile
+	 */
+	private Tile leftPatchTile;
+
+	/**
+	 * the bottom tile
+	 */
+	private Tile bottomPatchTile;
+
+	/**
+	 * the right tile
+	 */
+	private Tile rightPatchTile;
+
+	/**
+	 * the center tile
+	 */
+	private Tile centerPatchTile;
+
+	/**
+	 * Constructs a new {@link PatchBackground} instance
+	 * 
+	 * @param bitmap
+	 *            the bitmap
+	 * @param tiling
+	 *            the tiling
+	 */
+	public PatchBackground(Bitmap bitmap, Dimension[] tiling) {
+		this.argbWidth = bitmap.getWidth();
+		this.argbHeight = bitmap.getHeight();
+		this.argb = new int[this.argbWidth * this.argbHeight];
+
+		// get the argb array
+		bitmap.getARGB(this.argb, 0, this.argbWidth, 0, 0, this.argbWidth,
+				this.argbHeight);
+
+		// create the tiling edges
+		this.tiling = new XYEdges();
+		this.tiling.top = tiling[0].getValue();
+		this.tiling.right = tiling[1].getValue();
+		this.tiling.bottom = tiling[2].getValue();
+		this.tiling.left = tiling[3].getValue();
+
+		// create the corner tiles
+		this.topLeftTile = createCornerTile(0, 0, this.tiling.left,
+				this.tiling.top);
+		this.topRightTile = createCornerTile(
+				this.argbWidth - this.tiling.right, 0, this.tiling.right,
+				this.tiling.top);
+		this.bottomRightTile = createCornerTile(this.argbWidth
+				- this.tiling.right, this.argbHeight - this.tiling.bottom,
+				this.tiling.right, this.tiling.bottom);
+		this.bottomLeftTile = createCornerTile(0, this.argbHeight
+				- this.tiling.bottom, this.tiling.left, this.tiling.bottom);
+
+		// create the top, right, bottom, left and center tile
+		this.topPatchTile = createTopTile();
+		this.rightPatchTile = createRightTile();
+		this.bottomPatchTile = createBottomTile();
+		this.leftPatchTile = createLeftTile();
+		this.centerPatchTile = createCenterTile();
+
+	}
+
+	/**
+	 * Creates a corner (single) tile for the given tile offset and dimension.
+	 * 
+	 * @param tileX
+	 *            the x offset
+	 * @param tileY
+	 *            the y offset
+	 * @param tileWidth
+	 *            the width
+	 * @param tileHeight
+	 *            the height
+	 * @return the created {@link Tile}
+	 */
+	private Tile createCornerTile(int tileX, int tileY, int tileWidth,
+			int tileHeight) {
+		return new Tile(Tile.TILING_SINGLE, this.argb, this.argbWidth,
+				this.argbHeight, tileX, tileY, tileWidth, tileHeight);
+	}
+
+	/**
+	 * Creates the top tile.
+	 * 
+	 * @return the created {@link Tile}
+	 */
+	private Tile createTopTile() {
+		int tileX = this.tiling.left;
+		int tileY = 0;
+
+		int tileWidth = Math.max(1, this.argbWidth
+				- (this.tiling.left + this.tiling.right));
+		int tileHeight = this.tiling.top;
+
+		return new Tile(Tile.TILING_HORIZONTAL, this.argb, this.argbWidth,
+				this.argbHeight, tileX, tileY, tileWidth, tileHeight);
+	}
+
+	/**
+	 * Creates the right tile.
+	 * 
+	 * @return the created {@link Tile}
+	 */
+	private Tile createRightTile() {
+		int tileX = this.argbWidth - this.tiling.right;
+		int tileY = this.tiling.top;
+
+		int tileWidth = this.tiling.right;
+		int tileHeight = Math.max(1, this.argbHeight
+				- (this.tiling.top + this.tiling.bottom));
+
+		return new Tile(Tile.TILING_VERTICAL, this.argb, this.argbWidth,
+				this.argbHeight, tileX, tileY, tileWidth, tileHeight);
+	}
+
+	/**
+	 * Creates the bottom tile.
+	 * 
+	 * @return the created {@link Tile}
+	 */
+	private Tile createBottomTile() {
+		int tileX = this.tiling.left;
+		int tileY = this.argbHeight - this.tiling.bottom;
+
+		int tileWidth = Math.max(1, this.argbWidth
+				- (this.tiling.left + this.tiling.right));
+		int tileHeight = this.tiling.bottom;
+
+		return new Tile(Tile.TILING_HORIZONTAL, this.argb, this.argbWidth,
+				this.argbHeight, tileX, tileY, tileWidth, tileHeight);
+	}
+
+	/**
+	 * Creates the left tile.
+	 * 
+	 * @return the created {@link Tile}
+	 */
+	private Tile createLeftTile() {
+		int tileX = 0;
+		int tileY = this.tiling.top;
+
+		int tileWidth = this.tiling.left;
+		int tileHeight = Math.max(1, this.argbHeight
+				- (this.tiling.top + this.tiling.bottom));
+
+		return new Tile(Tile.TILING_VERTICAL, this.argb, this.argbWidth,
+				this.argbHeight, tileX, tileY, tileWidth, tileHeight);
+	}
+	
+	/**
+	 * Creates the center tile.
+	 * 
+	 * @return the created {@link Tile}
+	 */
+	private Tile createCenterTile() {
+		int tileX = this.tiling.left;
+		int tileY = this.tiling.top;
+
+		int tileWidth = Math.max(1, this.argbWidth
+				- (this.tiling.left + this.tiling.right));
+		int tileHeight = Math.max(1, this.argbHeight
+				- (this.tiling.top + this.tiling.bottom));
+
+		return new Tile(Tile.TILING_FILL, this.argb, this.argbWidth,
+				this.argbHeight, tileX, tileY, tileWidth, tileHeight);
 	}
 
 	/*
@@ -30,181 +230,189 @@ public class PatchBackground extends GzBackground {
 	 * , net.rim.device.api.ui.XYRect)
 	 */
 	public void draw(Graphics graphics, int x, int y, int width, int height) {
-		// remember original color
-		int originalColor = graphics.getColor();
-
-		paintHorizontalTiles(x + this.margins[POS_LEFT].getValue(), y
-				+ this.margins[POS_TOP].getValue(),
-				width - this.margins[POS_RIGHT].getValue()
-						- this.margins[POS_LEFT].getValue(), height
-						- this.margins[POS_TOP].getValue()
-						- this.margins[POS_BOTTOM].getValue(), graphics);
-		paintVerticalTiles(x + this.margins[POS_LEFT].getValue(), y
-				+ this.margins[POS_TOP].getValue(),
-				width - this.margins[POS_RIGHT].getValue()
-						- this.margins[POS_LEFT].getValue(), height
-						- this.margins[POS_TOP].getValue()
-						- this.margins[POS_BOTTOM].getValue(), graphics);
-		paintCorners(x + this.margins[POS_LEFT].getValue(), y
-				+ this.margins[POS_TOP].getValue(),
-				width - this.margins[POS_RIGHT].getValue()
-						- this.margins[POS_LEFT].getValue(), height
-						- this.margins[POS_TOP].getValue()
-						- this.margins[POS_BOTTOM].getValue(), graphics);
-		paintCenterTiles(x + this.margins[POS_LEFT].getValue(), y
-				+ this.margins[POS_TOP].getValue(),
-				width - this.margins[POS_RIGHT].getValue()
-						- this.margins[POS_LEFT].getValue(), height
-						- this.margins[POS_TOP].getValue()
-						- this.margins[POS_BOTTOM].getValue(), graphics);
-
-		// restore original color
-		graphics.setColor(originalColor);
+		drawHorizontalTiles(x, y, width, height, graphics);
+		drawVerticalTiles(x, y, width, height, graphics);
+		drawCorners(x, y, width, height, graphics);
+		drawCenterTiles(x, y, width, height, graphics);
 	}
 
-	private void paintHorizontalTiles(int x, int y, int width, int height,
+	/**
+	 * Paints the horizontal tiles of the background.
+	 * 
+	 * @param x
+	 *            the x offset
+	 * @param y
+	 *            the y offset
+	 * @param width
+	 *            the width
+	 * @param height
+	 *            the height
+	 * @param graphics
+	 *            the {@link Graphics} instance
+	 */
+	private void drawHorizontalTiles(int x, int y, int width, int height,
 			Graphics graphics) {
+		// draw the top tiles
+		int fillX = x + this.tiling.left;
+		int fillY = y;
+		int fillWidth = Math.max(1, width
+				- (this.tiling.left + this.tiling.right));
 
-		int tilingTop = this.tiling[POS_TOP].getValue();
-		int tilingRight = this.tiling[POS_RIGHT].getValue();
-		int tilingBottom = this.tiling[POS_BOTTOM].getValue();
-		int tilingLeft = this.tiling[POS_LEFT].getValue();
+		int[] topPatchTileBuffer = this.topPatchTile.getBuffer();
+		int tileWidth = this.topPatchTile.getWidth();
+		int tileHeight = this.topPatchTile.getHeight();
 
-		int srcX = tilingLeft;
-		int srcY;
-
-		int srcWidth = Math.max(1, this.image.getWidth()
-				- (tilingLeft + tilingRight));
-		int srcHeight = tilingTop;
-
-		int dstX = x + tilingLeft;
-		int dstY;
-
-		int fillWidth = Math.max(1, width - (tilingLeft + tilingRight));
-
-		srcY = 0;
-		dstY = y;
-
-		graphics.pushContext(new XYRect(dstX, dstY, fillWidth, srcHeight), 0, 0);
-		for (int xOffset = 0; xOffset < fillWidth; xOffset = xOffset + srcWidth) {
-			graphics.drawBitmap(dstX + xOffset, dstY, srcWidth, srcHeight,
-					image, srcX, 0);
+		graphics.pushContext(fillX, fillY, fillWidth, tileHeight, 0, 0);
+		for (int xOffset = 0; xOffset < fillWidth; xOffset = xOffset + tileWidth) {
+			graphics.drawARGB(topPatchTileBuffer, 0, tileWidth, fillX + xOffset,
+					fillY, tileWidth, tileHeight);
 		}
 		graphics.popContext();
 
-		dstY = y + (height - tilingBottom);
-		srcY = image.getHeight() - tilingBottom;
-		srcHeight = tilingBottom;
+		// draw the bottom tiles
+		fillY = y + (height - this.tiling.bottom);
 
-		graphics.pushContext(new XYRect(dstX, dstY, fillWidth, srcHeight), 0, 0);
-		for (int xOffset = 0; xOffset < fillWidth; xOffset = xOffset + srcWidth) {
-			graphics.drawBitmap(dstX + xOffset, dstY, srcWidth, srcHeight,
-					image, srcX, srcY);
+		int[] bottomPatchTileBuffer = this.bottomPatchTile.getBuffer();
+		tileWidth = this.bottomPatchTile.getWidth();
+		tileHeight = this.bottomPatchTile.getHeight();
+
+		graphics.pushContext(fillX, fillY, fillWidth, tileHeight, 0, 0);
+		for (int xOffset = 0; xOffset < fillWidth; xOffset = xOffset + tileWidth) {
+			graphics.drawARGB(bottomPatchTileBuffer, 0, tileWidth, fillX
+					+ xOffset, fillY, tileWidth, tileHeight);
 		}
 		graphics.popContext();
 	}
 
-	private void paintVerticalTiles(int x, int y, int width, int height,
+	/**
+	 * Paints the vertical tiles of the background.
+	 * 
+	 * @param x
+	 *            the x offset
+	 * @param y
+	 *            the y offset
+	 * @param width
+	 *            the width
+	 * @param height
+	 *            the height
+	 * @param graphics
+	 *            the {@link Graphics} instance
+	 */
+	private void drawVerticalTiles(int x, int y, int width, int height,
 			Graphics graphics) {
+		// draw the left tiles
+		int fillX = x;
+		int fillY = y + this.tiling.top;
+		int fillHeight = Math.max(1, height
+				- (this.tiling.top + this.tiling.bottom));
 
-		int tilingTop = this.tiling[POS_TOP].getValue();
-		int tilingRight = this.tiling[POS_RIGHT].getValue();
-		int tilingBottom = this.tiling[POS_BOTTOM].getValue();
-		int tilingLeft = this.tiling[POS_LEFT].getValue();
+		int[] leftPatchTileBuffer = this.leftPatchTile.getBuffer();
+		int tileWidth = this.leftPatchTile.getWidth();
+		int tileHeight = this.leftPatchTile.getHeight();
 
-		int srcX = 0;
-		int srcY = tilingTop;
-
-		int srcWidth = tilingLeft;
-		int srcHeight = Math.max(1, this.image.getHeight()
-				- (tilingTop + tilingBottom));
-
-		int dstX = x;
-		int dstY = y + tilingTop;
-
-		int fillHeight = Math.max(1, height - (tilingTop + tilingBottom));
-
-		graphics.pushContext(new XYRect(dstX, dstY, srcWidth, fillHeight), 0, 0);
+		graphics.pushContext(fillX, fillY, tileWidth, fillHeight, 0, 0);
 		for (int yOffset = 0; yOffset < fillHeight; yOffset = yOffset
-				+ srcHeight) {
-			graphics.drawBitmap(dstX, dstY + yOffset, srcWidth, srcHeight,
-					image, srcX, srcY);
+				+ tileHeight) {
+			graphics.drawARGB(leftPatchTileBuffer, 0, tileWidth, fillX, fillY
+					+ yOffset, tileWidth, tileHeight);
 		}
 		graphics.popContext();
 
-		srcX = this.image.getWidth() - tilingRight;
-		dstX = x + width - tilingRight;
+		// draw the right tiles
+		fillX = x + width - this.tiling.right;
 
-		graphics.pushContext(new XYRect(dstX, dstY, srcWidth, fillHeight), 0, 0);
+		int[] rightPatchTileBuffer = this.rightPatchTile.getBuffer();
+		tileWidth = this.rightPatchTile.getWidth();
+		tileHeight = this.rightPatchTile.getHeight();
+
+		graphics.pushContext(fillX, fillY, tileWidth, fillHeight, 0, 0);
 		for (int yOffset = 0; yOffset < fillHeight; yOffset = yOffset
-				+ srcHeight) {
-			graphics.drawBitmap(dstX, dstY + yOffset, srcWidth, srcHeight,
-					image, srcX, srcY);
+				+ tileHeight) {
+			graphics.drawARGB(rightPatchTileBuffer, 0, tileWidth, fillX, fillY
+					+ yOffset, tileWidth, tileHeight);
 		}
 		graphics.popContext();
 	}
 
-	private void paintCenterTiles(int x, int y, int width, int height,
+	/**
+	 * Paints the center tiles of the background.
+	 * 
+	 * @param x
+	 *            the x offset
+	 * @param y
+	 *            the y offset
+	 * @param width
+	 *            the width
+	 * @param height
+	 *            the height
+	 * @param graphics
+	 *            the {@link Graphics} instance
+	 */
+	private void drawCenterTiles(int x, int y, int width, int height,
 			Graphics graphics) {
+		int fillX = x + this.tiling.left;
+		int fillY = y + this.tiling.top;
 
-		int tilingTop = this.tiling[POS_TOP].getValue();
-		int tilingRight = this.tiling[POS_RIGHT].getValue();
-		int tilingBottom = this.tiling[POS_BOTTOM].getValue();
-		int tilingLeft = this.tiling[POS_LEFT].getValue();
+		int fillWidth = Math.max(1, width - (this.tiling.right + this.tiling.left));
+		int fillHeight = Math.max(1, height - (this.tiling.top + this.tiling.bottom));
 
-		int dstX = x + tilingLeft;
-		int dstY = y + tilingTop;
+		int[] centerPatchTileBuffer = this.centerPatchTile.getBuffer();
+		int tileWidth = this.centerPatchTile.getWidth();
+		int tileHeight = this.centerPatchTile.getHeight();
 
-		int fillWidth = Math.max(1, width - (tilingRight + tilingLeft));
-		int fillHeight = Math.max(1, height - (tilingTop + tilingBottom));
-
-		int srcX = tilingLeft;
-		int srcY = tilingTop;
-
-		int srcWidth = Math.max(1, this.image.getWidth()
-				- (tilingRight + tilingLeft));
-		int srcHeight = Math.max(1, this.image.getHeight()
-				- (tilingTop + tilingBottom));
-
-		graphics.pushContext(new XYRect(dstX, dstY, fillWidth, fillHeight), 0,
-				0);
-		for (int yOffset = 0; yOffset < fillHeight; yOffset = yOffset
-				+ srcHeight) {
-			for (int xOffset = 0; xOffset < fillWidth; xOffset = xOffset
-					+ srcWidth) {
-				graphics.drawBitmap(dstX + xOffset, dstY + yOffset, srcWidth,
-						srcHeight, this.image, srcX, srcY);
+		graphics.pushContext(fillX, fillY, fillWidth, fillHeight, 0, 0);
+		for (int xOffset = 0; xOffset < fillWidth; xOffset = xOffset
+				+ tileWidth) {
+			for (int yOffset = 0; yOffset < fillHeight; yOffset = yOffset
+					+ tileHeight) {
+				graphics.drawARGB(centerPatchTileBuffer, 0, tileWidth, fillX
+						+ xOffset, fillY + yOffset, tileWidth, tileHeight);
 			}
 		}
 		graphics.popContext();
-
 	}
 
-	private void paintCorners(int x, int y, int width, int height,
-			Graphics graphics) {
-
-		int tilingTop = this.tiling[POS_TOP].getValue();
-		int tilingRight = this.tiling[POS_RIGHT].getValue();
-		int tilingBottom = this.tiling[POS_BOTTOM].getValue();
-		int tilingLeft = this.tiling[POS_LEFT].getValue();
-
-		graphics.drawBitmap(x, y, tilingLeft, tilingTop, this.image, 0, 0);
-		graphics.drawBitmap(x + width - tilingRight, y, tilingRight, tilingTop,
-				this.image, image.getWidth() - tilingRight, 0);
-		graphics.drawBitmap(x, y + height - tilingBottom, tilingLeft,
-				tilingBottom, this.image, 0, this.image.getHeight()
-						- tilingBottom);
-		graphics.drawBitmap(x + width - tilingRight, y + height - tilingBottom,
-				tilingRight, tilingBottom, this.image, image.getWidth()
-						- tilingRight, this.image.getHeight() - tilingBottom);
-	}
-
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Draws the 4 corners of the background.
 	 * 
-	 * @see net.rim.device.api.ui.decor.Background#isTransparent()
+	 * @param x
+	 *            the x offset
+	 * @param y
+	 *            the y offset
+	 * @param width
+	 *            the width
+	 * @param height
+	 *            the height
+	 * @param graphics
+	 *            the {@link Graphics} instance
 	 */
-	public boolean isTransparent() {
-		return true;
+	private void drawCorners(int x, int y, int width, int height,
+			Graphics graphics) {
+		drawCorner(this.topLeftTile, 0, 0, graphics);
+		drawCorner(this.topRightTile, width - this.tiling.right, 0, graphics);
+		drawCorner(this.bottomRightTile, width - this.tiling.right, height
+				- this.tiling.bottom, graphics);
+		drawCorner(this.bottomLeftTile, 0, height - this.tiling.bottom,
+				graphics);
+	}
+
+	/**
+	 * Draws a corner of the background.
+	 * 
+	 * @param cornerTile
+	 *            the corner tile
+	 * @param x
+	 *            the x offset
+	 * @param y
+	 *            the y offset
+	 * @param graphics
+	 *            the {@link Graphics} instance
+	 */
+	private void drawCorner(Tile cornerTile, int x, int y,
+			Graphics graphics) {
+		int[] buffer = cornerTile.getBuffer();
+		int width = cornerTile.getWidth();
+		int height = cornerTile.getHeight();
+		graphics.drawARGB(buffer, 0, width, x, y, width, height);
 	}
 }

@@ -50,7 +50,6 @@ public class RoundedBackground extends GzBackground {
 				y + height, y + height - marginBottom };
 
 		graphics.drawFilledPath(xPts, yPts, PATH_POINT_TYPES, null);
-		this.color.reset(graphics);
 		graphics.setDrawingStyle(Graphics.DRAWSTYLE_AAPOLYGONS, false);
 	}
 }

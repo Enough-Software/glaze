@@ -21,9 +21,6 @@ public class LayerBackground extends GzBackground {
 	 * , net.rim.device.api.ui.XYRect)
 	 */
 	public void draw(Graphics graphics, int x, int y, int width, int height) {
-		// remember original color
-		int originalColor = graphics.getColor();
-
 		for (int index = 0; index < this.backgrounds.length; index++) {
 			this.drawRect.x = x;
 			this.drawRect.y = y;
@@ -31,8 +28,5 @@ public class LayerBackground extends GzBackground {
 			this.drawRect.height = height;
 			this.backgrounds[index].draw(graphics, this.drawRect);
 		}
-
-		// restore original color
-		graphics.setColor(originalColor);
 	}
 }

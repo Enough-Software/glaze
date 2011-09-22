@@ -22,6 +22,7 @@ public abstract class GzCachedBackground extends GzBackground {
 	 */
 	public void draw(Graphics graphics, XYRect rect) {
 		applyField(rect);
+		applyMargin(rect);
 
 		int[] buffer = (int[]) this.rectBufferMap.get(rect);
 
@@ -30,7 +31,13 @@ public abstract class GzCachedBackground extends GzBackground {
 			this.rectBufferMap.put(rect, buffer);
 		}
 
+		// remember original color
+		int originalColor = graphics.getColor();
+
 		draw(graphics, rect.x, rect.y, rect.width, rect.height, buffer);
+		
+		// restore original color
+		graphics.setColor(originalColor);
 	}
 
 	/*
