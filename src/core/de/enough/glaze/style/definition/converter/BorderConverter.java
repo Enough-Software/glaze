@@ -141,7 +141,10 @@ public class BorderConverter implements Converter {
 	 */
 	public GzBorder convertType(String borderType, Definition definition,
 			Property borderTypeProperty) throws CssSyntaxError {
-		if ("bevel".equals(borderType)) {
+		if ("simple".equals(borderType)) {
+			return (GzBorder) SimpleBorderConverter.getInstance().convert(
+					definition);
+		} else if ("bevel".equals(borderType)) {
 			return (GzBorder) BevelBorderConverter.getInstance().convert(
 					definition);
 		} else if ("rounded".equals(borderType)) {
