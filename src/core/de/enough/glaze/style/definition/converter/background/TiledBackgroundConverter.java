@@ -20,21 +20,21 @@ import de.enough.glaze.style.property.background.GzBackgroundFactory;
  * @author Andre
  * 
  */
-public class PatchBackgroundConverter implements Converter {
+public class TiledBackgroundConverter implements Converter {
 
 	/**
 	 * the instance
 	 */
-	private static PatchBackgroundConverter INSTANCE;
+	private static TiledBackgroundConverter INSTANCE;
 
 	/**
 	 * Returns the instance
 	 * 
 	 * @return the instance
 	 */
-	public static PatchBackgroundConverter getInstance() {
+	public static TiledBackgroundConverter getInstance() {
 		if (INSTANCE == null) {
-			INSTANCE = new PatchBackgroundConverter();
+			INSTANCE = new TiledBackgroundConverter();
 		}
 
 		return INSTANCE;

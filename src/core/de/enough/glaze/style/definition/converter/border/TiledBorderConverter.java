@@ -21,20 +21,20 @@ import de.enough.glaze.style.property.border.GzBorderFactory;
  * @author Andre
  * 
  */
-public class BitmapBorderConverter implements Converter {
+public class TiledBorderConverter implements Converter {
 	/**
 	 * the instance
 	 */
-	private static BitmapBorderConverter INSTANCE;
+	private static TiledBorderConverter INSTANCE;
 
 	/**
 	 * Returns the instance
 	 * 
 	 * @return the instance
 	 */
-	public static BitmapBorderConverter getInstance() {
+	public static TiledBorderConverter getInstance() {
 		if (INSTANCE == null) {
-			INSTANCE = new BitmapBorderConverter();
+			INSTANCE = new TiledBorderConverter();
 		}
 
 		return INSTANCE;

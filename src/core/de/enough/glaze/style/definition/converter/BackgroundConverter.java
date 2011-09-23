@@ -8,7 +8,7 @@ import de.enough.glaze.style.definition.converter.background.GradientBackgroundC
 import de.enough.glaze.style.definition.converter.background.ImageBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.LayerBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.MaskBackgroundConverter;
-import de.enough.glaze.style.definition.converter.background.PatchBackgroundConverter;
+import de.enough.glaze.style.definition.converter.background.TiledBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.RoundedBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.SolidBackgroundConverter;
 import de.enough.glaze.style.definition.converter.background.SvgBackgroundConverter;
@@ -64,7 +64,7 @@ public class BackgroundConverter implements Converter {
 			addIds(ImageBackgroundConverter.getInstance(), idCollection);
 			addIds(RoundedBackgroundConverter.getInstance(), idCollection);
 			addIds(GradientBackgroundConverter.getInstance(), idCollection);
-			addIds(PatchBackgroundConverter.getInstance(), idCollection);
+			addIds(TiledBackgroundConverter.getInstance(), idCollection);
 			addIds(MaskBackgroundConverter.getInstance(), idCollection);
 			addIds(LayerBackgroundConverter.getInstance(), idCollection);
 			addIds(SvgBackgroundConverter.getInstance(), idCollection);
@@ -201,8 +201,8 @@ public class BackgroundConverter implements Converter {
 		} else if ("layer".equals(backgroundType)) {
 			return (GzBackground) LayerBackgroundConverter.getInstance()
 					.convert(definition);
-		} else if ("patch".equals(backgroundType)) {
-			return (GzBackground) PatchBackgroundConverter.getInstance()
+		} else if ("tiled".equals(backgroundType) || "bitmap".equals(backgroundType) || "patch".equals(backgroundType)) {
+			return (GzBackground) TiledBackgroundConverter.getInstance()
 					.convert(definition);
 		} else if ("svg".equals(backgroundType)) {
 			return (GzBackground) SvgBackgroundConverter.getInstance().convert(
