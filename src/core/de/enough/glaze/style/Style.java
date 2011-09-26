@@ -315,8 +315,15 @@ public class Style {
 				return style.disabledFocusedStyle;
 				// otherwise ...
 			} else {
-				// return the normal style
-				return style;
+				// if the disabled style is set ...
+				if (style.disabledStyle != null) {
+					// return the disabled style
+					return style.disabledStyle;
+					// otherwise ...
+				} else {
+					// return the normal style
+					return style;
+				}
 			}
 		} else {
 			throw new IllegalArgumentException(visualState

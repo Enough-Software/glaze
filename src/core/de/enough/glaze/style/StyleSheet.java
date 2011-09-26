@@ -394,6 +394,7 @@ public class StyleSheet {
 	 * @return the style with the given id
 	 */
 	public Style getStyle(String id) {
+		id = id.toLowerCase().trim();
 		Style style = (Style) this.styles.get(id);
 		if (style != null) {
 			return style;
