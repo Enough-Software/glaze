@@ -100,7 +100,7 @@ public class TiledBackgroundConverter implements Converter {
 		}
 
 		if (bitmap != null && width != null) {
-			return GzBackgroundFactory.createPatchBackground(bitmap,
+			return GzBackgroundFactory.createTiledBackground(bitmap,
 					width);
 		} else {
 			throw new CssSyntaxError(

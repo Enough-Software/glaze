@@ -6,7 +6,7 @@ import net.rim.device.api.ui.XYEdges;
 import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.property.background.patch.Tile;
 
-public class PatchBackground extends GzBackground {
+public class TiledBackground extends GzBackground {
 
 	/**
 	 * the argb array
@@ -73,14 +73,14 @@ public class PatchBackground extends GzBackground {
 	private Tile centerPatchTile;
 
 	/**
-	 * Constructs a new {@link PatchBackground} instance
+	 * Constructs a new {@link TiledBackground} instance
 	 * 
 	 * @param bitmap
 	 *            the bitmap
 	 * @param tiling
 	 *            the tiling
 	 */
-	public PatchBackground(Bitmap bitmap, Dimension[] tiling) {
+	public TiledBackground(Bitmap bitmap, Dimension[] tiling) {
 		this.argbWidth = bitmap.getWidth();
 		this.argbHeight = bitmap.getHeight();
 		this.argb = new int[this.argbWidth * this.argbHeight];

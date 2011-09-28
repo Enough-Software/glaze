@@ -1,9 +1,9 @@
 package de.enough.glaze.style.property.background.patch;
 
-import de.enough.glaze.style.property.background.PatchBackground;
+import de.enough.glaze.style.property.background.TiledBackground;
 
 /**
- * A class representing a tile used in a {@link PatchBackground}. Takes a
+ * A class representing a tile used in a {@link TiledBackground}. Takes a
  * specified tile in a ARGB buffer and repeats it horizontally, vertically or in
  * both directions until a maximum size defined by SIZE_POLICY is reached.
  * 
