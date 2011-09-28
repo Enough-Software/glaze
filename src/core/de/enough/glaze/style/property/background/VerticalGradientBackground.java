@@ -5,7 +5,7 @@ import de.enough.glaze.style.Color;
 import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.property.background.gradient.GradientBackgroundUtils;
 
-public class VerticalGradientBackground extends GzBackground {
+public class VerticalGradientBackground extends GzCachedBackground {
 
 	/**
 	 * Start and end colors for the gradient
@@ -38,10 +38,27 @@ public class VerticalGradientBackground extends GzBackground {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * net.rim.device.api.ui.decor.Background#draw(net.rim.device.api.ui.Graphics
-	 * , net.rim.device.api.ui.XYRect)
+	 * de.enough.glaze.style.property.background.GzCachedBackground#create(int,
+	 * int)
 	 */
-	public void draw(Graphics graphics, int x, int y, int width, int height) {
+	public int[] create(int width, int height) {
+		int startGradientPixels = this.startPosition.getValue(height);
+		int endGradientPixels = this.endPosition.getValue(height);
+		int[] gradientColors = GradientBackgroundUtils.getGradient(
+				this.startColor.getColor(), this.endColor.getColor(),
+				Math.abs(endGradientPixels - startGradientPixels));
+		return gradientColors;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.enough.glaze.style.property.background.GzCachedBackground#draw(net
+	 * .rim.device.api.ui.Graphics, int, int, int, int, int[])
+	 */
+	public void draw(Graphics graphics, int x, int y, int width, int height,
+			int[] buffer) {
 		int startGradientPixels = this.startPosition.getValue(height);
 		int endGradientPixels = this.endPosition.getValue(height);
 
@@ -49,14 +66,10 @@ public class VerticalGradientBackground extends GzBackground {
 		graphics.setColor(this.startColor.getColor());
 		graphics.fillRect(x, y, width, startGradientPixels);
 
-		// Draw the gradient
-		int[] gradientColors = GradientBackgroundUtils.getGradient(
-				this.startColor.getColor(), this.endColor.getColor(),
-				Math.abs(endGradientPixels - startGradientPixels));
 		int pos = startGradientPixels;
 		int i = 0;
 		while (pos < endGradientPixels) {
-			graphics.setColor(gradientColors[i]);
+			graphics.setColor(buffer[i]);
 			graphics.drawLine(x, y + pos, x + width - 1, y + pos);
 			i++;
 			pos++;
@@ -66,7 +79,6 @@ public class VerticalGradientBackground extends GzBackground {
 		graphics.setColor(this.endColor.getColor());
 		graphics.fillRect(x, y + endGradientPixels, width, height
 				- endGradientPixels);
-
 	}
 
 	/*

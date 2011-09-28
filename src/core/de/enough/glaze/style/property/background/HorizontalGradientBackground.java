@@ -5,7 +5,7 @@ import de.enough.glaze.style.Color;
 import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.property.background.gradient.GradientBackgroundUtils;
 
-public class HorizontalGradientBackground extends GzBackground {
+public class HorizontalGradientBackground extends GzCachedBackground {
 
 	/**
 	 * Start and end colors for the gradient
@@ -38,10 +38,28 @@ public class HorizontalGradientBackground extends GzBackground {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * net.rim.device.api.ui.decor.Background#draw(net.rim.device.api.ui.Graphics
-	 * , net.rim.device.api.ui.XYRect)
+	 * de.enough.glaze.style.property.background.GzCachedBackground#create(int,
+	 * int)
 	 */
-	public void draw(Graphics graphics, int x, int y, int width, int height) {
+	public int[] create(int width, int height) {
+		int startGradientPixels = this.startPosition.getValue(width);
+		int endGradientPixels = this.endPosition.getValue(width);
+		// Draw the gradient
+		int[] gradientColors = GradientBackgroundUtils.getGradient(
+				startColor.getColor(), endColor.getColor(),
+				Math.abs(endGradientPixels - startGradientPixels));
+		return gradientColors;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.enough.glaze.style.property.background.GzCachedBackground#draw(net
+	 * .rim.device.api.ui.Graphics, int, int, int, int, int[])
+	 */
+	public void draw(Graphics graphics, int x, int y, int width, int height,
+			int[] buffer) {
 		int startGradientPixels = this.startPosition.getValue(width);
 		int endGradientPixels = this.endPosition.getValue(width);
 
@@ -49,21 +67,18 @@ public class HorizontalGradientBackground extends GzBackground {
 		graphics.setColor(this.startColor.getColor());
 		graphics.fillRect(x, y, startGradientPixels, height);
 
-		// Draw the gradient
-		int[] gradientColors = GradientBackgroundUtils.getGradient(startColor.getColor(),
-				endColor.getColor(),
-				Math.abs(endGradientPixels - startGradientPixels));
 		int pos = startGradientPixels;
 		int i = 0;
 		while (pos < endGradientPixels) {
-			graphics.setColor(gradientColors[i]);
-			graphics.drawLine(x+pos, y, x+pos, y+height);
+			graphics.setColor(buffer[i]);
+			graphics.drawLine(x + pos, y, x + pos, y + height);
 			i++;
 			pos++;
 		}
 
 		// Draw the post-gradient area
 		graphics.setColor(this.endColor.getColor());
-		graphics.fillRect(x + endGradientPixels, y, width - endGradientPixels, height);
+		graphics.fillRect(x + endGradientPixels, y, width - endGradientPixels,
+				height);
 	}
 }
