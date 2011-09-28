@@ -1,5 +1,6 @@
 package de.enough.glaze.ui.delegate;
 
+import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.ui.Manager;
 import net.rim.device.api.ui.UiApplication;
@@ -46,15 +47,22 @@ public class ManagerDelegate {
 				if (!styleManager.isLayouting()) {
 					boolean layoutUpdate = styleManager.applyStyles();
 					if (layoutUpdate) {
+						System.out.println("update layout");
 						// update the layout
 						gzManager.gz_updateLayout();
 					}
-				} 
+				}
 			}
-			
-			// invalidate with the given offsets and dimension
-			gzManager.gz_invalidate(0, 0, manager.getContentWidth(),
-					manager.getContentHeight());
+
+			// if the device is a simulator ...
+			if (DeviceInfo.isSimulator()) {
+				// invalidate all to workaround simulator bug
+				gzManager.gz_invalidate(0, 0, manager.getContentWidth(),
+						manager.getContentHeight());
+			} else {
+				// invalidate with the given offsets and dimension
+				gzManager.gz_invalidate(x, y, width, height);
+			}
 
 		} else {
 			Log.error("manager must implement GzManager", manager);
