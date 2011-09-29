@@ -41,7 +41,7 @@ public class HorizontalGradientBackground extends GzCachedBackground {
 	 * de.enough.glaze.style.property.background.GzCachedBackground#create(int,
 	 * int)
 	 */
-	public int[] create(int width, int height) {
+	public Object create(int width, int height) {
 		int startGradientPixels = this.startPosition.getValue(width);
 		int endGradientPixels = this.endPosition.getValue(width);
 		// Draw the gradient
@@ -59,7 +59,7 @@ public class HorizontalGradientBackground extends GzCachedBackground {
 	 * .rim.device.api.ui.Graphics, int, int, int, int, int[])
 	 */
 	public void draw(Graphics graphics, int x, int y, int width, int height,
-			int[] buffer) {
+			Object data) {
 		int startGradientPixels = this.startPosition.getValue(width);
 		int endGradientPixels = this.endPosition.getValue(width);
 
@@ -67,12 +67,13 @@ public class HorizontalGradientBackground extends GzCachedBackground {
 		graphics.setColor(this.startColor.getColor());
 		graphics.fillRect(x, y, startGradientPixels, height);
 
+		int[] gradientColors = (int[])data; 
 		int pos = startGradientPixels;
-		int i = 0;
+		int index = 0;
 		while (pos < endGradientPixels) {
-			graphics.setColor(buffer[i]);
+			graphics.setColor(gradientColors[index]);
 			graphics.drawLine(x + pos, y, x + pos, y + height);
-			i++;
+			index++;
 			pos++;
 		}
 

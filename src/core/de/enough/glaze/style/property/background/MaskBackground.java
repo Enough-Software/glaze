@@ -19,7 +19,7 @@ public class MaskBackground extends GzCachedBackground {
 	 * 
 	 * @see de.enough.glaze.style.background.GzCachedBackground#create(int, int)
 	 */
-	public int[] create(int width, int height) {
+	public Object create(int width, int height) {
 		Bitmap maskBitmap = new Bitmap(width, height);
 		Graphics maskBuffer = new Graphics(maskBitmap);
 
@@ -133,7 +133,19 @@ public class MaskBackground extends GzCachedBackground {
 			backgroundData[i] = (backgroundData[i] & 0x00FFFFFF)
 					| (resultMask[i] & 0xFF000000);
 		}
+		
+		Bitmap resultBitmap = new Bitmap(width, height);
+		resultBitmap.setARGB(backgroundData, 0, width, 0, 0, width, height);
 
-		return backgroundData;
+		return resultBitmap;
+	}
+
+	/* (non-Javadoc)
+	 * @see de.enough.glaze.style.property.background.GzCachedBackground#draw(net.rim.device.api.ui.Graphics, int, int, int, int, java.lang.Object)
+	 */
+	public void draw(Graphics graphics, int x, int y, int width, int height,
+			Object data) {
+		Bitmap bitmap = (Bitmap)data;
+		graphics.drawBitmap(x, y, width, height, bitmap, 0, 0);
 	}
 }

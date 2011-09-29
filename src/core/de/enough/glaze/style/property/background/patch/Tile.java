@@ -1,5 +1,6 @@
 package de.enough.glaze.style.property.background.patch;
 
+import net.rim.device.api.system.Bitmap;
 import de.enough.glaze.style.property.background.TiledBackground;
 
 /**
@@ -40,7 +41,7 @@ public class Tile {
 	/**
 	 * The buffer.
 	 */
-	private final int[] buffer;
+	private final Bitmap bitmap;
 
 	/**
 	 * The width.
@@ -85,14 +86,15 @@ public class Tile {
 	public Tile(int tiling, int[] argb, int argbWidth, int argbHeight,
 			int tileX, int tileY, int tileWidth, int tileHeight) {
 		int tileSize = tileWidth * tileHeight;
+		int[] buffer; 
 		// if the tile size is larger than the policy size ...
 		if (tileSize > SIZE_POLICY || tiling == TILING_SINGLE) {
 			// set a single tile in the buffer
 			this.width = tileWidth;
 			this.height = tileHeight;
-			this.buffer = new int[tileWidth * tileHeight];
+			buffer = new int[tileWidth * tileHeight];
 			setTile(argb, argbWidth, argbHeight, tileX, tileY, tileWidth,
-					tileHeight, this.buffer, 0, 0, tileWidth, tileHeight);
+					tileHeight, buffer, 0, 0, tileWidth, tileHeight);
 		} else {
 			// if the tiling is horizontal ...
 			if (tiling == TILING_HORIZONTAL) {
@@ -110,19 +112,19 @@ public class Tile {
 			}
 
 			// create and fill the buffer for the calculated width and height
-			this.buffer = new int[this.width * this.height];
+			buffer = new int[this.width * this.height];
 			if (tiling == TILING_HORIZONTAL) {
 				for (int xOffset = 0; xOffset < this.width; xOffset = xOffset
 						+ tileWidth) {
 					setTile(argb, argbWidth, argbHeight, tileX, tileY,
-							tileWidth, tileHeight, this.buffer, xOffset, 0,
+							tileWidth, tileHeight, buffer, xOffset, 0,
 							this.width, this.height);
 				}
 			} else if (tiling == TILING_VERTICAL) {
 				for (int yOffset = 0; yOffset < this.height; yOffset = yOffset
 						+ tileHeight) {
 					setTile(argb, argbWidth, argbHeight, tileX, tileY,
-							tileWidth, tileHeight, this.buffer, 0, yOffset,
+							tileWidth, tileHeight, buffer, 0, yOffset,
 							this.width, this.height);
 				}
 			} else {
@@ -131,12 +133,16 @@ public class Tile {
 					for (int yOffset = 0; yOffset < this.height; yOffset = yOffset
 							+ tileHeight) {
 						setTile(argb, argbWidth, argbHeight, tileX, tileY,
-								tileWidth, tileHeight, this.buffer, xOffset,
+								tileWidth, tileHeight, buffer, xOffset,
 								yOffset, this.width, this.height);
 					}
 				}
 			}
+			
 		}
+		
+		this.bitmap = new Bitmap(this.width, this.height);
+		this.bitmap.setARGB(buffer, 0, this.width, 0, 0, this.width, this.height);
 	}
 
 	/**
@@ -265,7 +271,7 @@ public class Tile {
 	 * 
 	 * @return the buffer
 	 */
-	public int[] getBuffer() {
-		return this.buffer;
+	public Bitmap getBitmap() {
+		return this.bitmap;
 	}
 }

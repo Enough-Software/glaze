@@ -4,24 +4,10 @@ import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.ui.XYEdges;
 import de.enough.glaze.style.Dimension;
+import de.enough.glaze.style.property.background.clipping.ClippingTest;
 import de.enough.glaze.style.property.background.patch.Tile;
 
 public class TiledBackground extends GzBackground {
-
-	/**
-	 * the argb array
-	 */
-	private final int[] argb;
-
-	/**
-	 * the argb width
-	 */
-	private final int argbWidth;
-
-	/**
-	 * the argb height
-	 */
-	private final int argbHeight;
 
 	/**
 	 * the tiling
@@ -73,6 +59,11 @@ public class TiledBackground extends GzBackground {
 	private Tile centerPatchTile;
 
 	/**
+	 * the clipping test
+	 */
+	private ClippingTest clippingTest;
+
+	/**
 	 * Constructs a new {@link TiledBackground} instance
 	 * 
 	 * @param bitmap
@@ -81,13 +72,12 @@ public class TiledBackground extends GzBackground {
 	 *            the tiling
 	 */
 	public TiledBackground(Bitmap bitmap, Dimension[] tiling) {
-		this.argbWidth = bitmap.getWidth();
-		this.argbHeight = bitmap.getHeight();
-		this.argb = new int[this.argbWidth * this.argbHeight];
+		int argbWidth = bitmap.getWidth();
+		int argbHeight = bitmap.getHeight();
+		int[] argb = new int[argbWidth * argbHeight];
 
 		// get the argb array
-		bitmap.getARGB(this.argb, 0, this.argbWidth, 0, 0, this.argbWidth,
-				this.argbHeight);
+		bitmap.getARGB(argb, 0, argbWidth, 0, 0, argbWidth, argbHeight);
 
 		// create the tiling edges
 		this.tiling = new XYEdges();
@@ -98,23 +88,24 @@ public class TiledBackground extends GzBackground {
 
 		// create the corner tiles
 		this.topLeftTile = createCornerTile(0, 0, this.tiling.left,
-				this.tiling.top);
-		this.topRightTile = createCornerTile(
-				this.argbWidth - this.tiling.right, 0, this.tiling.right,
-				this.tiling.top);
-		this.bottomRightTile = createCornerTile(this.argbWidth
-				- this.tiling.right, this.argbHeight - this.tiling.bottom,
-				this.tiling.right, this.tiling.bottom);
-		this.bottomLeftTile = createCornerTile(0, this.argbHeight
-				- this.tiling.bottom, this.tiling.left, this.tiling.bottom);
+				this.tiling.top, argb, argbWidth, argbHeight);
+		this.topRightTile = createCornerTile(argbWidth - this.tiling.right, 0,
+				this.tiling.right, this.tiling.top, argb, argbWidth, argbHeight);
+		this.bottomRightTile = createCornerTile(argbWidth - this.tiling.right,
+				argbHeight - this.tiling.bottom, this.tiling.right,
+				this.tiling.bottom, argb, argbWidth, argbHeight);
+		this.bottomLeftTile = createCornerTile(0, argbHeight
+				- this.tiling.bottom, this.tiling.left, this.tiling.bottom,
+				argb, argbWidth, argbHeight);
 
 		// create the top, right, bottom, left and center tile
-		this.topPatchTile = createTopTile();
-		this.rightPatchTile = createRightTile();
-		this.bottomPatchTile = createBottomTile();
-		this.leftPatchTile = createLeftTile();
-		this.centerPatchTile = createCenterTile();
+		this.topPatchTile = createTopTile(argb, argbWidth, argbHeight);
+		this.rightPatchTile = createRightTile(argb, argbWidth, argbHeight);
+		this.bottomPatchTile = createBottomTile(argb, argbWidth, argbHeight);
+		this.leftPatchTile = createLeftTile(argb, argbWidth, argbHeight);
+		this.centerPatchTile = createCenterTile(argb, argbWidth, argbHeight);
 
+		this.clippingTest = new ClippingTest();
 	}
 
 	/**
@@ -131,9 +122,9 @@ public class TiledBackground extends GzBackground {
 	 * @return the created {@link Tile}
 	 */
 	private Tile createCornerTile(int tileX, int tileY, int tileWidth,
-			int tileHeight) {
-		return new Tile(Tile.TILING_SINGLE, this.argb, this.argbWidth,
-				this.argbHeight, tileX, tileY, tileWidth, tileHeight);
+			int tileHeight, int[] argb, int argbWidth, int argbHeight) {
+		return new Tile(Tile.TILING_SINGLE, argb, argbWidth, argbHeight, tileX,
+				tileY, tileWidth, tileHeight);
 	}
 
 	/**
@@ -141,16 +132,16 @@ public class TiledBackground extends GzBackground {
 	 * 
 	 * @return the created {@link Tile}
 	 */
-	private Tile createTopTile() {
+	private Tile createTopTile(int[] argb, int argbWidth, int argbHeight) {
 		int tileX = this.tiling.left;
 		int tileY = 0;
 
-		int tileWidth = Math.max(1, this.argbWidth
+		int tileWidth = Math.max(1, argbWidth
 				- (this.tiling.left + this.tiling.right));
 		int tileHeight = this.tiling.top;
 
-		return new Tile(Tile.TILING_HORIZONTAL, this.argb, this.argbWidth,
-				this.argbHeight, tileX, tileY, tileWidth, tileHeight);
+		return new Tile(Tile.TILING_HORIZONTAL, argb, argbWidth,
+				argbHeight, tileX, tileY, tileWidth, tileHeight);
 	}
 
 	/**
@@ -158,16 +149,16 @@ public class TiledBackground extends GzBackground {
 	 * 
 	 * @return the created {@link Tile}
 	 */
-	private Tile createRightTile() {
-		int tileX = this.argbWidth - this.tiling.right;
+	private Tile createRightTile(int[] argb, int argbWidth, int argbHeight) {
+		int tileX = argbWidth - this.tiling.right;
 		int tileY = this.tiling.top;
 
 		int tileWidth = this.tiling.right;
-		int tileHeight = Math.max(1, this.argbHeight
+		int tileHeight = Math.max(1, argbHeight
 				- (this.tiling.top + this.tiling.bottom));
 
-		return new Tile(Tile.TILING_VERTICAL, this.argb, this.argbWidth,
-				this.argbHeight, tileX, tileY, tileWidth, tileHeight);
+		return new Tile(Tile.TILING_VERTICAL, argb, argbWidth, argbHeight,
+				tileX, tileY, tileWidth, tileHeight);
 	}
 
 	/**
@@ -175,16 +166,16 @@ public class TiledBackground extends GzBackground {
 	 * 
 	 * @return the created {@link Tile}
 	 */
-	private Tile createBottomTile() {
+	private Tile createBottomTile(int[] argb, int argbWidth, int argbHeight) {
 		int tileX = this.tiling.left;
-		int tileY = this.argbHeight - this.tiling.bottom;
+		int tileY = argbHeight - this.tiling.bottom;
 
-		int tileWidth = Math.max(1, this.argbWidth
+		int tileWidth = Math.max(1, argbWidth
 				- (this.tiling.left + this.tiling.right));
 		int tileHeight = this.tiling.bottom;
 
-		return new Tile(Tile.TILING_HORIZONTAL, this.argb, this.argbWidth,
-				this.argbHeight, tileX, tileY, tileWidth, tileHeight);
+		return new Tile(Tile.TILING_HORIZONTAL, argb, argbWidth,
+				argbHeight, tileX, tileY, tileWidth, tileHeight);
 	}
 
 	/**
@@ -192,34 +183,34 @@ public class TiledBackground extends GzBackground {
 	 * 
 	 * @return the created {@link Tile}
 	 */
-	private Tile createLeftTile() {
+	private Tile createLeftTile(int[] argb, int argbWidth, int argbHeight) {
 		int tileX = 0;
 		int tileY = this.tiling.top;
 
 		int tileWidth = this.tiling.left;
-		int tileHeight = Math.max(1, this.argbHeight
+		int tileHeight = Math.max(1, argbHeight
 				- (this.tiling.top + this.tiling.bottom));
 
-		return new Tile(Tile.TILING_VERTICAL, this.argb, this.argbWidth,
-				this.argbHeight, tileX, tileY, tileWidth, tileHeight);
+		return new Tile(Tile.TILING_VERTICAL, argb, argbWidth, argbHeight,
+				tileX, tileY, tileWidth, tileHeight);
 	}
-	
+
 	/**
 	 * Creates the center tile.
 	 * 
 	 * @return the created {@link Tile}
 	 */
-	private Tile createCenterTile() {
+	private Tile createCenterTile(int[] argb, int argbWidth, int argbHeight) {
 		int tileX = this.tiling.left;
 		int tileY = this.tiling.top;
 
-		int tileWidth = Math.max(1, this.argbWidth
+		int tileWidth = Math.max(1, argbWidth
 				- (this.tiling.left + this.tiling.right));
-		int tileHeight = Math.max(1, this.argbHeight
+		int tileHeight = Math.max(1, argbHeight
 				- (this.tiling.top + this.tiling.bottom));
 
-		return new Tile(Tile.TILING_FILL, this.argb, this.argbWidth,
-				this.argbHeight, tileX, tileY, tileWidth, tileHeight);
+		return new Tile(Tile.TILING_FILL, argb, argbWidth, argbHeight,
+				tileX, tileY, tileWidth, tileHeight);
 	}
 
 	/*
@@ -230,6 +221,7 @@ public class TiledBackground extends GzBackground {
 	 * , net.rim.device.api.ui.XYRect)
 	 */
 	public void draw(Graphics graphics, int x, int y, int width, int height) {
+		this.clippingTest.setProperties(graphics);
 		drawHorizontalTiles(x, y, width, height, graphics);
 		drawVerticalTiles(x, y, width, height, graphics);
 		drawCorners(x, y, width, height, graphics);
@@ -258,30 +250,42 @@ public class TiledBackground extends GzBackground {
 		int fillWidth = Math.max(1, width
 				- (this.tiling.left + this.tiling.right));
 
-		int[] topPatchTileBuffer = this.topPatchTile.getBuffer();
+		Bitmap topPatchTileBitmap = this.topPatchTile.getBitmap();
 		int tileWidth = this.topPatchTile.getWidth();
 		int tileHeight = this.topPatchTile.getHeight();
 
-		graphics.pushContext(fillX, fillY, fillWidth, tileHeight, 0, 0);
-		for (int xOffset = 0; xOffset < fillWidth; xOffset = xOffset + tileWidth) {
-			graphics.drawARGB(topPatchTileBuffer, 0, tileWidth, fillX + xOffset,
-					fillY, tileWidth, tileHeight);
+		if (this.clippingTest.isInClippingArea(fillX, fillY, fillWidth, tileHeight)) {
+			graphics.pushContext(fillX, fillY, fillWidth, tileHeight, 0, 0);
+			for (int xOffset = 0; xOffset < fillWidth; xOffset = xOffset
+					+ tileWidth) {
+				if (this.clippingTest.isInClippingArea(fillX + xOffset, fillY,
+						tileWidth, tileHeight)) {
+					graphics.drawBitmap(fillX + xOffset, fillY, tileWidth,
+							tileHeight, topPatchTileBitmap, 0, 0);
+				}
+			}
+			graphics.popContext();
 		}
-		graphics.popContext();
 
 		// draw the bottom tiles
 		fillY = y + (height - this.tiling.bottom);
 
-		int[] bottomPatchTileBuffer = this.bottomPatchTile.getBuffer();
+		Bitmap bottomPatchTileBitmap = this.bottomPatchTile.getBitmap();
 		tileWidth = this.bottomPatchTile.getWidth();
 		tileHeight = this.bottomPatchTile.getHeight();
 
-		graphics.pushContext(fillX, fillY, fillWidth, tileHeight, 0, 0);
-		for (int xOffset = 0; xOffset < fillWidth; xOffset = xOffset + tileWidth) {
-			graphics.drawARGB(bottomPatchTileBuffer, 0, tileWidth, fillX
-					+ xOffset, fillY, tileWidth, tileHeight);
+		if (this.clippingTest.isInClippingArea(fillX, fillY, fillWidth, tileHeight)) {
+			graphics.pushContext(fillX, fillY, fillWidth, tileHeight, 0, 0);
+			for (int xOffset = 0; xOffset < fillWidth; xOffset = xOffset
+					+ tileWidth) {
+				if (this.clippingTest.isInClippingArea(fillX + xOffset, fillY,
+						tileWidth, tileHeight)) {
+					graphics.drawBitmap(fillX + xOffset, fillY, tileWidth,
+							tileHeight, bottomPatchTileBitmap, 0, 0);
+				}
+			}
+			graphics.popContext();
 		}
-		graphics.popContext();
 	}
 
 	/**
@@ -306,32 +310,39 @@ public class TiledBackground extends GzBackground {
 		int fillHeight = Math.max(1, height
 				- (this.tiling.top + this.tiling.bottom));
 
-		int[] leftPatchTileBuffer = this.leftPatchTile.getBuffer();
+		Bitmap leftPatchTileBitmap = this.leftPatchTile.getBitmap();
 		int tileWidth = this.leftPatchTile.getWidth();
 		int tileHeight = this.leftPatchTile.getHeight();
 
-		graphics.pushContext(fillX, fillY, tileWidth, fillHeight, 0, 0);
-		for (int yOffset = 0; yOffset < fillHeight; yOffset = yOffset
-				+ tileHeight) {
-			graphics.drawARGB(leftPatchTileBuffer, 0, tileWidth, fillX, fillY
-					+ yOffset, tileWidth, tileHeight);
+		if (this.clippingTest.isInClippingArea(fillX, fillY, tileWidth, fillHeight)) {
+			graphics.pushContext(fillX, fillY, tileWidth, fillHeight, 0, 0);
+			for (int yOffset = 0; yOffset < fillHeight; yOffset = yOffset
+					+ tileHeight) {
+				if (this.clippingTest.isInClippingArea(fillX, fillY + yOffset,
+						tileWidth, tileHeight)) {
+					graphics.drawBitmap(fillX, fillY + yOffset, tileWidth,
+							tileHeight, leftPatchTileBitmap, 0, 0);
+				}
+			}
+			graphics.popContext();
 		}
-		graphics.popContext();
 
 		// draw the right tiles
 		fillX = x + width - this.tiling.right;
 
-		int[] rightPatchTileBuffer = this.rightPatchTile.getBuffer();
+		Bitmap rightPatchTileBitmap = this.rightPatchTile.getBitmap();
 		tileWidth = this.rightPatchTile.getWidth();
 		tileHeight = this.rightPatchTile.getHeight();
 
-		graphics.pushContext(fillX, fillY, tileWidth, fillHeight, 0, 0);
-		for (int yOffset = 0; yOffset < fillHeight; yOffset = yOffset
-				+ tileHeight) {
-			graphics.drawARGB(rightPatchTileBuffer, 0, tileWidth, fillX, fillY
-					+ yOffset, tileWidth, tileHeight);
+		if (this.clippingTest.isInClippingArea(fillX, fillY, tileWidth, fillHeight)) {
+			graphics.pushContext(fillX, fillY, tileWidth, fillHeight, 0, 0);
+			for (int yOffset = 0; yOffset < fillHeight; yOffset = yOffset
+					+ tileHeight) {
+				graphics.drawBitmap(fillX, fillY + yOffset, tileWidth,
+						tileHeight, rightPatchTileBitmap, 0, 0);
+			}
+			graphics.popContext();
 		}
-		graphics.popContext();
 	}
 
 	/**
@@ -353,23 +364,31 @@ public class TiledBackground extends GzBackground {
 		int fillX = x + this.tiling.left;
 		int fillY = y + this.tiling.top;
 
-		int fillWidth = Math.max(1, width - (this.tiling.right + this.tiling.left));
-		int fillHeight = Math.max(1, height - (this.tiling.top + this.tiling.bottom));
+		int fillWidth = Math.max(1, width
+				- (this.tiling.right + this.tiling.left));
+		int fillHeight = Math.max(1, height
+				- (this.tiling.top + this.tiling.bottom));
 
-		int[] centerPatchTileBuffer = this.centerPatchTile.getBuffer();
+		Bitmap centerPatchTileBitmap = this.centerPatchTile.getBitmap();
 		int tileWidth = this.centerPatchTile.getWidth();
 		int tileHeight = this.centerPatchTile.getHeight();
 
-		graphics.pushContext(fillX, fillY, fillWidth, fillHeight, 0, 0);
-		for (int xOffset = 0; xOffset < fillWidth; xOffset = xOffset
-				+ tileWidth) {
-			for (int yOffset = 0; yOffset < fillHeight; yOffset = yOffset
-					+ tileHeight) {
-				graphics.drawARGB(centerPatchTileBuffer, 0, tileWidth, fillX
-						+ xOffset, fillY + yOffset, tileWidth, tileHeight);
+		if (this.clippingTest.isInClippingArea(fillX, fillY, fillWidth, fillHeight)) {
+			graphics.pushContext(fillX, fillY, fillWidth, fillHeight, 0, 0);
+			for (int xOffset = 0; xOffset < fillWidth; xOffset = xOffset
+					+ tileWidth) {
+				for (int yOffset = 0; yOffset < fillHeight; yOffset = yOffset
+						+ tileHeight) {
+					if (this.clippingTest.isInClippingArea(fillX + xOffset, fillY
+							+ yOffset, tileWidth, tileHeight)) {
+						graphics.drawBitmap(fillX + xOffset, fillY + yOffset,
+								tileWidth, tileHeight, centerPatchTileBitmap,
+								0, 0);
+					}
+				}
 			}
+			graphics.popContext();
 		}
-		graphics.popContext();
 	}
 
 	/**
@@ -408,11 +427,12 @@ public class TiledBackground extends GzBackground {
 	 * @param graphics
 	 *            the {@link Graphics} instance
 	 */
-	private void drawCorner(Tile cornerTile, int x, int y,
-			Graphics graphics) {
-		int[] buffer = cornerTile.getBuffer();
+	private void drawCorner(Tile cornerTile, int x, int y, Graphics graphics) {
+		Bitmap bitmap = cornerTile.getBitmap();
 		int width = cornerTile.getWidth();
 		int height = cornerTile.getHeight();
-		graphics.drawARGB(buffer, 0, width, x, y, width, height);
+		if (this.clippingTest.isInClippingArea(x, y, width, height)) {
+			graphics.drawBitmap(x, y, width, height, bitmap, 0, 0);
+		}
 	}
 }

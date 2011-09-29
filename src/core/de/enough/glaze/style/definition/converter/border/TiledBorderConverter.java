@@ -97,7 +97,7 @@ public class TiledBorderConverter implements Converter {
 			}
 		}
 
-		return GzBorderFactory.createImageBorder(borderWidths, borderWidths,
+		return GzBorderFactory.createTiledBorder(borderWidths, borderWidths,
 				imageBitmap);
 	}
 

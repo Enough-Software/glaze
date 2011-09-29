@@ -22,10 +22,10 @@ public class GzBorderFactory {
 		return new BevelBorder(edges, colorsOuter, colorsInner);
 	}
 	
-	public static GzBorder createImageBorder(XYEdges padding,
+	public static GzBorder createTiledBorder(XYEdges padding,
             XYEdges corners,
             Bitmap bitmap) {
-		return new BitmapBorder(padding, corners, bitmap);
+		return new TiledBorder(padding, corners, bitmap);
 		
 	}
 }

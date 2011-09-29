@@ -7,11 +7,11 @@ import net.rim.device.api.ui.XYRect;
 import net.rim.device.api.ui.decor.Border;
 import net.rim.device.api.ui.decor.BorderFactory;
 
-public class BitmapBorder extends GzBorder {
+public class TiledBorder extends GzBorder {
 
 	private final Border border;
 
-	public BitmapBorder(XYEdges padding,
+	public TiledBorder(XYEdges padding,
             XYEdges corners,
             Bitmap bitmap) {
 		super(padding, Border.STYLE_SOLID);

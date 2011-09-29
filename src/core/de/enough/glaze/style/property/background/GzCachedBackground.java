@@ -24,18 +24,18 @@ public abstract class GzCachedBackground extends GzBackground {
 		applyField(rect);
 		applyMargin(rect);
 
-		int[] buffer = (int[]) this.rectBufferMap.get(rect);
+		Object data = this.rectBufferMap.get(rect);
 
-		if (buffer == null) {
-			buffer = create(rect.width, rect.height);
-			this.rectBufferMap.put(rect, buffer);
+		if (data == null) {
+			data = create(rect.width, rect.height);
+			this.rectBufferMap.put(rect, data);
 		}
 
 		// remember original color
 		int originalColor = graphics.getColor();
 
-		draw(graphics, rect.x, rect.y, rect.width, rect.height, buffer);
-		
+		draw(graphics, rect.x, rect.y, rect.width, rect.height, data);
+
 		// restore original color
 		graphics.setColor(originalColor);
 	}
@@ -61,26 +61,34 @@ public abstract class GzCachedBackground extends GzBackground {
 	}
 
 	/**
-	 * Creates the buffer for the background to draw
+	 * Creates the cached data for the background to draw
 	 * 
 	 * @param width
 	 *            the width
 	 * @param height
 	 *            the height
-	 * @return the created buffer
+	 * @return the created cached data
 	 */
-	public abstract int[] create(int width, int height);
+	public abstract Object create(int width, int height);
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Draws the given cached data for the given offset and area using the given
+	 * {@link Graphics} instance
 	 * 
-	 * @see
-	 * de.enough.glaze.style.background.GzCachedBackground#draw(net.rim.device
-	 * .api.ui.Graphics, int, int, int, int, int[])
+	 * @param graphics
+	 *            the {@link Graphics} instance
+	 * @param x
+	 *            the x offset
+	 * @param y
+	 *            the y offset
+	 * @param width
+	 *            the width
+	 * @param height
+	 *            the height
+	 * @param data
+	 *            the cached data
 	 */
-	public void draw(Graphics graphics, int x, int y, int width, int height,
-			int[] buffer) {
-		graphics.drawARGB(buffer, 0, width, x, y, width, height);
-	}
+	public abstract void draw(Graphics graphics, int x, int y, int width,
+			int height, Object data);
 
 }
