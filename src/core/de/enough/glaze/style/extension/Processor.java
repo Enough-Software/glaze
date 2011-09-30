@@ -19,6 +19,8 @@ public interface Processor {
 	 *            the field
 	 * @param data
 	 *            the data
+	 * @throws ProcessorException
+	 *             if the given data is not applicable to the given field
 	 */
-	public void apply(Field field, Object data);
+	public void apply(Field field, Object data) throws ProcessorException;
 }

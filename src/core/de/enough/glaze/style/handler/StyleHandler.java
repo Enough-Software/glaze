@@ -5,11 +5,13 @@ import java.util.Enumeration;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Font;
 import net.rim.device.api.ui.XYEdges;
+import de.enough.glaze.log.Log;
 import de.enough.glaze.style.Margin;
 import de.enough.glaze.style.Padding;
 import de.enough.glaze.style.Style;
 import de.enough.glaze.style.extension.Extension;
 import de.enough.glaze.style.extension.Processor;
+import de.enough.glaze.style.extension.ProcessorException;
 import de.enough.glaze.style.property.Visibility;
 import de.enough.glaze.style.property.background.GzBackground;
 import de.enough.glaze.style.property.background.ZeroBackground;
@@ -305,7 +307,12 @@ public class StyleHandler {
 				Extension extension = (Extension) extensions.nextElement();
 				Object extensionData = this.style.getExtensionData(extension);
 				Processor processor = extension.getProcessor();
-				processor.apply(this.field, extensionData);
+				try {
+					processor.apply(this.field, extensionData);
+				} catch (ProcessorException e) {
+					Log.error("unable to apply data to field : "
+							+ e.getMessage());
+				}
 			}
 		}
 	}
