@@ -83,6 +83,10 @@ public class CssParser {
 	 * flag indicating that the parser is inside a comment
 	 */
 	private boolean isInComment;
+	
+	private boolean checkNextCharForStartComment = false;
+	
+	private boolean checkNextCharForEndComment = false;
 
 	/**
 	 * flaf indicating that the parser has more tokens
@@ -224,27 +228,26 @@ public class CssParser {
 				return;
 			}
 		}
-		boolean checkNextCharForEndComment = false;
-		boolean checkNextCharForStartComment = false;
-		for (int index = this.bufferStartIndex; index < this.bufferEndIndex; index++) {
+		for (int index = this.bufferStartIndex; index < this.bufferEndIndex; index++ ) {
 			char c = this.readBuffer[index];
 			if (this.isInComment && c == '*') {
-				checkNextCharForEndComment = true;
+				this.checkNextCharForEndComment = true;
 			} else if (checkNextCharForEndComment && c == '/') {
 				this.isInComment = false;
+				this.checkNextCharForEndComment = false;
 			} else if (this.isInComment) {
 				// ignore comment char
-				checkNextCharForEndComment = false;
-			} else if (c == '/') {
+				this.checkNextCharForEndComment = false;
+			} else if (c == '/'){
 				// this _could_ be the start of a new comment:
-				checkNextCharForStartComment = true;
+				this.checkNextCharForStartComment = true;
 				buffer.append(c);
 			} else if (checkNextCharForStartComment && c == '*') {
-				checkNextCharForStartComment = false;
+				this.checkNextCharForStartComment = false;
 				this.isInComment = true;
 				buffer.deleteCharAt(buffer.length() - 1);
 			} else {
-				checkNextCharForStartComment = false;
+				this.checkNextCharForStartComment = false;
 				if (c == PROPERTY_END || c == BLOCK_START || c == BLOCK_END) {
 					String value = buffer.toString().trim();
 					if (c == PROPERTY_END) {
