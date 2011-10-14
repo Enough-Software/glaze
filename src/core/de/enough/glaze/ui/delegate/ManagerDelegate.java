@@ -47,7 +47,6 @@ public class ManagerDelegate {
 				if (!styleManager.isLayouting()) {
 					boolean layoutUpdate = styleManager.applyStyles();
 					if (layoutUpdate) {
-						System.out.println("update layout");
 						// update the layout
 						gzManager.gz_updateLayout();
 					}

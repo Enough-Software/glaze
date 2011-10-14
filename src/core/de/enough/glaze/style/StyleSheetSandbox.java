@@ -153,7 +153,7 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 	 */
 	public void onError(Exception e) {
 		synchronized (UiApplication.getEventLock()) {
-			String error = e.getMessage();
+			String error = e.toString() + ":" + e.getMessage();
 			UiApplication.getUiApplication().popScreen(this.waitDialog);
 			this.errorDialog = new Dialog(error, new String[] { "OK" }, null,
 					Dialog.OK, Bitmap.getPredefinedBitmap(Bitmap.EXCLAMATION));
