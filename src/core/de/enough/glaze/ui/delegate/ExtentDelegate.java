@@ -1,10 +1,12 @@
 package de.enough.glaze.ui.delegate;
 
+import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.ui.Field;
 import de.enough.glaze.style.Dimension;
 import de.enough.glaze.style.Style;
 import de.enough.glaze.style.handler.StyleManager;
 import de.enough.glaze.style.property.Visibility;
+import de.enough.glaze.version.Version;
 
 public class ExtentDelegate {
 
@@ -177,6 +179,13 @@ public class ExtentDelegate {
 			}
 		}
 
+		// if the software version is less than 5.0 ...
+		if(Version.isLessThan("5.0")) {
+			// calculate the horizontal margin and reduce the available content width by it.
+			// This is done to circumvent the platform issue that the content receives an extra margin
+			int horizontalFieldMargin = field.getMarginLeft() + field.getMarginRight();
+			availableContentWidth -= horizontalFieldMargin;
+		}
 		return availableContentWidth;
 	}
 
