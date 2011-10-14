@@ -39,18 +39,15 @@ public class ManagerDelegate {
 		GzManager gzManager;
 		if (manager instanceof GzManager) {
 			gzManager = (GzManager) manager;
-			// get the style manager
-			StyleManager styleManager = gzManager.getStyleManager();
-			synchronized (UiApplication.getEventLock()) {
-				// if the manager is not layouting and a one of the fields needs
-				// a layout update ...
-				if (!styleManager.isLayouting()) {
-					boolean layoutUpdate = styleManager.applyStyles();
-					if (layoutUpdate) {
-						// update the layout
-						gzManager.gz_updateLayout();
-					}
-				}
+			applyFieldStyles(gzManager);
+
+			// if the manager is a GzScreen ...
+			if (manager instanceof GzScreen) {
+				// get and apply the field styles of the field manager of the
+				// GzScreen
+				GzScreen gzScreen = (GzScreen) manager;
+				GzManager gzFieldManager = gzScreen.getFieldManager();
+				applyFieldStyles(gzFieldManager);
 			}
 
 			// if the device is a simulator ...
@@ -65,6 +62,29 @@ public class ManagerDelegate {
 
 		} else {
 			Log.error("manager must implement GzManager", manager);
+		}
+	}
+
+	/**
+	 * Apply the styles to all fields of the given {@link GzManager} instance.
+	 * 
+	 * @param styleManager
+	 *            the style manager
+	 * @param gzManager
+	 *            the {@link GzManager} instance
+	 */
+	private static void applyFieldStyles(GzManager gzManager) {
+		StyleManager styleManager = gzManager.getStyleManager();
+		synchronized (UiApplication.getEventLock()) {
+			// if the manager is not layouting and a one of the fields needs
+			// a layout update ...
+			if (!styleManager.isLayouting()) {
+				boolean layoutUpdate = styleManager.applyStyles();
+				if (layoutUpdate) {
+					// update the layout
+					gzManager.gz_updateLayout();
+				}
+			}
 		}
 	}
 

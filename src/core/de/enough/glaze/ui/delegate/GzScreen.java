@@ -8,4 +8,10 @@ package de.enough.glaze.ui.delegate;
  */
 public interface GzScreen extends GzManager {
 
+	/**
+	 * Return the field manager of an implementing screen.
+	 * 
+	 * @return the field manager
+	 */
+	public GzManager getFieldManager();
 }
