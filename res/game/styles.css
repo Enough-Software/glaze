@@ -1,0 +1,150 @@
+/* font definitions */
+fonts {
+	label {
+		size: 20px;
+		color: #F26522;
+	}
+
+	field {
+		size: 20px;
+	}
+
+	button {
+		size: 20px;
+		color: #F7D9AA;
+	}
+}
+
+/* background definitions */
+backgrounds {
+
+	/* the base background for the screen background, a solid background */
+	screen_base {
+		type: solid;
+		color: #79C6E2;
+	}
+
+	/* the top image background for the screen background */
+	screen_top {
+		type: image;
+		image: url(res://game/game_bg_top.png);
+		position: center top;
+	}
+
+	/* the bottom image background for the screen background */
+	screen_bottom {
+		type: image;
+		image: url(res://game/game_bg_bottom.png);
+		position: center bottom;
+	}
+
+
+	/* the bottom left image background for the screen background */
+	screen_left {
+		type: image;
+		image: url(res://game/fg_right.png);
+		position: right bottom;
+	}
+
+	/* the bottom right image background for the screen background */
+	screen_right {
+		type: image;
+		image: url(res://game/fg_left.png);
+		position: left bottom;
+	}
+
+	/* the screen background combining the screen_base, screen_top, screen_bttom, screen_left and screen_right backgrounds as layers */
+	screen {
+		type: layer;
+		backgrounds: screen_base screen_top screen_bottom screen_left screen_right;
+	}
+
+	/* the tiled content background */
+	content {
+		type: tiled;
+		image: url(res://game/box.png);
+		width: 83px 180px 46px 180px; 
+		margin: 0px 0px 34px 0px;
+	}
+
+	/* the tiled field background */ 
+	field {
+		type: tiled;
+		image: url(res://game/input_normal.png);
+		width: 19px;
+	}
+
+	/* the tiled field background for the focused state */
+	field_focus extends field {
+		image: url(res://game/input_focused.png);
+	}
+
+	
+	/* the image button background */
+	button {
+		type: image;
+		image: url(res://game/login_normal.png);
+	}
+
+	/* the image button background for the focused state */
+	button_focus {
+		type: image;
+		image: url(res://game/login_focused.png);
+	}
+
+	/* the image button background for the active state */
+	button_active {
+		type: image;
+		image: url(res://game/login_pressed.png);
+	}
+}
+
+/* the screen style using the background 'screen' */
+screen {
+	background: screen;
+}
+
+/* the content style using margin, padding and the background 'content' */
+content {
+	margin: 172px 7px 50px 7px;
+	padding: 15px 33px 0px 33px;
+	background: content;
+}
+
+/* the label style using the font 'label' */
+label {
+	font: label;
+}
+
+/* the field style using margin, padding, the font 'field' and the background 'field' */
+field {
+	margin: 6px 0px;
+	padding: 10px;
+	font: field;
+	background: field;
+}
+
+/* the field style for the focused state using the background 'field_focus' */
+field:focus {
+	background: field_focus;
+}
+
+/* the button style using margin, the font 'button', the background 'button' and a height of 90 px */
+button {
+	margin-top: 6px;
+	background: button;
+	font: button;
+	/* use a border-width of 0 to hide the preset button border */
+	border-width: 0px;
+	height: 90px;
+}
+
+/* the button style for the focused state with the 'button_focus' background */ 
+button:focus {
+	background: button_focus;
+}
+
+/* the button style for the active state with the 'button_active' background */
+button:active {
+	background: button_active;
+}

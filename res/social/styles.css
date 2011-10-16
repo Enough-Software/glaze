@@ -1,0 +1,154 @@
+/* font definitions */
+fonts {
+	label {
+		/* use the previously installed font 'Amplitude' as the font family */
+		family: Amplitude;
+		size: 16px;
+	}
+
+	field {
+		family: Amplitude;
+		size: 16px;
+	}
+
+	button {
+		family: Amplitude;
+		size: 26px;
+		color: white;
+	}
+}
+
+/* background definitions */
+backgrounds {
+	
+	/* the base background for the screen background, a solid black background */
+	screen_base {
+		type: solid;
+		color: black;
+	}
+	
+	/* the overlay background for the screen background, an image background */
+	screen_logo {
+		type: image;
+		image: url(res://social/social_bg.png);
+		position: center top;
+	}
+	
+	/* the screen background combining the screen_base and screen_logo background as layers */
+	screen {
+		type: layer;
+		backgrounds: screen_base screen_logo;
+	}
+ 
+ 	/* the top background for the content background, an image background */
+	content_top {
+		type: image;
+		image: url(res://social/login_top.png);
+		position: center top;
+	}
+
+
+ 	/* the fill background for the content background, a solid white background */
+	content_fill {
+		type: solid;
+		color: white;
+		margin: 1px 20px 1px 20px;
+	}
+
+	/* the bottom background for the content background, an image background */
+	content_bottom {
+		type: image;
+		image: url(res://social/login_top.png);
+		position: center bottom;
+	}
+
+	/* the content background combining the content_fill, content_top and content_bottom as layers */
+	content {
+		type: layer;
+		backgrounds:  content_fill content_top content_bottom;
+	}
+
+	/* the tiled field background */
+	field {
+		type: tiled;
+		image: url(res://social/input_normal.png);
+		width: 24px;
+	}
+
+	/* the tiled field background for the focused state */
+	field_focus extends field {
+		image: url(res://social/input_focused.png);
+	}
+
+	/* the tiled button background */
+	button {
+		type: tiled;
+		image: url(res://social/login_normal.png);
+		width: 24px;
+	}
+
+	/* the tiled button background for the focused state */
+	button_focus extends button {
+		image: url(res://social/login_focused.png);
+	}
+
+	/* the tiled button background for the active state */
+	button_active extends button {
+		image: url(res://social/login_down.png);
+	}
+}
+
+/* the screen style using the background 'screen' */
+screen {
+	background: screen;
+}
+
+/* the content style using margin, padding and the background 'content' */
+content {
+	margin-top: 200px;
+	margin-bottom: 20px;
+	padding-left: 40px;
+	padding-right: 40px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background: content;
+}
+
+/* the label style using margin and the font 'label' */
+label {
+	margin-top: 9px; 
+	margin-bottom: 9px;
+	font: label;
+}
+
+/* the field style using margin, padding, and the background 'field' */
+field {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding: 17px;
+	background: field;
+}
+
+/* the field style for the focused state using the background 'field_focus' */
+field:focus {
+	background: field_focus;
+}
+
+/* the button style using the font 'button', the background 'button' and a height of 50 px */
+button {
+	background: button;
+	font: button;
+	/* use a border-width of 0 to hide the preset button border */
+	border-width: 0;
+	height: 50px;
+}
+
+/* the button style for the focused state with the background 'button_focus' */ 
+button:focus {
+	background: button_focus;
+}
+
+/* the button style for the active state with the background 'button_active' */
+button:active {
+	background: button_active;
+}

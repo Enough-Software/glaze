@@ -1,0 +1,143 @@
+/* font definitions */
+fonts {
+	label {
+		size: 16px;
+	}
+
+	field {
+		size: 16px;
+	}
+
+	button {
+		size: 18px;
+		color: white;
+	}
+}
+
+/* background definitions */
+backgrounds {
+
+	/* the base background for the screen background, a solid black background */
+	screen_base {
+		type: solid;
+		color: black;
+	}
+
+	/* the overlay background for the screen background, an image background */
+	screen_logo {
+		type: image;
+		image: url(res://bank/bank_bg.png);		
+		position: center bottom;
+	}
+
+	/* the screen background combining the screen_base and screen_image background as layers */
+	screen {
+		type: layer;
+		backgrounds: screen_base screen_logo;
+	}
+
+	/* the bottom tiled background for the content background */
+	content_base {
+		type: tiled;
+		image: url(res://bank/box_normal.png);
+		width: 100px 12px 116px 120px;
+	}
+
+	/* the top image background for the content background */
+	content_logo {
+		type: image;
+		image: url(res://bank/logo.png);
+		/* the image is aligned left and has an offset of 55 px from the top */ 
+		position: left 55px;
+	}
+	
+	/* the content background combining the content_base and content_logo background as layers */
+	content {
+		type: layer;
+		backgrounds: content_base content_logo;
+	}
+
+	/* the field tiled background */
+	field {
+		type: tiled;
+		image: url(res://bank/input_normal.png);
+		width: 19px;
+	}
+
+	/* the field tiled background for the focused state */
+	field_focus extends field {
+		image: url(res://bank/input_focused.png);
+	}
+
+	/* the button tiled background */
+	button {
+		type: tiled;
+		image: url(res://bank/button_normal.png);
+		width: 19px;
+	}
+
+	/* the button tiled background for the focused state */
+	button_focus extends button {
+		image: url(res://bank/button_focused.png);
+	}
+
+	/* the button tiled background for the active (pressed) state */
+	button_active extends button {
+		image: url(res://bank/button_down.png);
+	}
+}
+
+/* the screen style using the screen background */
+screen {
+	background: screen;
+}
+
+/* the content style using margin, padding and the background 'content' */
+content {
+	margin: 20px;
+	padding-left: 140px;
+	padding-right: 20px;
+	padding-bottom: 20px;
+	background: content;
+}
+
+/* the label style using margin, padding and the font 'label' */
+label {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	font: label;
+}
+
+/* the field style using margin, padding and the background 'field' */ 
+field {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding: 12px;
+	background: field;
+	font: field;
+}
+
+/* the field style for the focused state with the 'field_focus' background */ 
+field:focus {
+	background: field_focus;
+}
+
+/* the button style using margin, the button font, the button background and a height of 40 px */
+button {
+	margin-top: 20px;
+	background: button;
+	/* use a border-width of 0 to hide the preset button border */
+	border-width: 0;
+	font: button;
+	height: 40px;
+}
+
+/* the button style for the focused state with the background 'button_focus' */ 
+button:focus {
+	background: button_focus;
+}
+
+/* the button style for the active state with the background 'button_active' */
+button:active {
+	background: button_active;
+}
