@@ -37,7 +37,6 @@ Glaze uses CSS to style native fields: well-known CSS properties like margin, ba
 Visit the homepage at "www.glazeui.org":http://www.glazeui.org
 
 table{border: 0px solid black}.
-
 |!glaze/wiki/images/showcase.bank.png!|!glaze/wiki/images/showcase.social.png!|!glaze/wiki/images/showcase.game.png!|
 
 
