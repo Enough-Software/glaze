@@ -1,16 +1,31 @@
-h1. Welcome to Glaze
-
-Glaze is a UI framework for BlackBerry Java Applications.
-
-Glaze uses CSS to style native fields: well-known CSS properties like margin, background-color and width as well as advanced properties for backgrounds, borders and fonts can be used to change the style and layout of an application to any design you wish. 
-
-*Benefits*
-* Create stunning and resolution-independent designs
-* Easy and lightweight integration and development
-* Seperate the design from the development of buisness logic
-* Use sandboxing to rapidly create an application design on multiple devices at the same time
-
-"Get started":wiki/Getting-Started with Glaze today!
-
+h1. Welcome to Glaze
+
+Glaze is a UI framework for BlackBerry Java Applications.
+
+Glaze uses CSS to style native fields: well-known CSS properties like margin, background-color and width as well as advanced properties for backgrounds, borders and fonts can be used to change the style and layout of an application to any design you wish. 
+
+*Benefits*
+* Create stunning and resolution-independent designs
+* Easy and lightweight integration and development
+* Seperate the design from the development of buisness logic
+* Use sandboxing to rapidly create an application design on multiple devices at the same time
+
+"Getting started":wiki/Getting-Started
+
+"Basics":wiki/Basics
+
+"Reference":wiki/Reference
+
+"Extending Glaze":wiki/Extending-Glaze
+
+"Sandboxing":wiki/Sandboxing
+
+"Downloading":https://github.com/downloads/Enough-Software/glaze/enough-glaze-1.0.0.zip
+
 Visit the homepage at "www.glazeui.org":http://www.glazeui.org
+
+table{border: 0px solid black}.
+|!wiki/images/showcase.bank.png!|!wiki/images/showcase.social.png!|!wiki/images/showcase.game.png!|
+
+
 
