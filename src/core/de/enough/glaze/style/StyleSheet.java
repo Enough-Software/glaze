@@ -8,7 +8,6 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import net.rim.device.api.ui.UiApplication;
-
 import de.enough.glaze.log.Log;
 import de.enough.glaze.style.definition.StyleSheetDefinition;
 import de.enough.glaze.style.definition.converter.Converter;
@@ -139,7 +138,7 @@ public class StyleSheet {
 	 * @param url
 	 *            the url
 	 */
-	private void notifyLoaded(String url) {
+	protected void notifyLoaded(String url) {
 		synchronized (UiApplication.getEventLock()) {
 			for (int index = 0; index < this.listeners.size(); index++) {
 				StyleSheetListener listener = (StyleSheetListener) this.listeners
@@ -155,7 +154,7 @@ public class StyleSheet {
 	 * @param syntaxError
 	 *            the {@link CssSyntaxError}
 	 */
-	private void notifySyntaxError(CssSyntaxError syntaxError) {
+	protected void notifySyntaxError(CssSyntaxError syntaxError) {
 		for (int index = 0; index < this.listeners.size(); index++) {
 			StyleSheetListener listener = (StyleSheetListener) this.listeners
 					.elementAt(index);
@@ -169,7 +168,7 @@ public class StyleSheet {
 	 * @param exception
 	 *            the exception
 	 */
-	private void notifyError(Exception exception) {
+	protected void notifyError(Exception exception) {
 		for (int index = 0; index < this.listeners.size(); index++) {
 			StyleSheetListener listener = (StyleSheetListener) this.listeners
 					.elementAt(index);
@@ -187,13 +186,17 @@ public class StyleSheet {
 	 *            the {@link StyleSheetListener}
 	 */
 	public void update(final String url, StyleSheetListener listener) {
+		update(new Url(url), listener);
+	}
+
+	protected void update(final Url url, StyleSheetListener listener) {
 		addListener(listener);
 
 		new Thread() {
 			public void run() {
 				try {
 					update(url);
-					notifyLoaded(url);
+					notifyLoaded(url.toString());
 				} catch (CssSyntaxError e) {
 					notifySyntaxError(e);
 				} catch (Exception e) {
@@ -216,10 +219,24 @@ public class StyleSheet {
 	 */
 	public synchronized void update(String url) throws CssSyntaxError,
 			Exception {
+		// load and parse the url
+		this.url = new Url(url);
+		update(this.url);
+	}
+
+	protected synchronized void update(Url url) throws CssSyntaxError,
+			Exception {
+		this.url = url;
+		// load and parse the url
+		update(url.openStream());
+	}
+
+	protected synchronized void update(InputStream stream)
+			throws CssSyntaxError, Exception {
 		// clear all definitions for an update
 		this.definition.clear();
 		// load and parse the url
-		load(new Url(url));
+		load(stream);
 	}
 
 	/**
@@ -261,7 +278,7 @@ public class StyleSheet {
 	public synchronized void extend(String url) throws CssSyntaxError,
 			Exception {
 		// load and parse the url
-		load(new Url(url));
+		load(new Url(url).openStream());
 	}
 
 	/**
@@ -275,14 +292,17 @@ public class StyleSheet {
 	 * @throws CssSyntaxError
 	 *             if the syntax of the CSS is wrong
 	 */
-	private void load(Url url) throws IOException, CssSyntaxError {
-		this.url = url;
-		InputStreamReader reader = new InputStreamReader(url.openStream());
+	protected void load(InputStream stream) throws IOException, CssSyntaxError {
+		InputStreamReader reader = new InputStreamReader(stream);
 		CssParser cssParser = new CssParser(reader);
 		CssContentHandlerImpl cssContentHandler = new CssContentHandlerImpl(
 				this);
 		cssParser.setContentHandler(cssContentHandler);
 		cssParser.parse();
+	}
+
+	protected void setUrl(Url url) {
+		this.url = url;
 	}
 
 	/**

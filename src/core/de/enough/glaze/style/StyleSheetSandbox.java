@@ -1,5 +1,9 @@
 package de.enough.glaze.style;
 
+import java.io.InputStream;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.MenuItem;
 import net.rim.device.api.ui.Screen;
@@ -22,9 +26,19 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 	private static final String MENU_UPDATE = "Update styles";
 
 	/**
+	 * The interval to automatically update the stylesheet.
+	 */
+	private static final int AUTOUPDATE_INTERVAL = 2 * 1000;
+
+	/**
 	 * the wait dialog
 	 */
-	private Dialog waitDialog;
+	private static Dialog waitDialog;
+
+	static {
+		waitDialog = new Dialog(DIALOG_WAIT, null, null, Dialog.GLOBAL_STATUS,
+				Bitmap.getPredefinedBitmap(Bitmap.HOURGLASS));
+	}
 
 	/**
 	 * the error dialog
@@ -34,16 +48,18 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 	/**
 	 * the url
 	 */
-	private String url;
+	private Url url;
+
+	/**
+	 * The automatic update timer.
+	 */
+	private Timer autoUpdateTimer;
 
 	/**
 	 * Constructs a new {@link StyleSheetSandbox} instance
 	 */
 	public StyleSheetSandbox(String url) {
-		this.url = url;
-		this.waitDialog = new Dialog(DIALOG_WAIT, null, null,
-				Dialog.GLOBAL_STATUS,
-				Bitmap.getPredefinedBitmap(Bitmap.HOURGLASS));
+		this.url = new Url(url);
 	}
 
 	/**
@@ -87,8 +103,64 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 	 */
 	public void update() {
 		synchronized (UiApplication.getEventLock()) {
-			this.waitDialog.show();
+			waitDialog.show();
 			StyleSheet.getInstance().update(this.url, this);
+		}
+	}
+
+	/**
+	 * Starts the automatic update of this sandbox.
+	 */
+	public synchronized void startAutoUpdate() {
+		synchronized (this) {
+			TimerTask autoUpdateTask = new TimerTask() {
+				/*
+				 * (non-Javadoc)
+				 * 
+				 * @see java.util.TimerTask#run()
+				 */
+				public void run() {
+					try {
+						StyleSheet.getInstance().addListener(
+								StyleSheetSandbox.this);
+						Url url = StyleSheetSandbox.this.url;
+						InputStream stream = url.openStream();
+						// if the contents of the url have been modified ...
+						if (url.isModified()) {
+							synchronized (UiApplication.getEventLock()) {
+								// show the wait dialog and update the
+								// stylesheet
+								StyleSheetSandbox.waitDialog.show();
+								StyleSheet.getInstance().setUrl(url);
+								StyleSheet.getInstance().update(stream);
+								StyleSheet.getInstance().notifyLoaded(
+										url.toString());
+							}
+						}
+					} catch (CssSyntaxError e) {
+						StyleSheet.getInstance().notifySyntaxError(e);
+					} catch (Exception e) {
+						StyleSheet.getInstance().notifyError(e);
+					}
+				}
+			};
+
+			// schedule the automatic update with the given interval
+			this.autoUpdateTimer = new Timer();
+			this.autoUpdateTimer.schedule(autoUpdateTask, 0,
+					AUTOUPDATE_INTERVAL);
+		}
+	}
+
+	/**
+	 * Ends the automatic update of this sandbox.
+	 */
+	public void endAutoUpdate() {
+		synchronized (this) {
+			if (this.autoUpdateTimer != null) {
+				this.autoUpdateTimer.cancel();
+			}
+			StyleSheet.getInstance().removeListener(this);
 		}
 	}
 
@@ -99,7 +171,9 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 	 */
 	public void onLoaded(String url) {
 		synchronized (UiApplication.getEventLock()) {
-			UiApplication.getUiApplication().popScreen(this.waitDialog);
+			if (UiApplication.getUiApplication().getActiveScreen() == waitDialog) {
+				UiApplication.getUiApplication().popScreen(waitDialog);
+			}
 			if (UiApplication.getUiApplication().getActiveScreen() == null) {
 				Screen sandboxScreen = createSandboxScreen();
 				UiApplication.getUiApplication().pushScreen(sandboxScreen);
@@ -119,7 +193,7 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 		synchronized (UiApplication.getEventLock()) {
 			String error = syntaxError.toString();
 			String message = Log.TAG + "\n" + error;
-			UiApplication.getUiApplication().popScreen(this.waitDialog);
+			UiApplication.getUiApplication().popScreen(waitDialog);
 			this.errorDialog = new Dialog(message, new String[] { "OK" }, null,
 					Dialog.OK, Bitmap.getPredefinedBitmap(Bitmap.EXCLAMATION));
 			this.errorDialog
@@ -154,7 +228,9 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 	public void onError(Exception e) {
 		synchronized (UiApplication.getEventLock()) {
 			String error = e.toString() + ":" + e.getMessage();
-			UiApplication.getUiApplication().popScreen(this.waitDialog);
+			if (UiApplication.getUiApplication().getActiveScreen() == waitDialog) {
+				UiApplication.getUiApplication().popScreen(waitDialog);
+			}
 			this.errorDialog = new Dialog(error, new String[] { "OK" }, null,
 					Dialog.OK, Bitmap.getPredefinedBitmap(Bitmap.EXCLAMATION));
 			this.errorDialog

@@ -252,7 +252,7 @@ public class ParserUtils {
 	 * @return the normalized value
 	 */
 	public static String normalize(String value) {
-		return value.trim().toLowerCase();
+		return value.trim();
 	}
 
 	/**

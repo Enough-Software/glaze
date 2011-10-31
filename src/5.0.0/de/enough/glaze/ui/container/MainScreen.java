@@ -5,6 +5,7 @@ import net.rim.device.api.ui.Graphics;
 import de.enough.glaze.style.Style;
 import de.enough.glaze.style.handler.StyleManager;
 import de.enough.glaze.ui.delegate.FieldDelegate;
+import de.enough.glaze.ui.delegate.GzManager;
 import de.enough.glaze.ui.delegate.GzScreen;
 import de.enough.glaze.ui.delegate.ManagerDelegate;
 
@@ -60,6 +61,15 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 		super.add(this.fieldManager);
 		this.styleManager = new StyleManager(getMainManager());
 		this.styleManager.add(getMainManager(), screenStyle);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.enough.glaze.ui.delegate.GzScreen#getFieldManager()
+	 */
+	public GzManager getFieldManager() {
+		return this.fieldManager;
 	}
 
 	/*

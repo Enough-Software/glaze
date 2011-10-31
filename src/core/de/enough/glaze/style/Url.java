@@ -52,6 +52,10 @@ public class Url {
 
 	private String url;
 
+	private long lastModified;
+
+	private boolean modified;
+
 	/**
 	 * Constructs a new {@link Url} instance
 	 * 
@@ -76,7 +80,13 @@ public class Url {
 		this.port = PORT_HTTP;
 		this.path = "";
 		this.file = "";
+		this.lastModified = 0;
+		this.modified = true;
 		parse(url, context);
+		if (context != null) {
+			System.out.println("CONTEXT : " + context.toString());
+		}
+		System.out.println("RESULT : " + toString());
 	}
 
 	/**
@@ -198,6 +208,9 @@ public class Url {
 		// add the connection suffix
 		url = url + getConnectionSuffix();
 		RedirectHttpConnection connection = new RedirectHttpConnection(url);
+		long lastModified = connection.getLastModified();
+		this.modified = lastModified != this.lastModified;
+		this.lastModified = lastModified;
 		InputStream stream = connection.openInputStream();
 		return stream;
 	}
@@ -333,6 +346,27 @@ public class Url {
 	 */
 	public String getQuery() {
 		return this.query;
+	}
+
+	/**
+	 * Returns the time the contents of the url have been modified.
+	 * 
+	 * @return the time the contents of the url have been modified.
+	 */
+	public long getLastModified() {
+		synchronized (this) {
+			return this.lastModified;
+		}
+	}
+
+	/**
+	 * Returns true if the contents of this Url has been modified
+	 * 
+	 * @return true if the contents of this Url has been modified otherwise
+	 *         false
+	 */
+	public boolean isModified() {
+		return this.modified;
 	}
 
 	/**
