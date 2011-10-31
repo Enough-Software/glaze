@@ -28,7 +28,7 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 	/**
 	 * The interval to automatically update the stylesheet.
 	 */
-	private static final int AUTOUPDATE_INTERVAL = 2 * 1000;
+	private static final int AUTOUPDATE_DEFAULT_INTERVAL = 2 * 1000;
 
 	/**
 	 * the wait dialog
@@ -112,6 +112,16 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 	 * Starts the automatic update of this sandbox.
 	 */
 	public synchronized void startAutoUpdate() {
+		startAutoUpdate(AUTOUPDATE_DEFAULT_INTERVAL);
+	}
+
+	/**
+	 * Starts the automatic update of this sandbox.
+	 * 
+	 * @param interval
+	 *            the interval for the update
+	 */
+	public synchronized void startAutoUpdate(int interval) {
 		synchronized (this) {
 			TimerTask autoUpdateTask = new TimerTask() {
 				/*
@@ -147,8 +157,7 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 
 			// schedule the automatic update with the given interval
 			this.autoUpdateTimer = new Timer();
-			this.autoUpdateTimer.schedule(autoUpdateTask, 0,
-					AUTOUPDATE_INTERVAL);
+			this.autoUpdateTimer.schedule(autoUpdateTask, 0, interval);
 		}
 	}
 
