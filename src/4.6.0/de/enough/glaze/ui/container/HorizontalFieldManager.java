@@ -3,6 +3,7 @@ package de.enough.glaze.ui.container;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
 import de.enough.glaze.style.Style;
+import de.enough.glaze.style.handler.StyleHandler;
 import de.enough.glaze.style.handler.StyleManager;
 import de.enough.glaze.ui.delegate.FieldDelegate;
 import de.enough.glaze.ui.delegate.GzManager;
@@ -138,6 +139,22 @@ public class HorizontalFieldManager extends
 		this.styleManager.replace(oldField, newField, style);
 	}
 
+	/**
+	 * Applies the given style to the given field.
+	 * 
+	 * @param field
+	 *            the field
+	 * @param style
+	 *            the style
+	 */
+	public void apply(Field field, Style style) {
+		StyleHandler styleHandler = this.styleManager.get(field);
+		if (styleHandler != null) {
+			styleHandler.setStyle(style);
+			invalidate();
+		}
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -164,7 +181,7 @@ public class HorizontalFieldManager extends
 	public int getPreferredHeight() {
 		return FieldDelegate.getPreferredHeight(this);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -301,5 +318,44 @@ public class HorizontalFieldManager extends
 	protected void onUndisplay() {
 		super.onUndisplay();
 		this.styleManager.onUndisplay();
+	}
+
+	/*
+	 * 4.6 workarounds & fixes
+	 */
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.rim.device.api.ui.Manager#onFocus(int)
+	 */
+	protected void onFocus(int direction) {
+		super.onFocus(direction);
+		invalidate();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.rim.device.api.ui.Manager#onUnfocus()
+	 */
+	protected void onUnfocus() {
+		super.onUnfocus();
+		invalidate();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.rim.device.api.ui.Manager#moveFocus(int, int, int)
+	 */
+	protected int moveFocus(int amount, int status, int time) {
+		Field previousFocusedField = getFieldWithFocus();
+		int result = super.moveFocus(amount, status, time);
+		if (previousFocusedField != getFieldWithFocus()) {
+			// invalidate to update the field styles
+			invalidate();
+		}
+		return result;
 	}
 }

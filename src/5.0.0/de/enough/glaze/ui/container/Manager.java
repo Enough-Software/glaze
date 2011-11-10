@@ -189,4 +189,43 @@ public abstract class Manager extends net.rim.device.api.ui.Manager {
 		super.onUndisplay();
 		this.styleManager.onUndisplay();
 	}
+
+	/*
+	 * 5.0 workarounds & fixes
+	 */
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.rim.device.api.ui.Manager#onFocus(int)
+	 */
+	protected void onFocus(int direction) {
+		super.onFocus(direction);
+		invalidate();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.rim.device.api.ui.Manager#onUnfocus()
+	 */
+	protected void onUnfocus() {
+		super.onUnfocus();
+		invalidate();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.rim.device.api.ui.Manager#moveFocus(int, int, int)
+	 */
+	protected int moveFocus(int amount, int status, int time) {
+		Field previousFocusedField = getFieldWithFocus();
+		int result = super.moveFocus(amount, status, time);
+		if (previousFocusedField != getFieldWithFocus()) {
+			// invalidate to update the field styles
+			invalidate();
+		}
+		return result;
+	}
 }

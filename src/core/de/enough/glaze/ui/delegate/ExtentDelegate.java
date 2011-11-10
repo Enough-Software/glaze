@@ -142,6 +142,30 @@ public class ExtentDelegate {
 	}
 
 	/**
+	 * Returns the correct available content width.
+	 * 
+	 * @param availableContentWidth
+	 *            the (potentially wrong) available content width
+	 * @param field
+	 *            the field
+	 * @return the correct available content width
+	 */
+	protected static int getAvailableContentWidth(int availableContentWidth,
+			Field field) {
+		// if the device is the simulator the software version is less than 5.0 ...
+		if (DeviceInfo.isSimulator() && Version.isLessThan("5.0")) {
+			// calculate the horizontal margin and reduce the available content
+			// width by it.
+			// This is done to circumvent the simulator issue that the content
+			// receives an extra margin
+			int horizontalFieldMargin = field.getMarginLeft()
+					+ field.getMarginRight();
+			availableContentWidth -= horizontalFieldMargin;
+		}
+		return availableContentWidth;
+	}
+
+	/**
 	 * Prepare a fields layout height by using the width and max-width dimension
 	 * and returns it
 	 * 
@@ -179,13 +203,6 @@ public class ExtentDelegate {
 			}
 		}
 
-		// if the software version is less than 5.0 ...
-		if(Version.isLessThan("5.0")) {
-			// calculate the horizontal margin and reduce the available content width by it.
-			// This is done to circumvent the platform issue that the content receives an extra margin
-			int horizontalFieldMargin = field.getMarginLeft() + field.getMarginRight();
-			availableContentWidth -= horizontalFieldMargin;
-		}
 		return availableContentWidth;
 	}
 

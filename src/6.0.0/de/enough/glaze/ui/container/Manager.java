@@ -3,10 +3,12 @@ package de.enough.glaze.ui.container;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
 import de.enough.glaze.style.Style;
+import de.enough.glaze.style.handler.StyleHandler;
 import de.enough.glaze.style.handler.StyleManager;
+import de.enough.glaze.ui.delegate.GzManager;
 import de.enough.glaze.ui.delegate.ManagerDelegate;
 
-public abstract class Manager extends net.rim.device.api.ui.Manager {
+public abstract class Manager extends net.rim.device.api.ui.Manager implements GzManager {
 
 	private final StyleManager styleManager;
 
@@ -118,6 +120,21 @@ public abstract class Manager extends net.rim.device.api.ui.Manager {
 	public void replace(Field oldField, Field newField, Style style) {
 		super.replace(oldField, newField);
 		this.styleManager.replace(oldField, newField, style);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.enough.glaze.ui.delegate.GzManager#apply(net.rim.device.api.ui.Field,
+	 * de.enough.glaze.style.Style)
+	 */
+	public void apply(Field field, Style style) {
+		StyleHandler styleHandler = this.styleManager.get(field);
+		if (styleHandler != null) {
+			styleHandler.setStyle(style);
+			invalidate();
+		}
 	}
 
 	/*

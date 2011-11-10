@@ -5,6 +5,7 @@ import java.util.Hashtable;
 
 import net.rim.device.api.ui.Field;
 import de.enough.glaze.style.extension.Extension;
+import de.enough.glaze.style.handler.StyleHandler;
 import de.enough.glaze.style.property.Visibility;
 import de.enough.glaze.style.property.background.GzBackground;
 import de.enough.glaze.style.property.border.GzBorder;

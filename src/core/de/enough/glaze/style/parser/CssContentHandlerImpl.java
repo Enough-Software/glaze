@@ -222,7 +222,7 @@ public class CssContentHandlerImpl implements CssContentHandler {
 							this.styleDefinition = new Definition(blockId,
 									blockClass);
 							// set the parent of the style definition
-							this.styleDefinition.setParent(parentDefinition);
+							this.styleDefinition.setParentId(parentDefinition.getId());
 						} else {
 							throw new CssSyntaxError("unable to resolve style",
 									blockId, lineNumber);
@@ -240,7 +240,7 @@ public class CssContentHandlerImpl implements CssContentHandler {
 						// create a new style definition with the id
 						this.styleDefinition = new Definition(blockId);
 						// set the parent of the style definition
-						this.styleDefinition.setParent(parentDefinition);
+						this.styleDefinition.setParentId(parentDefinition.getId());
 					} else {
 						throw new CssSyntaxError("unable to resolve style",
 								blockExtends, lineNumber);
@@ -307,8 +307,10 @@ public class CssContentHandlerImpl implements CssContentHandler {
 			}
 			// create a new definition with the block id
 			this.blockDefinition = new Definition(blockId);
-			// set the parent of the definition
-			this.blockDefinition.setParent(parentDefinition);
+			if (parentDefinition != null) {
+				// set the parent id of the definition
+				this.blockDefinition.setParentId(parentDefinition.getId());
+			}
 			// if the current block type is the colors section ...
 		} else if (BLOCK_TYPE_SECTION_COLORS.equals(blockType)) {
 			throw new CssSyntaxError(
@@ -338,7 +340,6 @@ public class CssContentHandlerImpl implements CssContentHandler {
 			// add the property to the style definition
 			this.styleDefinition.addProperty(propertyId, propertyValue,
 					lineNumber);
-
 			Log.debug("added style property : " + propertyId + ":"
 					+ propertyValue);
 			// if the current block id a local block definition ...
@@ -364,7 +365,7 @@ public class CssContentHandlerImpl implements CssContentHandler {
 					lineNumber);
 			Color color = (Color) ColorPropertyParser.getInstance().parse(
 					colorAttr);
-			this.stylesheet.addColor(propertyId, color);
+			this.stylesheet.setColor(propertyId, color);
 			Log.debug("added color property : " + propertyId + ":" + color);
 			// if the block is the backgrounds, borders or fonts section ...
 		} else if (blockType == null
@@ -423,73 +424,6 @@ public class CssContentHandlerImpl implements CssContentHandler {
 	 * .glaze.style.parser.CssParser)
 	 */
 	public void onDocumentEnd(CssParser parser) throws CssSyntaxError {
-		// clear the whole stylesheet
-		this.stylesheet.clear();
-
-		// convert and add all backgrounds to the stylesheet
-		DefinitionCollection backgroundDefinitions = this.styleSheetDefinition
-				.getBackgroundDefinitions();
-		for (int index = 0; index < backgroundDefinitions.size(); index++) {
-			Definition definition = backgroundDefinitions.getDefinition(index);
-			if (this.stylesheet.getBackground(definition.getId()) == null) {
-				ConverterUtils.validate(definition, BackgroundConverter
-						.getInstance().getIds());
-				GzBackground background = (GzBackground) BackgroundConverter
-						.getInstance().convert(definition);
-				this.stylesheet.addBackground(definition.getId(), background);
-			}
-		}
-
-		// convert and add all borders to the stylesheet
-		DefinitionCollection borderDefinitions = this.styleSheetDefinition
-				.getBorderDefinitions();
-		for (int index = 0; index < borderDefinitions.size(); index++) {
-			Definition definition = borderDefinitions.getDefinition(index);
-			if (this.stylesheet.getBorder(definition.getId()) == null) {
-				ConverterUtils.validate(definition, BorderConverter
-						.getInstance().getIds());
-				GzBorder border = (GzBorder) BorderConverter.getInstance()
-						.convert(definition);
-				this.stylesheet.addBorder(definition.getId(), border);
-			}
-		}
-
-		// convert and add all fonts to the stylesheet
-		DefinitionCollection fontDefinitions = this.styleSheetDefinition
-				.getFontDefinitions();
-		for (int index = 0; index < fontDefinitions.size(); index++) {
-			Definition definition = fontDefinitions.getDefinition(index);
-			if (this.stylesheet.getFont(definition.getId()) == null) {
-				ConverterUtils.validate(definition, FontConverter.getInstance()
-						.getIds());
-				GzFont font = (GzFont) FontConverter.getInstance().convert(
-						definition);
-				this.stylesheet.addFont(definition.getId(), font);
-			}
-		}
-
-		// convert and add all styles to the stylesheet
-		DefinitionCollection styleDefinitions = this.styleSheetDefinition
-				.getStyleDefinitions();
-		for (int index = 0; index < styleDefinitions.size(); index++) {
-			Definition definition = styleDefinitions.getDefinition(index);
-			Style style = (Style) StyleConverter.getInstance().convert(
-					definition);
-
-			String classId = definition.getClassId();
-			// if the style is a style class ...
-			if (classId != null) {
-				Definition parentDefinition = definition.getParent();
-				String parentId = parentDefinition.getId();
-				// get the parent style and set the style as a class of it
-				Style parentStyle = this.stylesheet.getStyle(parentId);
-				parentStyle.setClass(classId, style);
-				// otherwise ...
-			} else {
-				// simply add the style
-				this.stylesheet.addStyle(definition.getId(), style);
-			}
-		}
-
+		// do nothing
 	}
 }

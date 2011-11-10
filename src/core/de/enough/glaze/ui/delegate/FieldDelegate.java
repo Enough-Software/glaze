@@ -104,6 +104,8 @@ public class FieldDelegate {
 			gzField = (GzField) field;
 			// get the style of the field
 			Style style = getStyle(field);
+			// correct the available content width (width)
+			width = ExtentDelegate.getAvailableContentWidth(width, field);
 			// get the maximum width and height to layout the field
 			int layoutWidth = ExtentDelegate
 					.getLayoutWidth(width, field, style);
@@ -226,7 +228,7 @@ public class FieldDelegate {
 	 *            the field
 	 * @return the {@link StyleHandler}
 	 */
-	protected static StyleHandler getStyleHandler(Field field) {
+	public static StyleHandler getStyleHandler(Field field) {
 		StyleManager styleManager = getStyleManager(field);
 		if (styleManager != null) {
 			return styleManager.get(field);
@@ -242,7 +244,7 @@ public class FieldDelegate {
 	 *            the field
 	 * @return the style
 	 */
-	protected static Style getStyle(Field field) {
+	public static Style getStyle(Field field) {
 		StyleHandler styleHandler = getStyleHandler(field);
 		if (styleHandler != null) {
 			return styleHandler.getStyle();

@@ -3,6 +3,7 @@ package de.enough.glaze.ui.container;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
 import de.enough.glaze.style.Style;
+import de.enough.glaze.style.handler.StyleHandler;
 import de.enough.glaze.style.handler.StyleManager;
 import de.enough.glaze.ui.delegate.FieldDelegate;
 import de.enough.glaze.ui.delegate.GzManager;
@@ -13,7 +14,7 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 		implements GzScreen {
 
 	private final StyleManager styleManager;
-	
+
 	private final VerticalFieldManager fieldManager;
 
 	/**
@@ -41,7 +42,8 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 	 */
 	public MainScreen(Style screenStyle) {
 		super();
-		this.fieldManager = new VerticalFieldManager(Field.USE_ALL_WIDTH | Manager.NO_VERTICAL_SCROLL | Manager.NO_VERTICAL_SCROLL);
+		this.fieldManager = new VerticalFieldManager(Field.USE_ALL_WIDTH
+				| Manager.NO_VERTICAL_SCROLL | Manager.NO_VERTICAL_SCROLL);
 		super.add(this.fieldManager);
 		this.styleManager = new StyleManager(getMainManager());
 		this.styleManager.add(getMainManager(), screenStyle);
@@ -57,12 +59,13 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 	 */
 	public MainScreen(long style, Style screenStyle) {
 		super(style);
-		this.fieldManager = new VerticalFieldManager(Field.USE_ALL_WIDTH | Manager.NO_VERTICAL_SCROLL | Manager.NO_VERTICAL_SCROLL);
+		this.fieldManager = new VerticalFieldManager(Field.USE_ALL_WIDTH
+				| Manager.NO_VERTICAL_SCROLL | Manager.NO_VERTICAL_SCROLL);
 		super.add(this.fieldManager);
 		this.styleManager = new StyleManager(getMainManager());
 		this.styleManager.add(getMainManager(), screenStyle);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -170,6 +173,22 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 	 */
 	public void replace(Field oldField, Field newField, Style style) {
 		this.fieldManager.replace(oldField, newField, style);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.enough.glaze.ui.delegate.GzManager#apply(net.rim.device.api.ui.Field,
+	 * de.enough.glaze.style.Style)
+	 */
+	public void apply(Field field, Style style) {
+		StyleHandler styleHandler = this.fieldManager.getStyleManager().get(
+				field);
+		if (styleHandler != null) {
+			styleHandler.setStyle(style);
+			invalidate();
+		}
 	}
 
 	/*

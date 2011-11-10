@@ -9,8 +9,15 @@ import java.util.Vector;
 
 import net.rim.device.api.ui.UiApplication;
 import de.enough.glaze.log.Log;
+import de.enough.glaze.style.definition.Definition;
+import de.enough.glaze.style.definition.DefinitionCollection;
 import de.enough.glaze.style.definition.StyleSheetDefinition;
+import de.enough.glaze.style.definition.converter.BackgroundConverter;
+import de.enough.glaze.style.definition.converter.BorderConverter;
 import de.enough.glaze.style.definition.converter.Converter;
+import de.enough.glaze.style.definition.converter.FontConverter;
+import de.enough.glaze.style.definition.converter.StyleConverter;
+import de.enough.glaze.style.definition.converter.utils.ConverterUtils;
 import de.enough.glaze.style.extension.Extension;
 import de.enough.glaze.style.extension.Processor;
 import de.enough.glaze.style.parser.CssContentHandlerImpl;
@@ -186,17 +193,13 @@ public class StyleSheet {
 	 *            the {@link StyleSheetListener}
 	 */
 	public void update(final String url, StyleSheetListener listener) {
-		update(new Url(url), listener);
-	}
-
-	protected void update(final Url url, StyleSheetListener listener) {
 		addListener(listener);
 
 		new Thread() {
 			public void run() {
 				try {
 					update(url);
-					notifyLoaded(url.toString());
+					notifyLoaded(url);
 				} catch (CssSyntaxError e) {
 					notifySyntaxError(e);
 				} catch (Exception e) {
@@ -219,24 +222,31 @@ public class StyleSheet {
 	 */
 	public synchronized void update(String url) throws CssSyntaxError,
 			Exception {
+		update(url, true);
+	}
+
+	/**
+	 * Updates the stylesheet by clearing the definitions and loading and
+	 * parsing the given url.
+	 * 
+	 * @param url
+	 *            the url
+	 * @param build
+	 *            true if an the stylesheet should be build after the loading is
+	 *            done otherwise false
+	 * @throws CssSyntaxError
+	 *             if the syntax of the CSS is wrong
+	 * @throws Exception
+	 *             if an error occurs
+	 */
+	public synchronized void update(String url, boolean build)
+			throws CssSyntaxError, Exception {
 		// load and parse the url
 		this.url = new Url(url);
-		update(this.url);
-	}
-
-	protected synchronized void update(Url url) throws CssSyntaxError,
-			Exception {
-		this.url = url;
-		// load and parse the url
-		update(url.openStream());
-	}
-
-	protected synchronized void update(InputStream stream)
-			throws CssSyntaxError, Exception {
 		// clear all definitions for an update
 		this.definition.clear();
 		// load and parse the url
-		load(stream);
+		load(this.url.openStream(), build);
 	}
 
 	/**
@@ -277,8 +287,28 @@ public class StyleSheet {
 	 */
 	public synchronized void extend(String url) throws CssSyntaxError,
 			Exception {
+		extend(url, true);
+	}
+
+	/**
+	 * Extends the stylesheet by loading and parsing the given url
+	 * 
+	 * @param url
+	 *            the url
+	 * @param build
+	 *            true if an the stylesheet should be build after the loading is
+	 *            done otherwise false
+	 * @throws CssSyntaxError
+	 *             if the syntax of the CSS is wrong
+	 * @throws Exception
+	 *             if an error occurs
+	 */
+	public synchronized void extend(String url, boolean build)
+			throws CssSyntaxError, Exception {
 		// load and parse the url
-		load(new Url(url).openStream());
+		this.url = new Url(url);
+		// load and parse the url
+		load(new Url(url).openStream(), build);
 	}
 
 	/**
@@ -292,15 +322,132 @@ public class StyleSheet {
 	 * @throws CssSyntaxError
 	 *             if the syntax of the CSS is wrong
 	 */
-	protected void load(InputStream stream) throws IOException, CssSyntaxError {
+	protected void load(InputStream stream, boolean build) throws IOException,
+			CssSyntaxError {
+		// parse the css from the stream
 		InputStreamReader reader = new InputStreamReader(stream);
 		CssParser cssParser = new CssParser(reader);
 		CssContentHandlerImpl cssContentHandler = new CssContentHandlerImpl(
 				this);
 		cssParser.setContentHandler(cssContentHandler);
 		cssParser.parse();
+		// clear the whole stylesheet
+		clear();
+		// build the stylesheet
+		if (build) {
+			build();
+		}
 	}
 
+	/**
+	 * Builds the stylesheet elements (styles, backgrounds etc.) from the
+	 * current stylesheet definition. update() or extends should be run first.
+	 * 
+	 * @throws IOException
+	 *             if the connection is interrupted
+	 * @throws CssSyntaxError
+	 *             if the syntax in the css is wrong
+	 */
+	public void build() throws IOException, CssSyntaxError {
+		// convert and add all backgrounds to the stylesheet
+		DefinitionCollection backgroundDefinitions = this.definition
+				.getBackgroundDefinitions();
+		for (int index = 0; index < backgroundDefinitions.size(); index++) {
+			Definition definition = backgroundDefinitions.getDefinition(index);
+			String definitionParentId = definition.getParentId();
+			if (definitionParentId != null) {
+				Definition parentDefinition = backgroundDefinitions
+						.getDefinition(definitionParentId);
+				definition.setParent(parentDefinition);
+			}
+			ConverterUtils.validate(definition, BackgroundConverter
+					.getInstance().getIds());
+			GzBackground background = (GzBackground) BackgroundConverter
+					.getInstance().convert(definition);
+			setBackground(definition.getId(), background);
+		}
+
+		// convert and add all borders to the stylesheet
+		DefinitionCollection borderDefinitions = this.definition
+				.getBorderDefinitions();
+		for (int index = 0; index < borderDefinitions.size(); index++) {
+			Definition definition = borderDefinitions.getDefinition(index);
+			String definitionParentId = definition.getParentId();
+			if (definitionParentId != null) {
+				Definition parentDefinition = borderDefinitions
+						.getDefinition(definitionParentId);
+				definition.setParent(parentDefinition);
+			}
+			ConverterUtils.validate(definition, BorderConverter.getInstance()
+					.getIds());
+			GzBorder border = (GzBorder) BorderConverter.getInstance().convert(
+					definition);
+			setBorder(definition.getId(), border);
+		}
+
+		// convert and add all fonts to the stylesheet
+		DefinitionCollection fontDefinitions = this.definition
+				.getFontDefinitions();
+		for (int index = 0; index < fontDefinitions.size(); index++) {
+			Definition definition = fontDefinitions.getDefinition(index);
+			String definitionParentId = definition.getParentId();
+			if (definitionParentId != null) {
+				Definition parentDefinition = fontDefinitions
+						.getDefinition(definitionParentId);
+				definition.setParent(parentDefinition);
+			}
+			ConverterUtils.validate(definition, FontConverter.getInstance()
+					.getIds());
+			GzFont font = (GzFont) FontConverter.getInstance().convert(
+					definition);
+			setFont(definition.getId(), font);
+		}
+
+		// convert and add all styles to the stylesheet
+		DefinitionCollection styleDefinitions = this.definition
+				.getStyleDefinitions();
+		for (int index = 0; index < styleDefinitions.size(); index++) {
+			Definition definition = styleDefinitions.getDefinition(index);
+			String definitionParentId = definition.getParentId();
+			if (definitionParentId != null) {
+				Definition parentDefinition = styleDefinitions
+						.getDefinition(definitionParentId);
+				definition.setParent(parentDefinition);
+			}
+			Style style = (Style) StyleConverter.getInstance().convert(
+					definition);
+
+			String classId = definition.getClassId();
+			// if the style is a style class ...
+			if (classId != null) {
+				Definition parentDefinition = definition.getParent();
+				String parentId = parentDefinition.getId();
+				// get the parent style and set the style as a class of it
+				Style parentStyle = getStyle(parentId);
+				parentStyle.setClass(classId, style);
+				// otherwise ...
+			} else {
+				// simply add the style
+				setStyle(definition.getId(), style);
+			}
+		}
+	}
+
+	/**
+	 * Finalizes the stylesheet by clearing the definition. This method should
+	 * only be called if the stylesheet is in its final state for the given
+	 * application.
+	 */
+	public void finalize() {
+		this.definition.clear();
+	}
+
+	/**
+	 * Sets the url.
+	 * 
+	 * @param url
+	 *            the url
+	 */
 	protected void setUrl(Url url) {
 		this.url = url;
 	}
@@ -333,7 +480,7 @@ public class StyleSheet {
 	 * @param color
 	 *            the color
 	 */
-	public void addColor(String id, Color color) {
+	public void setColor(String id, Color color) {
 		this.colors.put(id, color);
 	}
 
@@ -356,7 +503,7 @@ public class StyleSheet {
 	 * @param border
 	 *            the border
 	 */
-	public void addBorder(String id, GzBorder border) {
+	public void setBorder(String id, GzBorder border) {
 		this.borders.put(id, border);
 	}
 
@@ -379,7 +526,7 @@ public class StyleSheet {
 	 * @param background
 	 *            the background
 	 */
-	public void addBackground(String id, GzBackground background) {
+	public void setBackground(String id, GzBackground background) {
 		this.backgrounds.put(id, background);
 	}
 
@@ -402,7 +549,7 @@ public class StyleSheet {
 	 * @param font
 	 *            the font
 	 */
-	public void addFont(String id, GzFont font) {
+	public void setFont(String id, GzFont font) {
 		this.fonts.put(id, font);
 	}
 
@@ -433,7 +580,7 @@ public class StyleSheet {
 	 * @param style
 	 *            the style
 	 */
-	public void addStyle(String id, Style style) {
+	public void setStyle(String id, Style style) {
 		this.styles.put(id, style);
 	}
 

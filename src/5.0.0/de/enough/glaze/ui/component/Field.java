@@ -70,4 +70,24 @@ public abstract class Field extends net.rim.device.api.ui.Field implements
 	public void gz_setExtent(int width, int height) {
 		super.setExtent(width, height);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.rim.device.api.ui.Field#onFocus(int)
+	 */
+	protected void onFocus(int arg0) {
+		super.onFocus(arg0);
+		invalidate();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.rim.device.api.ui.Field#onUnfocus()
+	 */
+	protected void onUnfocus() {
+		super.onUnfocus();
+		invalidate();
+	}
 }

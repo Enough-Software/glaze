@@ -83,10 +83,6 @@ public class Url {
 		this.lastModified = 0;
 		this.modified = true;
 		parse(url, context);
-		if (context != null) {
-			System.out.println("CONTEXT : " + context.toString());
-		}
-		System.out.println("RESULT : " + toString());
 	}
 
 	/**

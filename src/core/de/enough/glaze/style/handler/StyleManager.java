@@ -6,7 +6,6 @@ import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Manager;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
-import de.enough.glaze.log.Log;
 import de.enough.glaze.style.Style;
 import de.enough.glaze.style.StyleSheet;
 import de.enough.glaze.style.StyleSheetListener;
@@ -275,7 +274,6 @@ public class StyleManager implements StyleSheetListener {
 	 * Called by onDisplay() of the parenting {@link Manager}
 	 */
 	public void onDisplay() {
-		Log.debug("display", this);
 		// add this style manager as a listener
 		StyleSheet.getInstance().addListener(this);
 	}
@@ -317,6 +315,9 @@ public class StyleManager implements StyleSheetListener {
 			StyleHandler styleHandler = get(index);
 			// if the visual state of the field has changed ...
 			if (styleHandler.isVisualStateChanged()) {
+				/*System.out.println("visual state changed : "
+						+ styleHandler.getField() + ":"
+						+ styleHandler.getField().getVisualState());*/
 				// update the style
 				styleHandler.updateVisualState();
 				styleHandler.applyStyle();
@@ -332,14 +333,22 @@ public class StyleManager implements StyleSheetListener {
 	}
 
 	/**
-	 * Returns true if the {@link Manager} of this {@link StyleManager} is
-	 * currently layouting
+	 * Returns true if the {@link Manager} of this {@link StyleManager} or a
+	 * parent of this {@link Manager} is currently layouting
 	 * 
 	 * @return true if the {@link Manager} of this {@link StyleManager} is
 	 *         currently layouting otherwise false
 	 */
 	public boolean isLayouting() {
 		synchronized (UiApplication.getEventLock()) {
+			if (this.layouting == false) {
+				Manager parent = this.manager.getManager();
+				if (parent instanceof GzManager) {
+					GzManager gzManager = (GzManager) parent;
+					return gzManager.getStyleManager().isLayouting();
+				}
+			}
+
 			return this.layouting;
 		}
 	}
@@ -383,14 +392,14 @@ public class StyleManager implements StyleSheetListener {
 				gzManager.gz_updateLayout();
 			} else {
 				Screen screen = this.manager.getScreen();
-				if(screen instanceof GzScreen) {
-					GzScreen gzScreen = (GzScreen)screen;
+				if (screen instanceof GzScreen) {
+					GzScreen gzScreen = (GzScreen) screen;
 					gzScreen.gz_updateLayout();
 				}
 			}
 		}
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 

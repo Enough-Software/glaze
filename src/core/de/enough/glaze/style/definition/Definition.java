@@ -38,6 +38,11 @@ public class Definition {
 	private Definition parent;
 
 	/**
+	 * the parent definition id
+	 */
+	private String parentId;
+
+	/**
 	 * Creates a new {@link Definition} instance
 	 */
 	public Definition() {
@@ -85,6 +90,25 @@ public class Definition {
 	 */
 	public String getClassId() {
 		return this.classId;
+	}
+
+	/**
+	 * Sets the parent definition id
+	 * 
+	 * @param parentId
+	 *            the parent definition id
+	 */
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+
+	/**
+	 * Returns the parent definition id
+	 * 
+	 * @return
+	 */
+	public String getParentId() {
+		return parentId;
 	}
 
 	/**

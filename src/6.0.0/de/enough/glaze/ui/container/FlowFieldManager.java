@@ -3,6 +3,7 @@ package de.enough.glaze.ui.container;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
 import de.enough.glaze.style.Style;
+import de.enough.glaze.style.handler.StyleHandler;
 import de.enough.glaze.style.handler.StyleManager;
 import de.enough.glaze.ui.delegate.FieldDelegate;
 import de.enough.glaze.ui.delegate.GzManager;
@@ -140,12 +141,27 @@ public class FlowFieldManager extends
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see
+	 * de.enough.glaze.ui.delegate.GzManager#apply(net.rim.device.api.ui.Field,
+	 * de.enough.glaze.style.Style)
+	 */
+	public void apply(Field field, Style style) {
+		StyleHandler styleHandler = this.styleManager.get(field);
+		if (styleHandler != null) {
+			styleHandler.setStyle(style);
+			invalidate();
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.enough.glaze.ui.container.GzManager#getHandlers()
 	 */
 	public StyleManager getStyleManager() {
 		return this.styleManager;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 

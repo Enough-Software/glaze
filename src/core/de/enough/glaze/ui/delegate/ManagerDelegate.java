@@ -106,6 +106,9 @@ public class ManagerDelegate {
 			StyleManager styleManager = gzManager.getStyleManager();
 			// indicate that the manager is layouting
 			styleManager.setLayouting(true);
+			// correct the available content width (maxWidth)
+			maxWidth = ExtentDelegate.getAvailableContentWidth(maxWidth,
+					manager);
 			// set the maximum width in the style manager for percentual field
 			// dimensions
 			styleManager.setMaxWidth(maxWidth);

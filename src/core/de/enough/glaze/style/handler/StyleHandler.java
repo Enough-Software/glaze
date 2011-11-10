@@ -5,6 +5,7 @@ import java.util.Enumeration;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Font;
 import net.rim.device.api.ui.XYEdges;
+import net.rim.device.api.ui.decor.Border;
 import de.enough.glaze.log.Log;
 import de.enough.glaze.style.Margin;
 import de.enough.glaze.style.Padding;
@@ -265,22 +266,26 @@ public class StyleHandler {
 	 *            the visual state
 	 */
 	private void applyBorder(int visualState) {
-		GzBorder border = null;
+		Border currentBorder = this.field.getBorder(visualState);
+		Border nextBorder = null;
 
 		Style style = this.style.getStyle(visualState);
 		int visibility = style.getVisibility();
 		// if the visibility is visible ...
 		if (visibility == Visibility.VISIBLE) {
 			// use the style border
-			border = style.getBorder();
+			nextBorder = style.getBorder();
 			// otherwise ...
 		} else if (visibility == Visibility.COLLAPSE
 				|| visibility == Visibility.HIDDEN) {
 			// use the zero (none) border
-			border = ZeroBorder.getInstance();
+			nextBorder = ZeroBorder.getInstance();
 		}
 
-		this.field.setBorder(visualState, border);
+		if (nextBorder != currentBorder) {
+			this.field.setBorder(visualState, nextBorder);
+		}
+
 	}
 
 	/**

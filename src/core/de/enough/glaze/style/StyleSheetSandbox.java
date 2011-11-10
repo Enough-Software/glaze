@@ -48,7 +48,7 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 	/**
 	 * the url
 	 */
-	private Url url;
+	private String url;
 
 	/**
 	 * The automatic update timer.
@@ -59,7 +59,7 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 	 * Constructs a new {@link StyleSheetSandbox} instance
 	 */
 	public StyleSheetSandbox(String url) {
-		this.url = new Url(url);
+		this.url = url;
 	}
 
 	/**
@@ -123,6 +123,7 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 	 */
 	public synchronized void startAutoUpdate(int interval) {
 		synchronized (this) {
+			final Url url = new Url(this.url); 
 			TimerTask autoUpdateTask = new TimerTask() {
 				/*
 				 * (non-Javadoc)
@@ -133,7 +134,6 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 					try {
 						StyleSheet.getInstance().addListener(
 								StyleSheetSandbox.this);
-						Url url = StyleSheetSandbox.this.url;
 						InputStream stream = url.openStream();
 						// if the contents of the url have been modified ...
 						if (url.isModified()) {
@@ -142,7 +142,8 @@ public abstract class StyleSheetSandbox implements StyleSheetListener {
 								// stylesheet
 								StyleSheetSandbox.waitDialog.show();
 								StyleSheet.getInstance().setUrl(url);
-								StyleSheet.getInstance().update(stream);
+								StyleSheet.getInstance().getDefinition().clear();
+								StyleSheet.getInstance().load(stream, true);
 								StyleSheet.getInstance().notifyLoaded(
 										url.toString());
 							}

@@ -133,4 +133,24 @@ public class ListField extends net.rim.device.api.ui.component.ListField
 	public int gz_getPreferredHeight() {
 		return super.getPreferredHeight();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.rim.device.api.ui.Field#onFocus(int)
+	 */
+	protected void onFocus(int arg0) {
+		super.onFocus(arg0);
+		invalidate();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.rim.device.api.ui.Field#onUnfocus()
+	 */
+	protected void onUnfocus() {
+		super.onUnfocus();
+		invalidate();
+	}
 }

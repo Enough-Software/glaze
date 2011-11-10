@@ -4,6 +4,7 @@ import net.rim.device.api.collection.util.BasicFilteredList;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Graphics;
 import de.enough.glaze.style.Style;
+import de.enough.glaze.style.handler.StyleHandler;
 import de.enough.glaze.style.handler.StyleManager;
 import de.enough.glaze.ui.delegate.GzManager;
 import de.enough.glaze.ui.delegate.ManagerDelegate;
@@ -122,6 +123,21 @@ public class AutoCompleteField extends
 	public void replace(Field oldField, Field newField, Style style) {
 		super.replace(oldField, newField);
 		this.styleManager.replace(oldField, newField, style);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.enough.glaze.ui.delegate.GzManager#apply(net.rim.device.api.ui.Field,
+	 * de.enough.glaze.style.Style)
+	 */
+	public void apply(Field field, Style style) {
+		StyleHandler styleHandler = this.styleManager.get(field);
+		if (styleHandler != null) {
+			styleHandler.setStyle(style);
+			invalidate();
+		}
 	}
 
 	/*
@@ -269,5 +285,44 @@ public class AutoCompleteField extends
 	 */
 	public int gz_getPreferredHeight() {
 		return super.getPreferredHeight();
+	}
+
+	/*
+	 * 5.0 workarounds & fixes
+	 */
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.rim.device.api.ui.Manager#onFocus(int)
+	 */
+	protected void onFocus(int direction) {
+		super.onFocus(direction);
+		invalidate();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.rim.device.api.ui.Manager#onUnfocus()
+	 */
+	protected void onUnfocus() {
+		super.onUnfocus();
+		invalidate();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.rim.device.api.ui.Manager#moveFocus(int, int, int)
+	 */
+	protected int moveFocus(int amount, int status, int time) {
+		Field previousFocusedField = getFieldWithFocus();
+		int result = super.moveFocus(amount, status, time);
+		if (previousFocusedField != getFieldWithFocus()) {
+			// invalidate to update the field styles
+			invalidate();
+		}
+		return result;
 	}
 }

@@ -182,6 +182,16 @@ public interface GzManager extends GzExtent {
 	public void gz_updateLayout();
 
 	/**
+	 * Applies the given style to the given field.
+	 * 
+	 * @param field
+	 *            the field
+	 * @param style
+	 *            the style
+	 */
+	public void apply(Field field, Style style);
+
+	/**
 	 * Return the style manager of the implementing manager
 	 * 
 	 * @return the style manager
