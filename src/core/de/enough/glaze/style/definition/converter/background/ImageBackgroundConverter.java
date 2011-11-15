@@ -3,7 +3,6 @@ package de.enough.glaze.style.definition.converter.background;
 import net.rim.device.api.system.Bitmap;
 import de.enough.glaze.content.ContentException;
 import de.enough.glaze.style.Dimension;
-import de.enough.glaze.style.StyleResources;
 import de.enough.glaze.style.Url;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.converter.Converter;
@@ -15,6 +14,7 @@ import de.enough.glaze.style.parser.property.ValuePropertyParser;
 import de.enough.glaze.style.property.background.GzBackgroundFactory;
 import de.enough.glaze.style.property.background.ImageBackground;
 import de.enough.glaze.style.property.background.image.ImageBackgroundPosition;
+import de.enough.glaze.style.resources.StyleResources;
 
 /**
  * A {@link Converter} implementation to convert a definition to an image

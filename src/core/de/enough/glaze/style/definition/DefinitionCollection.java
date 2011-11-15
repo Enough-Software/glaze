@@ -32,8 +32,7 @@ public class DefinitionCollection {
 		String id = definition.getId();
 		Definition storedDefinition = getDefinition(id);
 		if (storedDefinition != null) {
-			int index = this.definitions.indexOf(storedDefinition);
-			this.definitions.setElementAt(definition, index);
+			storedDefinition.setProperties(definition);
 		} else {
 			this.definitions.addElement(definition);
 		}

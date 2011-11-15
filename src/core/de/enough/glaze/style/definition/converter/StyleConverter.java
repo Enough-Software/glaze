@@ -216,7 +216,7 @@ public class StyleConverter implements Converter {
 						// the style definition
 						Definition backgroundDefinition = backgroundDefinitions
 								.getDefinition(backgroundId);
-						definition.addProperties(backgroundDefinition);
+						definition.setProperties(backgroundDefinition);
 						// otherwise ...
 					} else {
 						// just return the referenced background
@@ -266,7 +266,7 @@ public class StyleConverter implements Converter {
 						// the style definition
 						Definition borderDefinition = borderDefinitions
 								.getDefinition(borderId);
-						definition.addProperties(borderDefinition);
+						definition.setProperties(borderDefinition);
 						// otherwise ...
 					} else {
 						// just return the referenced border
@@ -314,7 +314,7 @@ public class StyleConverter implements Converter {
 						// the style definition
 						Definition fontDefinition = fontDefinitions
 								.getDefinition(fontId);
-						definition.addProperties(fontDefinition);
+						definition.setProperties(fontDefinition);
 						// otherwise ...
 					} else {
 						// just return the referenced font

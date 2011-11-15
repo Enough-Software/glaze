@@ -161,7 +161,7 @@ public class Definition {
 			int propertyLine) {
 		Property attribute = new Property(propertyId, propertyValue,
 				propertyLine);
-		addProperty(attribute);
+		setProperty(attribute);
 	}
 
 	/**
@@ -170,21 +170,21 @@ public class Definition {
 	 * @param property
 	 *            the property
 	 */
-	private void addProperty(Property property) {
+	private void setProperty(Property property) {
 		this.properties.put(property.getId(), property);
 	}
 
 	/**
-	 * Adds all properties of the given definition
+	 * Sets all properties of the given definition
 	 * 
 	 * @param definition
 	 *            the definition
 	 */
-	public void addProperties(Definition definition) {
+	public void setProperties(Definition definition) {
 		Enumeration properties = definition.getProperties();
 		while (properties.hasMoreElements()) {
 			Property property = (Property) properties.nextElement();
-			addProperty(property);
+			setProperty(property);
 		}
 	}
 

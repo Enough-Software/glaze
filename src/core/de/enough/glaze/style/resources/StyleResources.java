@@ -1,4 +1,4 @@
-package de.enough.glaze.style;
+package de.enough.glaze.style.resources;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -14,6 +14,7 @@ import de.enough.glaze.content.source.impl.HttpContentSource;
 import de.enough.glaze.content.source.impl.RMSContentStorage;
 import de.enough.glaze.content.source.impl.RMSStorageIndex;
 import de.enough.glaze.content.source.impl.ResourceContentSource;
+import de.enough.glaze.style.Url;
 
 /**
  * Provides loader methods to load resources used in backgrounds etc.. Web-based

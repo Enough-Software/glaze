@@ -5,7 +5,6 @@ import java.io.IOException;
 import javax.microedition.m2g.SVGImage;
 
 import de.enough.glaze.content.ContentException;
-import de.enough.glaze.style.StyleResources;
 import de.enough.glaze.style.Url;
 import de.enough.glaze.style.definition.Definition;
 import de.enough.glaze.style.definition.converter.Converter;
@@ -13,6 +12,7 @@ import de.enough.glaze.style.parser.exception.CssSyntaxError;
 import de.enough.glaze.style.parser.property.Property;
 import de.enough.glaze.style.parser.property.UrlPropertyParser;
 import de.enough.glaze.style.property.background.GzBackgroundFactory;
+import de.enough.glaze.style.resources.StyleResources;
 
 /**
  * A {@link Converter} implementation to convert a definition to a SVG
