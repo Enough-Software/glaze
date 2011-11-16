@@ -223,6 +223,8 @@ public class Url {
 
 		if (DeviceInfo.isSimulator()) {
 			// do nothing
+		} else if (WLANInfo.getWLANState() == WLANInfo.WLAN_STATE_CONNECTED) {
+			connSuffixStr = ";ConnectionTimeout=70000;interface=wifi";
 		} else if ((CoverageInfo.getCoverageStatus() & CoverageInfo.COVERAGE_MDS) == CoverageInfo.COVERAGE_MDS) {
 			connSuffixStr = ";ConnectionTimeout=70000;deviceside=false";
 		} else if (RadioInfo.isDataServiceOperational()
@@ -233,8 +235,6 @@ public class Url {
 				connSuffixStr = ";ConnectionTimeout=70000;deviceside=true;ConnectionUID="
 						+ record.getUid();// WAP2
 			}
-		} else if (WLANInfo.getWLANState() == WLANInfo.WLAN_STATE_CONNECTED) {
-			connSuffixStr = ";ConnectionTimeout=70000;interface=wifi";
 		}
 
 		return connSuffixStr;
