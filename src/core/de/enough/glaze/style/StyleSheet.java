@@ -349,87 +349,93 @@ public class StyleSheet {
 	 *             if the syntax in the css is wrong
 	 */
 	public void build() throws IOException, CssSyntaxError {
-		// convert and add all backgrounds to the stylesheet
-		DefinitionCollection backgroundDefinitions = this.definition
-				.getBackgroundDefinitions();
-		for (int index = 0; index < backgroundDefinitions.size(); index++) {
-			Definition definition = backgroundDefinitions.getDefinition(index);
-			String definitionParentId = definition.getParentId();
-			if (definitionParentId != null) {
-				Definition parentDefinition = backgroundDefinitions
-						.getDefinition(definitionParentId);
-				definition.setParent(parentDefinition);
+		try {
+			// convert and add all backgrounds to the stylesheet
+			DefinitionCollection backgroundDefinitions = this.definition
+					.getBackgroundDefinitions();
+			for (int index = 0; index < backgroundDefinitions.size(); index++) {
+				Definition definition = backgroundDefinitions
+						.getDefinition(index);
+				String definitionParentId = definition.getParentId();
+				if (definitionParentId != null) {
+					Definition parentDefinition = backgroundDefinitions
+							.getDefinition(definitionParentId);
+					definition.setParent(parentDefinition);
+				}
+				ConverterUtils.validate(definition, BackgroundConverter
+						.getInstance().getIds());
+				GzBackground background = (GzBackground) BackgroundConverter
+						.getInstance().convert(definition);
+				setBackground(definition.getId(), background);
 			}
-			ConverterUtils.validate(definition, BackgroundConverter
-					.getInstance().getIds());
-			GzBackground background = (GzBackground) BackgroundConverter
-					.getInstance().convert(definition);
-			setBackground(definition.getId(), background);
-		}
 
-		// convert and add all borders to the stylesheet
-		DefinitionCollection borderDefinitions = this.definition
-				.getBorderDefinitions();
-		for (int index = 0; index < borderDefinitions.size(); index++) {
-			Definition definition = borderDefinitions.getDefinition(index);
-			String definitionParentId = definition.getParentId();
-			if (definitionParentId != null) {
-				Definition parentDefinition = borderDefinitions
-						.getDefinition(definitionParentId);
-				definition.setParent(parentDefinition);
+			// convert and add all borders to the stylesheet
+			DefinitionCollection borderDefinitions = this.definition
+					.getBorderDefinitions();
+			for (int index = 0; index < borderDefinitions.size(); index++) {
+				Definition definition = borderDefinitions.getDefinition(index);
+				String definitionParentId = definition.getParentId();
+				if (definitionParentId != null) {
+					Definition parentDefinition = borderDefinitions
+							.getDefinition(definitionParentId);
+					definition.setParent(parentDefinition);
+				}
+				ConverterUtils.validate(definition, BorderConverter
+						.getInstance().getIds());
+				GzBorder border = (GzBorder) BorderConverter.getInstance()
+						.convert(definition);
+				setBorder(definition.getId(), border);
 			}
-			ConverterUtils.validate(definition, BorderConverter.getInstance()
-					.getIds());
-			GzBorder border = (GzBorder) BorderConverter.getInstance().convert(
-					definition);
-			setBorder(definition.getId(), border);
-		}
 
-		// convert and add all fonts to the stylesheet
-		DefinitionCollection fontDefinitions = this.definition
-				.getFontDefinitions();
-		for (int index = 0; index < fontDefinitions.size(); index++) {
-			Definition definition = fontDefinitions.getDefinition(index);
-			String definitionParentId = definition.getParentId();
-			if (definitionParentId != null) {
-				Definition parentDefinition = fontDefinitions
-						.getDefinition(definitionParentId);
-				definition.setParent(parentDefinition);
+			// convert and add all fonts to the stylesheet
+			DefinitionCollection fontDefinitions = this.definition
+					.getFontDefinitions();
+			for (int index = 0; index < fontDefinitions.size(); index++) {
+				Definition definition = fontDefinitions.getDefinition(index);
+				String definitionParentId = definition.getParentId();
+				if (definitionParentId != null) {
+					Definition parentDefinition = fontDefinitions
+							.getDefinition(definitionParentId);
+					definition.setParent(parentDefinition);
+				}
+				ConverterUtils.validate(definition, FontConverter.getInstance()
+						.getIds());
+				GzFont font = (GzFont) FontConverter.getInstance().convert(
+						definition);
+				setFont(definition.getId(), font);
 			}
-			ConverterUtils.validate(definition, FontConverter.getInstance()
-					.getIds());
-			GzFont font = (GzFont) FontConverter.getInstance().convert(
-					definition);
-			setFont(definition.getId(), font);
-		}
 
-		// convert and add all styles to the stylesheet
-		DefinitionCollection styleDefinitions = this.definition
-				.getStyleDefinitions();
-		for (int index = 0; index < styleDefinitions.size(); index++) {
-			Definition definition = styleDefinitions.getDefinition(index);
-			String definitionParentId = definition.getParentId();
-			if (definitionParentId != null) {
-				Definition parentDefinition = styleDefinitions
-						.getDefinition(definitionParentId);
-				definition.setParent(parentDefinition);
-			}
-			Style style = (Style) StyleConverter.getInstance().convert(
-					definition);
+			// convert and add all styles to the stylesheet
+			DefinitionCollection styleDefinitions = this.definition
+					.getStyleDefinitions();
+			for (int index = 0; index < styleDefinitions.size(); index++) {
+				Definition definition = styleDefinitions.getDefinition(index);
+				String definitionParentId = definition.getParentId();
+				if (definitionParentId != null) {
+					Definition parentDefinition = styleDefinitions
+							.getDefinition(definitionParentId);
+					definition.setParent(parentDefinition);
+				}
+				Style style = (Style) StyleConverter.getInstance().convert(
+						definition);
 
-			String classId = definition.getClassId();
-			// if the style is a style class ...
-			if (classId != null) {
-				Definition parentDefinition = definition.getParent();
-				String parentId = parentDefinition.getId();
-				// get the parent style and set the style as a class of it
-				Style parentStyle = getStyle(parentId);
-				parentStyle.setClass(classId, style);
-				// otherwise ...
-			} else {
-				// simply add the style
-				setStyle(definition.getId(), style);
+				String classId = definition.getClassId();
+				// if the style is a style class ...
+				if (classId != null) {
+					Definition parentDefinition = definition.getParent();
+					String parentId = parentDefinition.getId();
+					// get the parent style and set the style as a class of it
+					Style parentStyle = getStyle(parentId);
+					parentStyle.setClass(classId, style);
+					// otherwise ...
+				} else {
+					// simply add the style
+					setStyle(definition.getId(), style);
+				}
 			}
+		} catch (CssSyntaxError e) {
+			Log.syntaxError(e);
+			throw e;
 		}
 	}
 

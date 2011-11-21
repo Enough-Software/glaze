@@ -139,24 +139,6 @@ public class MainScreen extends net.rim.device.api.ui.container.MainScreen
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.rim.device.api.ui.Manager#deleteAll()
-	 */
-	public void deleteAll() {
-		this.fieldManager.deleteAll();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.rim.device.api.ui.Manager#deleteRange(int, int)
-	 */
-	public void deleteRange(int start, int count) {
-		this.fieldManager.deleteRange(start, count);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see net.rim.device.api.ui.Manager#replace(net.rim.device.api.ui.Field,
 	 * net.rim.device.api.ui.Field)
 	 */

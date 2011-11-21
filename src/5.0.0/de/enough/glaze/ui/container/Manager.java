@@ -87,26 +87,6 @@ public abstract class Manager extends net.rim.device.api.ui.Manager {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.rim.device.api.ui.Manager#deleteAll()
-	 */
-	public void deleteAll() {
-		super.deleteAll();
-		this.styleManager.deleteAll();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.rim.device.api.ui.Manager#deleteRange(int, int)
-	 */
-	public void deleteRange(int start, int count) {
-		super.deleteRange(start, count);
-		this.styleManager.deleteRange(start, count);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see net.rim.device.api.ui.Manager#replace(net.rim.device.api.ui.Field,
 	 * net.rim.device.api.ui.Field)
 	 */
