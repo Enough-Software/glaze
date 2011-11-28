@@ -252,4 +252,18 @@ public class FieldDelegate {
 			return null;
 		}
 	}
+	
+	/**
+	 * Returns true if the current style of the given field has a background 
+	 * @param field
+	 * @return
+	 */
+	public static boolean drawFocusNeeded(Field field) {
+		StyleHandler styleHandler = getStyleHandler(field);
+		if (styleHandler != null) {
+			return !styleHandler.getStyle().hasBackground();
+		} else {
+			return true;
+		}
+	}
 }

@@ -70,7 +70,9 @@ public class LabelField extends net.rim.device.api.ui.component.LabelField
 	 * boolean)
 	 */
 	protected void drawFocus(Graphics graphics, boolean on) {
-		// do nothing, let the style handle the focus
+		if(FieldDelegate.drawFocusNeeded(this)) {
+			super.drawFocus(graphics, on);
+		}
 	}
 
 	/*

@@ -380,6 +380,15 @@ public class Style {
 	}
 
 	/**
+	 * Returns true if a background is set.
+	 * 
+	 * @return true if a background is set otherwise false.
+	 */
+	public boolean hasBackground() {
+		return this.background != null;
+	}
+
+	/**
 	 * Sets the background
 	 * 
 	 * @param background
