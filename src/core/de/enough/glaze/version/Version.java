@@ -3,6 +3,7 @@ package de.enough.glaze.version;
 import java.util.Hashtable;
 
 import net.rim.device.api.system.DeviceInfo;
+import de.enough.glaze.util.StringUtil;
 
 /**
  * Helper class for version-related tasks.
@@ -20,9 +21,10 @@ public class Version {
 	/**
 	 * The software version of the running device.
 	 */
-	private static final String VERSION = DeviceInfo.getSoftwareVersion();
+	private static final String[] VERSION;
 
 	static {
+		VERSION = expandVersion(DeviceInfo.getSoftwareVersion());
 		VERSION_MAP = new Hashtable();
 	}
 
@@ -38,10 +40,55 @@ public class Version {
 	public static boolean isGreaterThan(String version) {
 		Boolean result = (Boolean) VERSION_MAP.get(version);
 		if (result == null) {
-			result = new Boolean(VERSION.compareTo(version) >= 0);
+			String[] expandedVersion = expandVersion(version);
+			result = new Boolean(isGreaterThan(VERSION, expandedVersion));
 			VERSION_MAP.put(version, result);
 		}
 		return result.booleanValue();
+	}
+
+	/**
+	 * Returns true if the given version to compare is greater than the software version of
+	 * the running device.
+	 * 
+	 * @param softwareVersion
+	 * @param compareVersion
+	 * @return
+	 */
+	private static boolean isGreaterThan(String[] softwareVersion,
+			String[] compareVersion) {
+		for (int index = 0; index < softwareVersion.length; index++) {
+			int softwareVersionNumber = Integer.valueOf(softwareVersion[index]).intValue();
+			int compareVersionNumber = Integer.valueOf(
+					compareVersion[index]).intValue();
+			if (softwareVersionNumber < compareVersionNumber) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Expands the version to a String array.
+	 * 
+	 * @param version
+	 *            the version
+	 * @return the String array
+	 */
+	private static String[] expandVersion(String version) {
+		String[] result = new String[10];
+		String[] expanded = StringUtil.split(version, ".");
+
+		for (int index = 0; index < result.length; index++) {
+			if (index < expanded.length) {
+				result[index] = expanded[index];
+			} else {
+				result[index] = "0";
+			}
+		}
+
+		return result;
 	}
 
 	/**

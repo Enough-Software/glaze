@@ -152,8 +152,8 @@ public class ExtentDelegate {
 	 */
 	protected static int getAvailableContentWidth(int availableContentWidth,
 			Field field) {
-		// if the device is the simulator the software version is less than 5.0 ...
-		if (DeviceInfo.isSimulator() && Version.isLessThan("5.0")) {
+		// if the device is the simulator the software version is not greater than 4.6 ...
+		if (!Version.isGreaterThan("4.6")) { 
 			// calculate the horizontal margin and reduce the available content
 			// width by it.
 			// This is done to circumvent the simulator issue that the content
