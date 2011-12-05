@@ -30,11 +30,17 @@ public class AutoCompleteField extends
 	 * @see net.rim.device.api.ui.Manager#add(net.rim.device.api.ui.Field)
 	 */
 	public void add(Field field) {
+		if(this.styleManager == null) {
+			this.styleManager = new StyleManager(this);
+		}
 		super.add(field);
 		this.styleManager.add(field);
 	}
 
 	public void add(Field field, Style style) {
+		if(this.styleManager == null) {
+			this.styleManager = new StyleManager(this);
+		}
 		super.add(field);
 		this.styleManager.add(field, style);
 	}
