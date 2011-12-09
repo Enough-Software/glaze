@@ -32,7 +32,7 @@ Glaze uses CSS to style native fields: well-known CSS properties like margin, ba
 
 "Sandboxing":glaze/wiki/Sandboxing
 
-"Downloading":https://github.com/downloads/Enough-Software/glaze/enough-glaze-1.0.4.zip
+"Downloading":https://github.com/downloads/Enough-Software/glaze/enough-glaze-1.0.5.zip
 
 Visit the homepage at "www.glazeui.org":http://www.glazeui.org
 
