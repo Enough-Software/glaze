@@ -49,7 +49,7 @@ public class ResourceContentSource extends ContentSource {
 			data = StreamHelper.toBytes(stream);
 
 			return data;
-		} catch (IllegalArgumentException e) {
+		} catch (Exception e) {
 			throw new IOException("unable to load " + url);
 		}
 	}

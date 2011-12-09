@@ -35,12 +35,16 @@ public class HttpContentSource extends ContentSource{
 	protected Object load(ContentDescriptor descriptor) throws IOException {
 		byte[] data = null;
 		
-		// open the http connection
-		Url url = new Url(descriptor.getUrl());
-		InputStream stream = url.openStream();
-
-		// read all bytes into data
-		data = StreamHelper.toBytes(stream);
+		try {
+			// open the http connection
+			Url url = new Url(descriptor.getUrl());
+			InputStream stream = url.openStream();
+	
+			// read all bytes into data
+			data = StreamHelper.toBytes(stream);
+		} catch (Exception e) {
+			throw new IOException("unable to load " + descriptor.getUrl());
+		}
 		
 		return data;
 	}
