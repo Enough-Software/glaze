@@ -29,15 +29,15 @@ public class FieldDelegate {
 	 * @return the preferred width
 	 */
 	public static int getPreferredWidth(Field field) {
-		if (field instanceof GzField) {
-			GzField gzField = (GzField) field;
-			int preferredWidth = gzField.gz_getPreferredWidth();
+		if (field instanceof GzExtent) {
+			GzExtent gzExtent = (GzExtent) field;
+			int preferredWidth = gzExtent.gz_getPreferredWidth();
 			// get the style of the field
 			Style style = getStyle(field);
 			return ExtentDelegate.getPreferredWidth(preferredWidth, field,
 					style);
 		} else {
-			Log.error("field must implement GzField", field);
+			Log.error("field must implement GzExtent", field);
 			return 0;
 		}
 	}
@@ -50,15 +50,15 @@ public class FieldDelegate {
 	 * @return the preferred height
 	 */
 	public static int getPreferredHeight(Field field) {
-		if (field instanceof GzField) {
-			GzField gzField = (GzField) field;
-			int preferredHeight = gzField.gz_getPreferredHeight();
+		if (field instanceof GzExtent) {
+			GzExtent gzExtent = (GzExtent) field;
+			int preferredHeight = gzExtent.gz_getPreferredHeight();
 			// get the style of the field
 			Style style = getStyle(field);
 			return ExtentDelegate.getPreferredHeight(preferredHeight, field,
 					style);
 		} else {
-			Log.error("field must implement GzField", field);
+			Log.error("field must implement GzExtent", field);
 			return 0;
 		}
 	}
