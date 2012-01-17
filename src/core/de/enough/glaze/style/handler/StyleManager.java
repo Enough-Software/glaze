@@ -152,6 +152,7 @@ public class StyleManager implements StyleSheetListener {
 					.elementAt(index);
 			if (fieldStyleHandler.getField().equals(field)) {
 				delete(index);
+				return;
 			}
 		}
 
