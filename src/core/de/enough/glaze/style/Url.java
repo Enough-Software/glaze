@@ -7,9 +7,9 @@ import net.rim.device.api.servicebook.ServiceBook;
 import net.rim.device.api.servicebook.ServiceRecord;
 import net.rim.device.api.system.CoverageInfo;
 import net.rim.device.api.system.DeviceInfo;
-import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.system.WLANInfo;
 import de.enough.glaze.content.io.RedirectHttpConnection;
+import de.enough.glaze.log.Log;
 
 /**
  * A class representing a URL. {@link #openStream()} interprets and opens an
@@ -17,7 +17,6 @@ import de.enough.glaze.content.io.RedirectHttpConnection;
  * resources (res://) and web-based resources (http://) and relatives.
  * 
  * @author Andre
- * 
  */
 public class Url {
 
@@ -37,6 +36,8 @@ public class Url {
 	private static final String PROTOCOL_HTTPS = "https";
 
 	private static final int PORT_HTTP = 80;
+
+	private static final boolean USE_MDS_IN_SIMULATOR = false;
 
 	private String protocol;
 
@@ -215,29 +216,96 @@ public class Url {
 	 * Returns the BlackBerry connection suffix used to open connections to
 	 * web-based resources
 	 * 
+	 * http://http://www.localytics.com/blog/2009/how-to-reliably-establish-a-network-connection-on-any-blackberry-device/
+	 * 
 	 * @return the BlackBerry connection suffix
 	 */
 	public static String getConnectionSuffix() {
-		// the final fallback, an unidentified direct TCP connection
-		String connSuffixStr = ";ConnectionTimeout=70000;deviceside=true";
+		// This code is based on the connection code developed by Mike Nelson of AccelGolf.
+		// http://blog.accelgolf.com/2009/05/22/blackberry-cross-carrier-and-cross-network-http-connection
+		String connectionString = null;
 
-		if (DeviceInfo.isSimulator()) {
-			// do nothing
-		} else if (WLANInfo.getWLANState() == WLANInfo.WLAN_STATE_CONNECTED) {
-			connSuffixStr = ";ConnectionTimeout=70000;interface=wifi";
-		} else if ((CoverageInfo.getCoverageStatus() & CoverageInfo.COVERAGE_MDS) == CoverageInfo.COVERAGE_MDS) {
-			connSuffixStr = ";ConnectionTimeout=70000;deviceside=false";
-		} else if (RadioInfo.isDataServiceOperational()
-				&& (CoverageInfo.getCoverageStatus() & CoverageInfo.COVERAGE_DIRECT) == CoverageInfo.COVERAGE_DIRECT) {
-			ServiceRecord record = getServiceRecord();
-
-			if (record != null) {
-				connSuffixStr = ";ConnectionTimeout=70000;deviceside=true;ConnectionUID="
-						+ record.getUid();// WAP2
+		// Simulator behavior is controlled by the USE_MDS_IN_SIMULATOR variable.
+		if (DeviceInfo.isSimulator())
+		{
+			if (Url.USE_MDS_IN_SIMULATOR)
+			{
+				Log.info("Device is a simulator and USE_MDS_IN_SIMULATOR is true");
+				connectionString = ";deviceside=false";
+			}
+			else
+			{
+				Log.info("Device is a simulator and USE_MDS_IN_SIMULATOR is false");
+				connectionString = ";deviceside=true";
 			}
 		}
 
-		return connSuffixStr;
+		// Wifi is the preferred transmission method
+		else if (WLANInfo.getWLANState() == WLANInfo.WLAN_STATE_CONNECTED)
+		{
+			Log.info("Device is connected via Wifi.");
+			connectionString = ";interface=wifi";
+		}
+
+		// Is the carrier network the only way to connect?
+		else if ((CoverageInfo.getCoverageStatus() & CoverageInfo.COVERAGE_DIRECT) == CoverageInfo.COVERAGE_DIRECT)
+		{
+			Log.info("Carrier coverage.");
+			String carrierUid = getCarrierBIBSUid();
+
+			if (carrierUid == null)
+			{
+				Log.info("No Uid");
+				connectionString = ";deviceside=true";
+			}
+			else
+			{
+				// otherwise, use the Uid to construct a valid carrier BIBS request
+				Log.info("uid is: " + carrierUid);
+				connectionString = ";deviceside=false;connectionUID="+carrierUid + ";ConnectionType=mds-public";
+			}
+		}
+
+		// Check for an MDS connection instead (BlackBerry Enterprise Server)
+		else if((CoverageInfo.getCoverageStatus() & CoverageInfo.COVERAGE_MDS) == CoverageInfo.COVERAGE_MDS)
+		{
+			Log.info("MDS coverage found");
+			connectionString = ";deviceside=false";
+		}
+
+		// If there is no connection available abort to avoid bugging the user unnecssarily.
+		else if(CoverageInfo.getCoverageStatus() == CoverageInfo.COVERAGE_NONE)
+		{
+			Log.error("There is no available connection.");
+		}
+
+		// In theory, all bases are covered so this shouldn't be reachable.
+		else
+		{
+			Log.info("no other options found, assuming device.");
+			connectionString = ";deviceside=true";
+		}
+
+		return connectionString;
+    }
+
+	/**
+	 * Looks through the phone's service book for a carrier provided BIBS network
+	 * @return The uid used to connect to that network.
+	 */
+	public static String getCarrierBIBSUid() {
+		ServiceRecord[] records = ServiceBook.getSB().getRecords();
+		int currentRecord;
+
+		for (currentRecord = 0; currentRecord < records.length; currentRecord++) {
+			if (records[currentRecord].getCid().toLowerCase().equals("ippp")) {
+				if (records[currentRecord].getName().toLowerCase().indexOf("bibs") >= 0) {
+					return records[currentRecord].getUid();
+				}
+			}
+		}
+
+		return null;
 	}
 
 	/**
