@@ -4,11 +4,11 @@ import net.rim.device.api.ui.Graphics;
 import de.enough.glaze.ui.delegate.FieldDelegate;
 import de.enough.glaze.ui.delegate.GzField;
 
-public class TextField extends net.rim.device.api.ui.component.TextField
+public class TextField extends net.rim.device.api.ui.component.EditField
 		implements GzField {
 
 	public TextField() {
-		this(0);
+		this(Field.EDITABLE);
 	}
 
 	public TextField(long style) {

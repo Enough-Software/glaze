@@ -255,8 +255,17 @@ public class Url {
 
 			if (carrierUid == null)
 			{
-				Log.info("No Uid");
-				connectionString = ";deviceside=true";
+				Log.info("No BIBS Uid");
+				ServiceRecord record = getServiceRecord();
+
+				if (record != null) {
+					Log.info("Got service Uid");
+					connectionString = ";ConnectionTimeout=70000;deviceside=true;ConnectionUID=" + record.getUid();// WAP2
+				}
+				else {
+					Log.info("No service Uid");
+					connectionString = ";deviceside=true";
+				}
 			}
 			else
 			{
