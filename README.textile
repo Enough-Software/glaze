@@ -1,5 +1,6 @@
 h1. Welcome to Glaze
 
+*DISCLAIMER* This product is discontinued by enough Software. The repository will still be kept active. Happy coding!
 
 
 Glaze is a UI framework for BlackBerry Java Applications.
